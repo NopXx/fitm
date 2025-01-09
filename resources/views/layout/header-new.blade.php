@@ -23,31 +23,25 @@
                                 </div>
                             </a>
                             <ul class="dropdown-menu language-dropdown header-card border-0">
-                                <li class="lang lang-en selected dropdown-item p-2" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" title="US">
-                                    <span class="d-flex align-items-center">
-                                        <i class="flag-icon flag-icon-usa flag-icon-squared b-r-10 f-s-22"></i>
-                                        <span class="ps-2">US</span>
-                                    </span>
-                                </li>
-                                <li class="lang lang-pt dropdown-item p-2" title="FR">
-                                    <span class="d-flex align-items-center">
-                                        <i class="flag-icon flag-icon-fra flag-icon-squared b-r-10 f-s-22"></i>
-                                        <span class="ps-2">France</span>
-                                    </span>
-                                </li>
-                                <li class="lang lang-es dropdown-item p-2" title="UK">
-                                    <span class="d-flex align-items-center">
-                                        <i class="flag-icon flag-icon-gbr flag-icon-squared b-r-10 f-s-22"></i>
-                                        <span class="ps-2">UK</span>
-                                    </span>
-                                </li>
-                                <li class="lang lang-es dropdown-item p-2" title="IT">
-                                    <span class="d-flex align-items-center">
-                                        <i class="flag-icon flag-icon-ita flag-icon-squared b-r-10 f-s-22"></i>
-                                        <span class="ps-2">Italy</span>
-                                    </span>
-                                </li>
+                                <a href="{{ route('changeLang', ['locale' => 'en']) }}">
+                                    <li class="lang lang-en {{ session()->get('lang') == null || session()->get('lang') == 'en' ? 'selected' : '' }} dropdown-item p-2"
+                                        data-bs-toggle="tooltip" data-bs-placement="top" title="US">
+                                        <span class="d-flex align-items-center">
+                                            <i class="flag-icon flag-icon-usa flag-icon-squared b-r-10 f-s-22"></i>
+                                            <span class="ps-2">English</span>
+                                        </span>
+                                    </li>
+                                </a>
+                                <a href="{{ route('changeLang', ['locale' => 'th']) }}">
+                                    <li class="lang lang-th {{ session()->get('lang') == 'th' ? 'selected' : '' }} dropdown-item p-2"
+                                        data-bs-toggle="tooltip" data-bs-placement="top" title="TH">
+                                        <span class="d-flex align-items-center">
+                                            <i class="flag-icon flag-icon-tha flag-icon-squared b-r-10 f-s-22"></i>
+                                            <span class="ps-2">ภาษาไทย</span>
+                                        </span>
+                                    </li>
+                                </a>
+
                             </ul>
                         </div>
 
@@ -81,7 +75,8 @@
                                             </span>
                                         </div>
                                         <div class="text-center mt-2">
-                                            <h6 class="mb-0">{{ Auth::user()->f_name }} {{ Auth::user()->l_name }}</h6>
+                                            <h6 class="mb-0">{{ Auth::user()->f_name }} {{ Auth::user()->l_name }}
+                                            </h6>
                                             <p class="f-s-12 mb-0 text-secondary">{{ Auth::user()->email }}</p>
                                         </div>
                                     </li>

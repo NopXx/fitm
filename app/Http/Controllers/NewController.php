@@ -19,7 +19,7 @@ class NewController extends Controller
         return response()->json($new);
     }
 
-    public function add()
+    public function show()
     {
         return view('news.add');
     }

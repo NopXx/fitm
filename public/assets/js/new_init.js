@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
     $('#example').DataTable({
         ajax: {
             type: 'GET',
@@ -10,10 +10,18 @@ $(function() {
                 return response;
             },
         },
-        columns: [
-            { data: 'new_id' },
-            { data: 'title' },
-            { data: 'created_at' }
+        columns: [{
+                data: 'new_id'
+            },
+            {
+                data: 'title'
+            },
+            {
+                data: null,
+                render: function (data, type, row) {
+                    return moment(data.created_at).format('DD/MM/yyyy HH:mm:ss');
+                }
+            }
         ],
     });
 });

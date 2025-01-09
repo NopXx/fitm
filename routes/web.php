@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LangController;
 use App\Http\Controllers\NewController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,6 +14,8 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
+Route::get('lang/{locale}', [LangController::class, 'change'])->name('changeLang');
+
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/main/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
@@ -20,7 +23,7 @@ Route::group(['middleware' => 'auth'], function () {
     // News
     Route::resource('new', NewController::class);
     Route::get('news', [NewController::class, 'getNews'])->name('new.getNews');
-    Route::get('new/add', [NewController::class, 'add'])->name('new.add');
+    Route::get('new/add', [NewController::class, 'show'])->name('new.add');
     Route::post('news/store', [NewController::class, 'store'])->name('news.store');
 });
 

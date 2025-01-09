@@ -1,5 +1,5 @@
 @extends('layout.master-new')
-@section('title', 'News')
+@section('title', __('new.title'))
 
 @section('css')
     <!--font-awesome-css-->
@@ -13,7 +13,7 @@
         <!-- Breadcrumb start -->
         <div class="row m-1">
             <div class="col-12 ">
-                <h4 class="main-title">News</h4>
+                <h4 class="main-title">@lang('new.title')</h4>
                 <ul class="app-line-breadcrumbs mb-3">
                     <li class="">
                         <a href="#" class="f-s-14 f-w-500">
@@ -30,7 +30,7 @@
         <div class="col-xl-12">
             <div class="card add-blog">
                 <div class="card-header">
-                    <h5>News</h5>
+                    <h5>@lang('new.title')</h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -38,7 +38,7 @@
                             <a href="{{ route('new.add') }}" class="card hover-effect card-success">
                                 <div class="card-body">
                                     <i class="ti ti-news icon-bg"></i>
-                                    <h6>Add News</h6>
+                                    <h6>@lang('new.add_new')</h6>
                                 </div>
                             </a>
                         </div>
