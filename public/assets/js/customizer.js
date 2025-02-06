@@ -1,6 +1,12 @@
 $(function() {
   //  **------Load customizer**
-  $.get("../assets/customizer.txt", function(html_string)
+  function getBasePath() {
+    const path = window.location.pathname;
+    const depth = (path.match(/\//g) || []).length - 1;
+    return '../'.repeat(depth) + 'assets/customizer.txt';
+}
+
+  $.get(getBasePath(), function(html_string)
   {
     let customizer = $("#customizer");
     if (customizer.length >0){

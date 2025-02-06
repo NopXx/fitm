@@ -1,22 +1,18 @@
 @extends('layout.master-new')
-@section('title', __('translation.add_new'))
+@section('title', __('new.edit_new'))
 @section('css')
-
-    <!-- filepond css -->
+    <!-- เพิ่ม CSS เหมือนหน้า add -->
     <link rel="stylesheet" href="{{ asset('assets/vendor/filepond/filepond.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendor/filepond/image-preview.min.css') }}">
-
-    <!-- editor css -->
     <link rel="stylesheet" href="{{ asset('assets/vendor/trumbowyg/trumbowyg.min.css') }}">
-
-    <!-- flatpickr css-->
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datepikar/flatpickr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/datepikar/flatpickr.min.css') }}">
 
     <!-- slick css -->
     <link rel="stylesheet" href="{{ asset('assets/vendor/slick/slick.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendor/slick/slick-theme.css') }}">
 
 @endsection
+
 @section('main-content')
     <style>
         .fade-a-nav .slider-1,
@@ -42,31 +38,27 @@
         }
     </style>
     <div class="container-fluid">
-
-        <!-- Breadcrumb start -->
+        <!-- Breadcrumb -->
         <div class="row m-1">
-            <div class="col-12 ">
-                <h4 class="main-title">@lang('new.title')</h4>
+            <div class="col-12">
+                <h4 class="main-title">@lang('new.edit_new')</h4>
                 <ul class="app-line-breadcrumbs mb-3">
-                    <li>
-                        <a href="#" class="f-s-14 f-w-500">DataTable</a>
-                    </li>
-                    <li class="active">
-                        <a href="#" class="f-s-14 f-w-500">@lang('translation.add_new')</a>
-                    </li>
+                    <li><a href="{{ route('new.index') }}">@lang('translation.news')</a></li>
+                    <li class="active">@lang('translation.edit')</li>
                 </ul>
             </div>
         </div>
-        <!-- Breadcrumb end -->
 
-        <!-- Blog Details start -->
+        <!-- Form -->
         <div class="col-xl-12">
             <div class="card add-blog">
                 <div class="card-body">
-                    <form action="{{ route('news.store') }}" id="addNewForm" class="app-form" method="POST"
+                    <form action="{{ route('new.update', $new->id) }}" id="editNewForm" method="POST"
                         enctype="multipart/form-data">
-                        <input type="hidden" name="content">
                         @csrf
+                        @method('PUT')
+                        <input type="hidden" name="content" value="{{ old('content', $new->content) }}">
+
                         <h5>Display New</h5>
                         <div class="row">
                             <!-- Style 1 -->
@@ -74,7 +66,9 @@
                                 <div class="card select-card">
                                     <div class="card-header d-flex align-items-center">
                                         <h5 class="mb-0">Style 1</h5>
-                                        <input type="radio" name="display_type" value="1" class="ms-2 form-check-input" required>
+                                        <input type="radio" name="display_type" value="1"
+                                            class="ms-2 form-check-input" {{ $new->display_type == 1 ? 'checked' : '' }}
+                                            required>
                                     </div>
                                     <div class="card">
                                         <img id="previewStyle1Cover" src="{{ asset('../assets/images/size/600x400.png') }}"
@@ -94,7 +88,9 @@
                                 <div class="card select-card">
                                     <div class="card-header d-flex align-items-center">
                                         <h5 class="mb-0">Style 2</h5>
-                                        <input type="radio" name="display_type" value="2" class="ms-2 form-check-input" required>
+                                        <input type="radio" name="display_type" value="2"
+                                            class="ms-2 form-check-input" {{ $new->display_type == 2 ? 'checked' : '' }}
+                                            required>
                                     </div>
                                     <div class="card-body p-0"> <!-- Changed padding to 0 -->
                                         <div class="fade-a app-arrow">
@@ -104,13 +100,11 @@
                                                     class="img-fluid" alt="Cover Preview">
                                             </div>
                                             <div class="item">
-                                                <img
-                                                    src="{{ asset('../assets/images/size/1200x600.png') }}"
+                                                <img src="{{ asset('../assets/images/size/1200x600.png') }}"
                                                     class="img-fluid" alt="Cover Preview">
                                             </div>
                                             <div class="item">
-                                                <img
-                                                    src="{{ asset('../assets/images/size/1200x600.png') }}"
+                                                <img src="{{ asset('../assets/images/size/1200x600.png') }}"
                                                     class="img-fluid" alt="Cover Preview">
                                             </div>
                                         </div>
@@ -133,62 +127,67 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" name="title" placeholder="Blog Title"
-                                        required>
+                                    <input type="text" class="form-control" name="title"
+                                        value="{{ old('title', $new->title) }}" required>
                                     <label>@lang('translation.title')</label>
                                 </div>
 
                                 <div class="form-floating mb-3">
-                                    <select class="form-select form-select-labels" name="new_type" required>
+                                    <select class="form-select" name="new_type" required>
                                         <option value="">@lang('translation.select_type')</option>
                                         @foreach ($newtypes as $newtype)
-                                            <option value="{{ $newtype->id }}">{{ $newtype->new_type_name }}</option>
+                                            <option value="{{ $newtype->id }}" {{ $new->new_type == $newtype->id ? 'selected' : '' }}>{{ $newtype->new_type_name }}</option>
                                         @endforeach
                                     </select>
                                     <label>@lang('translation.type')</label>
                                 </div>
 
                                 <div class="form-floating mb-3">
-                                    <textarea class="form-control" name="detail" placeholder="Blog Description" required></textarea>
+                                    <textarea class="form-control" name="detail" required>{{ old('detail', $new->detail) }}</textarea>
                                     <label>@lang('translation.description')</label>
                                 </div>
 
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control basic-date" name="effective_date"
-                                        placeholder="YYYY-MM-DD H:i" required>
+                                        value="{{ old('effective_date', $new->effective_date ? \Carbon\Carbon::parse($new->effective_date)->format('Y-m-d H:i') : '') }}"
+                                        required>
                                     <label>@lang('translation.effective_date')</label>
                                 </div>
+
+
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control" name="link"
-                                        placeholder="External Link (Optional)">
+                                        value="{{ old('link', $new->link) }}">
                                     <label>@lang('translation.external_link')</label>
                                 </div>
                             </div>
-                            {{-- upload cover --}}
+
                             <div class="col-md-6">
                                 <div class="file-uploader-box mb-3">
                                     <input class="filepond-1" type="file" id="fileupload-2" name="cover"
-                                        accept="image/png, image/jpeg, image/gif">
+                                        accept="image/png, image/jpeg, image/gif"
+                                        data-file="{{ $new->cover ? asset('storage/' . $new->cover) : '' }}">
 
                                 </div>
+
                                 <div class="form-floating mb-3">
-                                    <select class="form-select form-select-labels" name="status" required>
-                                        <option value="1">@lang('translation.active')</option>
-                                        <option value="0">@lang('translation.inactive')</option>
+                                    <select class="form-select" name="status" required>
+                                        <option value="1" {{ $new->status ? 'selected' : '' }}>@lang('translation.active')
+                                        </option>
+                                        <option value="0" {{ !$new->status ? 'selected' : '' }}>@lang('translation.inactive')
+                                        </option>
                                     </select>
                                     <label>@lang('translation.status')</label>
                                 </div>
                             </div>
-                            {{-- editor --}}
+
                             <div class="col-xl-12 editor-details">
-                                <div id="editor">
-                                    <p>Hello !</p>
-                                </div>
+                                <div id="editor">{!! old('content', $new->content) !!}</div>
                             </div>
+
                             <div class="col-12 mt-3">
                                 <div class="text-start">
                                     <button type="submit" class="btn btn-primary">@lang('translation.save')</button>
@@ -198,29 +197,25 @@
                             </div>
                         </div>
                     </form>
-
                 </div>
             </div>
         </div>
-        <!-- Blog Details end -->
-
     </div>
 @endsection
 
 @section('script')
-    <!--customizer-->
-    {{-- <div id="customizer"></div> --}}
 
     <!-- Trumbowyg js -->
     <script src="{{ asset('assets/vendor/trumbowyg/trumbowyg.min.js') }}"></script>
 
-    <!-- filepond -->
+    <!-- Load FilePond core first -->
+    <script src="{{ asset('assets/vendor/filepond/filepond.min.js') }}"></script>
+    <!-- Then load plugins -->
     <script src="{{ asset('assets/vendor/filepond/file-encode.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/filepond/validate-size.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/filepond/validate-type.js') }}"></script>
     <script src="{{ asset('assets/vendor/filepond/exif-orientation.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/filepond/image-preview.min.js') }}"></script>
-    <script src="{{ asset('assets/vendor/filepond/filepond.min.js') }}"></script>
 
     <!-- flatpickr js-->
     <script src="{{ asset('assets/vendor/datepikar/flatpickr.js') }}"></script>
@@ -232,8 +227,11 @@
     <script>
         var locale = '{{ $lang }}'
         var csrf = '{{ csrf_token() }}'
-        const DEFAULT_IMAGE = "{{ asset('../assets/images/size/600x400.png') }}";
-        const DEFAULT_IMAGE_STYLE2 = "{{ asset('../assets/images/size/1200x600.png') }}";
+    </script>
+
+    <script>
+        // กำหนดค่าเริ่มต้นให้ FilePond
+        var existingFile = document.querySelector('input[name="cover"]').dataset.file;
     </script>
 
     <script>
@@ -253,6 +251,11 @@
             var previewStyle1Cover = document.getElementById("previewStyle1Cover");
             var previewStyle2Cover = document.getElementById("previewStyle2Cover");
 
+            previewTitle1.textContent = titleInput.value || "@lang('translation.title')";
+            previewTitle2.textContent = titleInput.value || "@lang('translation.title')";
+            previewDetail1.textContent = detailInput.value || "@lang('translation.description')";
+            previewDetail2.textContent = detailInput.value || "@lang('translation.description')";
+
             // Update Title Preview
             titleInput.addEventListener("input", function() {
                 previewTitle1.textContent = this.value || "@lang('translation.title')";
@@ -267,8 +270,14 @@
         });
     </script>
 
-    <!-- add blog js  -->
-    <script src="{{ asset('assets/js/add_new_init.js') }}"></script>
+    <!-- ใช้สคริปต์เดียวกันกับหน้า add แต่ปรับ id form -->
+    <script src="{{ asset('assets/js/edit_new_init.js') }}"></script>
+    <script>
+        // เปลี่ยน selector เป็น form edit
+        document.getElementById('editNewForm').addEventListener('submit', function(e) {
+            document.querySelector('input[name="content"]').value = $('#editor').trumbowyg('html');
+        });
+    </script>
 
     <!-- slick-file -->
     <script src="{{ asset('assets/vendor/slick/slick.min.js') }}"></script>

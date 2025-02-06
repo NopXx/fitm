@@ -18,7 +18,7 @@
                     <li class="">
                         <a href="#" class="f-s-14 f-w-500">
                             <span>
-                                <i class="ph-duotone  ph-table f-s-16"></i> Table
+                                @lang('translation.data_management')
                             </span>
                         </a>
                     </li>
@@ -29,13 +29,10 @@
         {{-- Content --}}
         <div class="col-xl-12">
             <div class="card add-blog">
-                <div class="card-header">
-                    <h5>@lang('new.title')</h5>
-                </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-xl-4">
-                            <a href="{{ route('new.add') }}" class="card hover-effect card-success">
+                            <a href="{{ route('new.add') }}" class="card card-light-primary">
                                 <div class="card-body">
                                     <i class="ti ti-news icon-bg"></i>
                                     <h6>@lang('new.add_new')</h6>
@@ -50,9 +47,10 @@
                                 <table id="example" class="display app-data-table default-data-table">
                                     <thead>
                                         <tr>
-                                            <th>Id</th>
-                                            <th>Title</th>
-                                            <th>Start date</th>
+                                            <th>@lang('translation.title')</th>
+                                            <th>@lang('translation.effective_date')</th>
+                                            <th>@lang('translation.description')</th>
+                                            <th>@lang('translation.action')</th>
                                         </tr>
                                     </thead>
                                 </table>

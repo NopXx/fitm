@@ -8,6 +8,6 @@
 <meta name="author" content="la-themes">
 <!-- CSRF Token -->
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<link rel="icon" href="{{('../assets/images/logo/favicon.png')}}" type="image/x-icon">
-<link rel="shortcut icon" href="{{('../assets/images/logo/favicon.png')}}" type="image/x-icon">
-<title>@yield('title') | Ra-admin - Premium Admin Template</title>
+<link rel="icon" href="{{ asset('assets/images/logo/favicon.png') }}" type="image/x-icon">
+<link rel="shortcut icon" href="{{ asset('assets/images/logo/favicon.png') }}" type="image/x-icon">
+<title>@yield('title') | FITM Admin</title>

@@ -11,17 +11,20 @@
     </div>
     <div class="app-nav" id="app-simple-bar">
         <ul class="main-nav p-0 mt-2">
-            <li class="menu-title">
-                <span>Dashboard</span>
-            </li>
+            <li class="app-divider-v dotted py-1"></li>
             <li class="no-sub">
                 <a class="" href="{{route('dashboard.index')}}">
-                    <i class="ph-duotone  ph-house-line"></i> Dashboard
+                    <i class="ph-fill  ph-house-line"></i> Dashboard
                 </a>
             </li>
             <li class="no-sub">
                 <a class="" href="{{route('new.index')}}">
-                    <i class="ph-bold  ph-newspaper"></i> News
+                    <i class="ph-fill  ph-newspaper"></i> @lang('new.title')
+                </a>
+            </li>
+            <li class="no-sub">
+                <a class="" href="#">
+                    <i class="ph-fill  ph-user-circle-gear"></i> @lang('translation.members')
                 </a>
             </li>
             {{-- <li class="no-sub">

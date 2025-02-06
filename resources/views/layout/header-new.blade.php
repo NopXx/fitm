@@ -24,7 +24,7 @@
                             </a>
                             <ul class="dropdown-menu language-dropdown header-card border-0">
                                 <a href="{{ route('changeLang', ['locale' => 'en']) }}">
-                                    <li class="lang lang-en {{ session()->get('lang') == null || session()->get('lang') == 'en' ? 'selected' : '' }} dropdown-item p-2"
+                                    <li class="lang lang-en {{ session()->get('lang') == 'en' ? 'selected' : '' }} dropdown-item p-2"
                                         data-bs-toggle="tooltip" data-bs-placement="top" title="US">
                                         <span class="d-flex align-items-center">
                                             <i class="flag-icon flag-icon-usa flag-icon-squared b-r-10 f-s-22"></i>
@@ -33,7 +33,7 @@
                                     </li>
                                 </a>
                                 <a href="{{ route('changeLang', ['locale' => 'th']) }}">
-                                    <li class="lang lang-th {{ session()->get('lang') == 'th' ? 'selected' : '' }} dropdown-item p-2"
+                                    <li class="lang lang-th {{ session()->get('lang') == null || session()->get('lang') == 'th' ? 'selected' : '' }} dropdown-item p-2"
                                         data-bs-toggle="tooltip" data-bs-placement="top" title="TH">
                                         <span class="d-flex align-items-center">
                                             <i class="flag-icon flag-icon-tha flag-icon-squared b-r-10 f-s-22"></i>

@@ -98,7 +98,7 @@ FilePond.create(document.querySelector('#filepondsolid2'), {
 });
 
 
-// **------solid 3** 
+// **------solid 3**
 
 const pondInput3 = FilePond.create(
   document.querySelector('#solid3'),

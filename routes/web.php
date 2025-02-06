@@ -18,13 +18,21 @@ Route::get('lang/{locale}', [LangController::class, 'change'])->name('changeLang
 
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('/main/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+    Route::prefix('admin')->group(function () {
 
-    // News
-    Route::resource('new', NewController::class);
-    Route::get('news', [NewController::class, 'getNews'])->name('new.getNews');
-    Route::get('new/add', [NewController::class, 'show'])->name('new.add');
-    Route::post('news/store', [NewController::class, 'store'])->name('news.store');
+        Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
+
+        // News
+        Route::resource('new', NewController::class);
+        Route::get('news', [NewController::class, 'getNews'])->name('new.getNews');
+        Route::get('new/add', [NewController::class, 'show'])->name('new.add');
+        Route::post('new/store', [NewController::class, 'store'])->name('news.store');
+        Route::post('new/upload', [NewController::class, 'upload'])->name('new.upload');
+        Route::delete('new/revert', [NewController::class, 'destroy'])->name('new.revert');
+        // edit news
+        Route::get('/new/edit/{new}', [NewController::class, 'edit'])->name('new.edit');
+        Route::put('/new/update/{new}', [NewController::class, 'update'])->name('new.update');
+    });
 });
 
 Route::view('index', 'template.index')->name('index');

@@ -13,9 +13,9 @@
                 <ul class="app-line-breadcrumbs mb-3">
                     <li class="">
                         <a href="#" class="f-s-14 f-w-500">
-                      <span>
-                        <i class="ph-duotone  ph-cardholder f-s-16"></i>  Forms elements
-                      </span>
+                            <span>
+                                <i class="ph-duotone  ph-cardholder f-s-16"></i> Forms elements
+                            </span>
                         </a>
                     </li>
                     <li class="active">
@@ -39,21 +39,21 @@
                             <div class="col-12 d-flex flex-column gap-2">
                                 <div class="form-check d-flex align-items-center gap-1">
                                     <input class="form-check-input f-s-18 mb-1 m-1" type="radio" name="flexRadioDefault"
-                                           id="radio_default1">
+                                        id="radio_default1">
                                     <label class="form-check-label" for="radio_default1">
                                         Default
                                     </label>
                                 </div>
                                 <div class="form-check d-flex align-items-center gap-1">
                                     <input class="form-check-input f-s-18 mb-1 m-1" type="radio" name="flexRadioDisabled"
-                                           id="radio_disabled" disabled>
+                                        id="radio_disabled" disabled>
                                     <label class="form-check-label" for="radio_disabled">
                                         Disabled
                                     </label>
                                 </div>
                                 <div class="form-check d-flex align-items-center gap-1">
                                     <input class="form-check-input f-s-18 mb-1 m-1" type="radio" name="flexRadioDefault"
-                                           id="radio_default2" checked>
+                                        id="radio_default2" checked>
                                     <label class="form-check-label" for="radio_default2">
                                         Checked
                                     </label>
@@ -445,7 +445,8 @@
                             <label class="btn btn-outline-primary" for="btn-check-outlined">Single toggle</label>
                             <input type="checkbox" class="btn-check" id="btn-check-2-outlined" checked>
                             <label class="btn btn-outline-secondary" for="btn-check-2-outlined">Checked</label>
-                            <input type="radio" class="btn-check" name="options-outlined" id="success-outlined" checked>
+                            <input type="radio" class="btn-check" name="options-outlined" id="success-outlined"
+                                checked>
                             <label class="btn btn-outline-success" for="success-outlined">Checked success radio</label>
                             <input type="radio" class="btn-check" name="options-outlined" id="danger-outlined">
                             <label class="btn btn-outline-danger" for="danger-outlined">Danger radio</label>
@@ -465,34 +466,34 @@
                             <label class="select-items">
                                 <input type="checkbox" class="select-input" checked>
                                 <span class="select-box">
-                              <span class="selectitem">
-                                <i class="ti ti-brand-instagram"></i> Instagram
-                              </span>
-                            </span>
+                                    <span class="selectitem">
+                                        <i class="ti ti-brand-instagram"></i> Instagram
+                                    </span>
+                                </span>
                             </label>
                             <label class="select-items">
                                 <input type="checkbox" class="select-input">
                                 <span class="select-box">
-                              <span class="selectitem">
-                                <i class="ti ti-brand-twitter"></i> Twitter
-                              </span>
-                            </span>
+                                    <span class="selectitem">
+                                        <i class="ti ti-brand-twitter"></i> Twitter
+                                    </span>
+                                </span>
                             </label>
                             <label class="select-items">
                                 <input type="checkbox" class="select-input">
                                 <span class="select-box">
-                              <span class="selectitem">
-                                <i class="ti ti-brand-facebook"></i> Facebook
-                              </span>
-                            </span>
+                                    <span class="selectitem">
+                                        <i class="ti ti-brand-facebook"></i> Facebook
+                                    </span>
+                                </span>
                             </label>
                             <label class="select-items">
                                 <input type="checkbox" class="select-input">
                                 <span class="select-box">
-                              <span class="selectitem">
-                                <i class="ti ti-brand-snapchat"></i> Snapchat
-                              </span>
-                            </span>
+                                    <span class="selectitem">
+                                        <i class="ti ti-brand-snapchat"></i> Snapchat
+                                    </span>
+                                </span>
                             </label>
                         </div>
                     </div>
@@ -510,34 +511,34 @@
                             <label class="select-items">
                                 <input type="radio" class="select-input" name="select-options" checked>
                                 <span class="select-box">
-                              <span class="selectitem">
-                                <i class="ti ti-brand-instagram"></i> Instagram
-                              </span>
-                            </span>
+                                    <span class="selectitem">
+                                        <i class="ti ti-brand-instagram"></i> Instagram
+                                    </span>
+                                </span>
                             </label>
                             <label class="select-items">
                                 <input type="radio" class="select-input" name="select-options">
                                 <span class="select-box">
-                              <span class="selectitem">
-                                <i class="ti ti-brand-twitter"></i> Twitter
-                              </span>
-                            </span>
+                                    <span class="selectitem">
+                                        <i class="ti ti-brand-twitter"></i> Twitter
+                                    </span>
+                                </span>
                             </label>
                             <label class="select-items">
                                 <input type="radio" class="select-input" name="select-options">
                                 <span class="select-box">
-                              <span class="selectitem">
-                                <i class="ti ti-brand-facebook"></i> Facebook
-                              </span>
-                            </span>
+                                    <span class="selectitem">
+                                        <i class="ti ti-brand-facebook"></i> Facebook
+                                    </span>
+                                </span>
                             </label>
                             <label class="select-items">
                                 <input type="radio" class="select-input" name="select-options">
                                 <span class="select-box">
-                              <span class="selectitem">
-                                <i class="ti ti-brand-snapchat"></i> Snapchat
-                              </span>
-                            </span>
+                                    <span class="selectitem">
+                                        <i class="ti ti-brand-snapchat"></i> Snapchat
+                                    </span>
+                                </span>
                             </label>
                         </div>
                     </div>
@@ -556,24 +557,28 @@
                                 <label class="form-checkimage">
                                     <input type="radio" value="1" name="radioimage" class="checkimage-input">
                                     <span class="check-box radiobox">
-                            <img src="{{asset('../assets/images/bootstrapslider/02.jpg')}}" class="checkbox-image w-100" alt="">
-                          </span>
+                                        <img src="{{ asset('../assets/images/bootstrapslider/02.jpg') }}"
+                                            class="checkbox-image w-100" alt="">
+                                    </span>
                                 </label>
                             </div>
                             <div class="col-sm-6 col-xl-4">
                                 <label class="form-checkimage">
                                     <input type="radio" value="1" name="radioimage" class="checkimage-input">
                                     <span class="check-box radiobox">
-                            <img src="{{asset('../assets/images/bootstrapslider/04.jpg')}}" class="checkbox-image w-100" alt="">
-                          </span>
+                                        <img src="{{ asset('../assets/images/bootstrapslider/04.jpg') }}"
+                                            class="checkbox-image w-100" alt="">
+                                    </span>
                                 </label>
                             </div>
                             <div class="col-sm-6 col-xl-4">
                                 <label class="form-checkimage">
-                                    <input type="radio" value="1" name="radioimage" class="checkimage-input" checked disabled>
+                                    <input type="radio" value="1" name="radioimage" class="checkimage-input"
+                                        checked disabled>
                                     <span class="check-box radiobox">
-                            <img src="{{asset('../assets/images/bootstrapslider/05.jpg')}}" class="checkbox-image w-100" alt="">
-                          </span>
+                                        <img src="{{ asset('../assets/images/bootstrapslider/05.jpg') }}"
+                                            class="checkbox-image w-100" alt="">
+                                    </span>
                                 </label>
                             </div>
                         </div>
@@ -593,24 +598,27 @@
                                 <label class="form-checkimage">
                                     <input type="checkbox" value="1" class="checkimage-input">
                                     <span class="check-box">
-                            <img src="{{asset('../assets/images/bootstrapslider/01.jpg')}}" class="checkbox-image w-100" alt="">
-                          </span>
+                                        <img src="{{ asset('../assets/images/bootstrapslider/01.jpg') }}"
+                                            class="checkbox-image w-100" alt="">
+                                    </span>
                                 </label>
                             </div>
                             <div class="col-md-6 col-xl-4">
                                 <label class="form-checkimage">
                                     <input type="checkbox" value="2" class="checkimage-input" checked>
                                     <span class="check-box">
-                            <img src="{{asset('../assets/images/bootstrapslider/08.jpg')}}" class="checkbox-image w-100" alt="">
-                          </span>
+                                        <img src="{{ asset('../assets/images/bootstrapslider/08.jpg') }}"
+                                            class="checkbox-image w-100" alt="">
+                                    </span>
                                 </label>
                             </div>
                             <div class="col-md-6 col-xl-4">
                                 <label class="form-checkimage">
                                     <input type="checkbox" value="3" class="checkimage-input" checked disabled>
                                     <span class="check-box">
-                            <img src="{{asset('../assets/images/bootstrapslider/03.jpg')}}" class="checkbox-image w-100" alt="">
-                          </span>
+                                        <img src="{{ asset('../assets/images/bootstrapslider/03.jpg') }}"
+                                            class="checkbox-image w-100" alt="">
+                                    </span>
                                 </label>
                             </div>
                         </div>
@@ -627,51 +635,60 @@
                     <div class="card-body">
                         <div class="form-selectgroup">
                             <div class="select-item">
-                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions"
+                                    id="inlineRadio1" value="option1">
                                 <label class="form-check-label" for="inlineRadio1">
-                          <span class="d-flex align-items-center">
-                            <img src="{{asset('../assets/images/checkbox-radio/logo1.png')}}" class="w-30 h-30" alt="">
-                            <span class="ms-2">
-                              <span class="fs-6 ">Visa Card</span>
-                              <span class="d-block text-secondary">Select Visa card payment method</span>
-                            </span>
-                          </span>
+                                    <span class="d-flex align-items-center">
+                                        <img src="{{ asset('../assets/images/checkbox-radio/logo1.png') }}"
+                                            class="w-30 h-30" alt="">
+                                        <span class="ms-2">
+                                            <span class="fs-6 ">Visa Card</span>
+                                            <span class="d-block text-secondary">Select Visa card payment method</span>
+                                        </span>
+                                    </span>
                                 </label>
                             </div>
                             <div class="select-item">
-                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions"
+                                    id="inlineRadio2" value="option2">
                                 <label class="form-check-label" for="inlineRadio2">
-                          <span class="d-flex align-items-center">
-                            <img src="{{asset('../assets/images/checkbox-radio/logo2.png')}}" class="w-30 h-30" alt="">
-                            <span class="ms-2">
-                              <span class="fs-6">Credit / Debit Card</span>
-                              <span class="d-block text-secondary">Select Credit/Debit card payment method</span>
-                            </span>
-                          </span>
+                                    <span class="d-flex align-items-center">
+                                        <img src="{{ asset('../assets/images/checkbox-radio/logo2.png') }}"
+                                            class="w-30 h-30" alt="">
+                                        <span class="ms-2">
+                                            <span class="fs-6">Credit / Debit Card</span>
+                                            <span class="d-block text-secondary">Select Credit/Debit card payment
+                                                method</span>
+                                        </span>
+                                    </span>
                                 </label>
                             </div>
                             <div class="select-item">
-                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3" >
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions"
+                                    id="inlineRadio3" value="option3">
                                 <label class="form-check-label" for="inlineRadio3">
-                          <span class="d-flex align-items-center">
-                            <img src="{{asset('../assets/images/checkbox-radio/logo3.png')}}" class="w-30 h-30" alt="">
-                            <span class="ms-2">
-                                <span class="fs-6">Paypal</span>
-                                <span class="d-block text-secondary">Select Paypal payment method</span>
-                            </span>
-                          </span>
+                                    <span class="d-flex align-items-center">
+                                        <img src="{{ asset('../assets/images/checkbox-radio/logo3.png') }}"
+                                            class="w-30 h-30" alt="">
+                                        <span class="ms-2">
+                                            <span class="fs-6">Paypal</span>
+                                            <span class="d-block text-secondary">Select Paypal payment method</span>
+                                        </span>
+                                    </span>
                                 </label>
                             </div>
                             <div class="select-item">
-                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio4" value="option4" >
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions"
+                                    id="inlineRadio4" value="option4">
                                 <label class="form-check-label" for="inlineRadio4">
-                          <span class="d-flex align-items-center">
-                            <img src="{{asset('../assets/images/checkbox-radio/logo4.png')}}" class="w-30 h-30" alt="">
-                            <span class="ms-2">
-                                <span class="fs-6">Other UPI Apps</span>
-                                <span class="d-block text-secondary">Select Other UPI Apps for payment</span>
-                            </span>
-                          </span>
+                                    <span class="d-flex align-items-center">
+                                        <img src="{{ asset('../assets/images/checkbox-radio/logo4.png') }}"
+                                            class="w-30 h-30" alt="">
+                                        <span class="ms-2">
+                                            <span class="fs-6">Other UPI Apps</span>
+                                            <span class="d-block text-secondary">Select Other UPI Apps for payment</span>
+                                        </span>
+                                    </span>
                                 </label>
                             </div>
                         </div>
@@ -690,61 +707,69 @@
                             <div class="select-item">
                                 <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
                                 <label class="form-check-label" for="inlineCheckbox1">
-                            <span class="d-flex align-items-center">
-                              <span class="bg-secondary h-30 w-30 d-flex-center b-r-50 position-relative">
-                                <img src="{{asset('../assets/images/avtar/1.png')}}" alt="" class="img-fluid b-r-50">
-                                <span class="position-absolute top-0 end-0 p-1 bg-success border border-light rounded-circle"></span>
-                              </span>
-                              <span class="ms-2">
-                                  <span class="fs-6">Mark Moen</span>
-                                  <span class="d-block text-secondary">UI/UX Designer</span>
-                              </span>
-                            </span>
+                                    <span class="d-flex align-items-center">
+                                        <span class="bg-secondary h-30 w-30 d-flex-center b-r-50 position-relative">
+                                            <img src="{{ asset('../assets/images/avtar/1.png') }}" alt=""
+                                                class="img-fluid b-r-50">
+                                            <span
+                                                class="position-absolute top-0 end-0 p-1 bg-success border border-light rounded-circle"></span>
+                                        </span>
+                                        <span class="ms-2">
+                                            <span class="fs-6">Mark Moen</span>
+                                            <span class="d-block text-secondary">UI/UX Designer</span>
+                                        </span>
+                                    </span>
                                 </label>
                             </div>
                             <div class="select-item">
                                 <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
                                 <label class="form-check-label" for="inlineCheckbox2">
-                          <span class="d-flex align-items-center">
-                            <span class="bg-secondary h-30 w-30 d-flex-center b-r-50 position-relative">
-                              <img src="{{asset('../assets/images/avtar/2.png')}}" alt="" class="img-fluid b-r-50">
-                              <span class="position-absolute top-0 end-0 p-1 bg-success border border-light rounded-circle"></span>
-                            </span>
-                            <span class="ms-2">
-                                <span class="fs-6">Johan Moen</span>
-                                <span class="d-block text-secondary">Web Designer</span>
-                            </span>
-                          </span>
+                                    <span class="d-flex align-items-center">
+                                        <span class="bg-secondary h-30 w-30 d-flex-center b-r-50 position-relative">
+                                            <img src="{{ asset('../assets/images/avtar/2.png') }}" alt=""
+                                                class="img-fluid b-r-50">
+                                            <span
+                                                class="position-absolute top-0 end-0 p-1 bg-success border border-light rounded-circle"></span>
+                                        </span>
+                                        <span class="ms-2">
+                                            <span class="fs-6">Johan Moen</span>
+                                            <span class="d-block text-secondary">Web Designer</span>
+                                        </span>
+                                    </span>
                                 </label>
                             </div>
                             <div class="select-item">
                                 <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
                                 <label class="form-check-label" for="inlineCheckbox3">
-                          <span class="d-flex align-items-center">
-                            <span class="bg-secondary h-30 w-30 d-flex-center b-r-50 position-relative">
-                              <img src="{{asset('../assets/images/avtar/3.png')}}" alt="" class="img-fluid b-r-50">
-                              <span class="position-absolute top-0 end-0 p-1 bg-success border border-light rounded-circle"></span>
-                            </span>
-                            <span class="ms-2">
-                                <span class="fs-6">Moen Deo</span>
-                                <span class="d-block text-secondary">Web Developer</span>
-                            </span>
-                          </span>
+                                    <span class="d-flex align-items-center">
+                                        <span class="bg-secondary h-30 w-30 d-flex-center b-r-50 position-relative">
+                                            <img src="{{ asset('../assets/images/avtar/3.png') }}" alt=""
+                                                class="img-fluid b-r-50">
+                                            <span
+                                                class="position-absolute top-0 end-0 p-1 bg-success border border-light rounded-circle"></span>
+                                        </span>
+                                        <span class="ms-2">
+                                            <span class="fs-6">Moen Deo</span>
+                                            <span class="d-block text-secondary">Web Developer</span>
+                                        </span>
+                                    </span>
                                 </label>
                             </div>
                             <div class="select-item">
                                 <input class="form-check-input" type="checkbox" id="inlineCheckbox4" value="option4">
                                 <label class="form-check-label" for="inlineCheckbox4">
-                          <span class="d-flex align-items-center">
-                            <span class="bg-secondary h-30 w-30 d-flex-center b-r-50 position-relative">
-                              <img src="{{asset('../assets/images/avtar/16.png')}}" alt="" class="img-fluid b-r-50">
-                              <span class="position-absolute top-0 end-0 p-1 bg-success border border-light rounded-circle"></span>
-                            </span>
-                            <span class="ms-2">
-                                <span class="fs-6">Lenora Bogisich</span>
-                                <span class="d-block text-secondary">Web Developer</span>
-                            </span>
-                          </span>
+                                    <span class="d-flex align-items-center">
+                                        <span class="bg-secondary h-30 w-30 d-flex-center b-r-50 position-relative">
+                                            <img src="{{ asset('../assets/images/avtar/16.png') }}" alt=""
+                                                class="img-fluid b-r-50">
+                                            <span
+                                                class="position-absolute top-0 end-0 p-1 bg-success border border-light rounded-circle"></span>
+                                        </span>
+                                        <span class="ms-2">
+                                            <span class="fs-6">Lenora Bogisich</span>
+                                            <span class="d-block text-secondary">Web Developer</span>
+                                        </span>
+                                    </span>
                                 </label>
                             </div>
                         </div>
@@ -771,7 +796,7 @@
                                             </label>
                                         </div>
                                         <div>
-                                        <!-- <img src="{{asset('../assets/images/form/16.png')}}" alt=""> -->
+                                            <!-- <img src="{{ asset('../assets/images/form/16.png') }}" alt=""> -->
                                             <i class="ti ti-brand-appstore icon-bg"></i>
                                             <p class="text-muted">Mobile app development is the act or process by which a
                                                 mobile app is developed for one or more mobile devices.</p>
@@ -812,7 +837,7 @@
 @endsection
 
 @section('script')
-<!--customizer-->
-<div id="customizer"></div>
+    <!--customizer-->
+    <div id="customizer"></div>
 
 @endsection

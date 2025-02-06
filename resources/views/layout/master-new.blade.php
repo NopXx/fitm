@@ -51,7 +51,7 @@
 </body>
 
 <!--customizer-->
-{{-- <div id="customizer"></div> --}}
+<div id="customizer"></div>
 
 <!-- scripts start-->
 @include('layout.script')
