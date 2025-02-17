@@ -2,8 +2,13 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DepartmentContentController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\HistoricalEventController;
 use App\Http\Controllers\LangController;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\NewController;
+use App\Http\Controllers\SymbolController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -32,6 +37,43 @@ Route::group(['middleware' => 'auth'], function () {
         // edit news
         Route::get('/new/edit/{new}', [NewController::class, 'edit'])->name('new.edit');
         Route::put('/new/update/{new}', [NewController::class, 'update'])->name('new.update');
+
+        // department
+        Route::get('/department', [DepartmentController::class, 'index'])->name('department.index');
+        Route::get('/department/create', [DepartmentController::class, 'createDepartment'])->name('departments.create');
+        Route::post('/department/store', [DepartmentController::class, 'store'])->name('departments.store');
+        Route::get('/department/edit/{id}', [DepartmentController::class, 'editDepartment'])->name('departments.edit');
+        Route::put('/department/update/{id}', [DepartmentController::class, 'updateDepartment'])->name('departments.update');
+        Route::delete('/department/delete/{id}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
+        Route::get('/departments', [DepartmentController::class, 'getDepartments']);
+
+        // Department Content routes
+        Route::get('{department}/content', [DepartmentContentController::class, 'edit'])
+            ->name('departments.content.edit');
+        Route::put('{department}/content', [DepartmentContentController::class, 'update'])
+            ->name('departments.content.update');
+        Route::get('{department}/content/preview', [DepartmentContentController::class, 'preview'])
+            ->name('departments.content.preview');
+
+        // Media routes
+        Route::post('media/upload', [MediaController::class, 'upload'])
+            ->name('media.upload');
+        Route::delete('media/{media}', [MediaController::class, 'destroy'])
+            ->name('media.destroy');
+        Route::get('media/browse', [MediaController::class, 'browse'])
+            ->name('media.browse');
+
+        // Historical Events
+        // Route::get('/historical-events', [HistoricalEventController::class, 'index'])->name('historical-events.index');
+        // Route::get('/historical-events/create', [HistoricalEventController::class, 'create'])->name('historical-events.create');
+        // Route::post('/historical-events/store', [HistoricalEventController::class, 'store'])->name('historical-events.store');
+        // Route::get('/historical-events/edit/{id}', [HistoricalEventController::class, 'edit'])->name('historical-events.edit');
+        // Route::put('/historical-events/update/{id}', [HistoricalEventController::class, 'update'])->name('historical-events.update');
+        // Route::delete('/historical-events/delete/{id}', [HistoricalEventController::class, 'destroy'])->name('historical-events.destroy');
+        Route::resource('historical-events', HistoricalEventController::class);
+        Route::get('/historical-events-data', [HistoricalEventController::class, 'data'])->name('historical-events.data');
+
+        Route::resource('symbols', SymbolController::class);
     });
 });
 

@@ -1,0 +1,67 @@
+@extends('layout.master-new')
+@section('title', __('historical_event.create_title'))
+
+@section('css')
+    <link rel="stylesheet" href="{{ asset('assets/vendor/fontawesome/css/all.css') }}">
+@endsection
+
+@section('main-content')
+    <div class="container-fluid">
+        <div class="row m-1">
+            <div class="col-12">
+                <h4 class="main-title">@lang('historical_event.create_event')</h4>
+                <ul class="app-line-breadcrumbs mb-3">
+                    <li>
+                        <a href="{{ route('historical-events.index') }}" class="f-s-14 f-w-500">
+                            <span>@lang('translation.data_management')</span>
+                        </a>
+                    </li>
+                    <li>
+                        <span>@lang('historical_event.create_event')</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{{ route('historical-events.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label">@lang('historical_event.year')</label>
+                                <input type="number" class="form-control" name="year" required min="2500" max="2999">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">@lang('historical_event.title')</label>
+                                <input type="text" class="form-control" name="title" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <label class="form-label">@lang('historical_event.description')</label>
+                                <textarea id="description" name="description" class="form-control" rows="5" required></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <label class="form-label">@lang('historical_event.image')</label>
+                                <input type="file" class="form-control" name="image" accept="image/*">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">@lang('translation.save')</button>
+                                <a href="{{ route('historical-events.index') }}" class="btn btn-secondary">@lang('translation.cancel')</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection

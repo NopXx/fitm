@@ -2,29 +2,45 @@
 <nav>
     <div class="app-logo">
         <a class="logo d-inline-block" href="{{ route('index') }}">
-            <img src="{{asset('../assets/images/logo/1.png')}}" alt="#">
+            <img src="{{ asset('../assets/images/logo/1.png') }}" alt="#">
         </a>
 
         <span class="bg-light-primary toggle-semi-nav">
-          <i class="ti ti-chevrons-right f-s-20"></i>
+            <i class="ti ti-chevrons-right f-s-20"></i>
         </span>
     </div>
     <div class="app-nav" id="app-simple-bar">
         <ul class="main-nav p-0 mt-2">
             <li class="app-divider-v dotted py-1"></li>
             <li class="no-sub">
-                <a class="" href="{{route('dashboard.index')}}">
-                    <i class="ph-fill  ph-house-line"></i> Dashboard
+                <a class="" href="{{ route('dashboard.index') }}">
+                    <i class="ph-fill  ph-house-line"></i> @lang('translation.home')
                 </a>
             </li>
             <li class="no-sub">
-                <a class="" href="{{route('new.index')}}">
+                <a class="" href="{{ route('new.index') }}">
                     <i class="ph-fill  ph-newspaper"></i> @lang('new.title')
                 </a>
             </li>
             <li class="no-sub">
                 <a class="" href="#">
                     <i class="ph-fill  ph-user-circle-gear"></i> @lang('translation.members')
+                </a>
+            </li>
+            <li class="no-sub">
+                <a class="" href="{{ route('department.index') }}">
+                    <i class="ph-bold  ph-book"></i> @lang('translation.department')
+                </a>
+            </li>
+
+            <li class="no-sub">
+                <a class="" href="{{ route('historical-events.index') }}">
+                    <i class="ph-bold ph-clock-clockwise"></i> @lang('historical_event.title')
+                </a>
+            </li>
+            <li class="no-sub">
+                <a class="" href="{{ route('symbols.index') }}">
+                    <i class="ph-duotone  ph-codesandbox-logo"></i> @lang('symbol.title')
                 </a>
             </li>
             {{-- <li class="no-sub">

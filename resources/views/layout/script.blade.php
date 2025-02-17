@@ -25,7 +25,7 @@
 <script src="{{ asset('assets/js/script.js') }}"></script>
 
 @php
-    $lang = session()->get('lang') == null ? 'en' : session()->get('lang');
+    $lang = session()->get('lang') == null ? 'th' : session()->get('lang');
 @endphp
 <script>
     moment.locale('{{ $lang }}');
