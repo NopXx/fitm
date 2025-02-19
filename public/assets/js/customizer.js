@@ -92,7 +92,8 @@ function hexToRGB(hex, alpha) {
 
 function loadConfiguration(){
   $(".offcanvas-body > ul > li").removeClass("selected")
-  let selectedSidebarOption = getLocalStorageItem("sidebar-option","vertical-sidebar");
+//   let selectedSidebarOption = getLocalStorageItem("sidebar-option","vertical-sidebar");
+  let selectedSidebarOption = getLocalStorageItem("sidebar-option","horizontal-sidebar");
   $("nav").addClass(selectedSidebarOption);
   $(".offcanvas-body > ul").find(`.${selectedSidebarOption}`).addClass("selected")
   let textOption = getLocalStorageItem("text-option","medium-text");

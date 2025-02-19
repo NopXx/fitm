@@ -1,12 +1,14 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\ContentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentContentController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\HistoricalEventController;
 use App\Http\Controllers\LangController;
 use App\Http\Controllers\MediaController;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\NewController;
 use App\Http\Controllers\SymbolController;
 use Illuminate\Support\Facades\Route;
@@ -64,16 +66,18 @@ Route::group(['middleware' => 'auth'], function () {
             ->name('media.browse');
 
         // Historical Events
-        // Route::get('/historical-events', [HistoricalEventController::class, 'index'])->name('historical-events.index');
-        // Route::get('/historical-events/create', [HistoricalEventController::class, 'create'])->name('historical-events.create');
-        // Route::post('/historical-events/store', [HistoricalEventController::class, 'store'])->name('historical-events.store');
-        // Route::get('/historical-events/edit/{id}', [HistoricalEventController::class, 'edit'])->name('historical-events.edit');
-        // Route::put('/historical-events/update/{id}', [HistoricalEventController::class, 'update'])->name('historical-events.update');
-        // Route::delete('/historical-events/delete/{id}', [HistoricalEventController::class, 'destroy'])->name('historical-events.destroy');
         Route::resource('historical-events', HistoricalEventController::class);
         Route::get('/historical-events-data', [HistoricalEventController::class, 'data'])->name('historical-events.data');
 
         Route::resource('symbols', SymbolController::class);
+
+        Route::resource('menus', MenuController::class);
+        Route::post('/menus/update-order', [MenuController::class, 'updateOrder'])->name('admin.menus.updateOrder');
+        Route::post('/menus/sync-departments', [MenuController::class, 'syncDepartmentMenus'])
+            ->name('admin.menus.sync-departments');
+
+        Route::resource('contents', ContentController::class);
+        Route::get('/contents/get-contents', [ContentController::class, 'show']);
     });
 });
 

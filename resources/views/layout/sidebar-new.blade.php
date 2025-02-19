@@ -43,6 +43,16 @@
                     <i class="ph-duotone  ph-codesandbox-logo"></i> @lang('symbol.title')
                 </a>
             </li>
+            <li class="no-sub">
+                <a class="" href="{{ route('menus.index') }}">
+                    <i class="ph-bold  ph-list"></i> @lang('menu.menu_structure')
+                </a>
+            </li>
+            <li class="no-sub">
+                <a class="" href="{{ route('contents.index') }}">
+                    <i class="ph-duotone  ph-file"></i> @lang('content.title')
+                </a>
+            </li>
             {{-- <li class="no-sub">
                 <a class="" href="{{route('widget')}}">
                     <i class="ph-duotone  ph-squares-four"></i> Widgets

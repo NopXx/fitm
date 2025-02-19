@@ -16,18 +16,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([
-            DepartmentSeeder::class,
-        ]);
+        // $this->call([
+        //     DepartmentSeeder::class,
+
+        // ]);
         // User::factory(10)->create();
 
-        // User::create([
-        //     'f_name' => 'Test',
-        //     'l_name' => 'User',
-        //     'email' => 'admin@admin.com',
-        //     'password' => bcrypt('admin'),
-        //     'tel' => '1234567890',
-        // ]);
+        User::create([
+            'f_name' => 'Test',
+            'l_name' => 'User',
+            'email' => 'admin@admin.com',
+            'password' => bcrypt('admin'),
+            'tel' => '1234567890',
+        ]);
 
         $newtype = new NewType();
         $newtype->new_type_name = 'ข่าวประชาสัมพันธ์';
