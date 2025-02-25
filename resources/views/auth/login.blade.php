@@ -56,28 +56,6 @@
                                     <div>
                                         <button type="submit" class="btn btn-primary w-100">Submit</button>
                                     </div>
-
-                                    <div class="app-divider-v justify-content-center">
-                                        <p>OR</p>
-                                    </div>
-
-                                    <div class="mb-3 text-center">
-                                        <button type="button" class="btn btn-primary icon-btn b-r-5 m-1">
-                                            <i class="ti ti-brand-facebook text-white"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-danger icon-btn b-r-5 m-1">
-                                            <i class="ti ti-brand-google text-white"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-dark icon-btn b-r-5 m-1">
-                                            <i class="ti ti-brand-github text-white"></i>
-                                        </button>
-                                    </div>
-
-                                    <div class="text-center">
-                                        <a href="{{route('terms_condition')}}" class="text-secondary text-decoration-underline">
-                                            Terms of use & Conditions
-                                        </a>
-                                    </div>
                                 </form>
 
                             </div>

@@ -6,6 +6,7 @@ use App\Models\DepartmentContent;
 use App\Models\Departments;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -27,8 +28,6 @@ class DepartmentContentController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'overview' => 'required',
-            'meta_title' => 'nullable|max:60',
-            'meta_description' => 'nullable|max:160',
             'status' => 'required|in:draft,published'
         ]);
 
@@ -46,8 +45,6 @@ class DepartmentContentController extends Controller
 
             $contentData = [
                 'overview' => $request->overview,
-                'meta_title' => $request->meta_title,
-                'meta_description' => $request->meta_description,
                 'status' => $request->status
             ];
 

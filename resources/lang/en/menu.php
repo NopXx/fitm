@@ -18,7 +18,9 @@ return [
     'name_en' => 'English Name',
     'url_th' => 'Thai URL',
     'url_en' => 'English URL',
+    'url' => 'URL',
     'is_active' => 'Active',
+    'inactive' => 'Inactive',
     'display_order' => 'Display Order',
     'visibility' => 'Visibility',
     'actions' => 'Actions',
@@ -51,4 +53,5 @@ return [
     'sync_departments' => 'Sync Department Menus',
     'departments_synced' => 'Department menus synchronized successfully',
     'sync_failed' => 'Failed to sync department menus',
+    'show_dropdown' => 'Show dropdown'
 ];

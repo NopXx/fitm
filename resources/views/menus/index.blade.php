@@ -118,6 +118,23 @@
         .menu-header .toggle-submenu.collapsed {
             transform: rotate(-90deg);
         }
+
+        /* Inactive menu styles */
+        .menu-inactive {
+            opacity: 0.8;
+            border-left: 3px solid #dc3545;
+        }
+
+        .submenu-inactive {
+            opacity: 0.8;
+            border-left: 3px solid #dc3545;
+        }
+
+        .status-badge {
+            margin-left: 8px;
+            font-size: 0.75rem;
+            padding: 2px 6px;
+        }
     </style>
 @endsection
 
@@ -145,9 +162,9 @@
 
                     <div class="card-body">
                         <div id="mainMenuContainer">
-                            @foreach ($menus as $menu)
+                            @foreach ($menu1 as $menu)
                                 <div class="menu-container" data-id="{{ $menu->id }}">
-                                    <div class="menu-wrapper">
+                                    <div class="menu-wrapper {{ !$menu->is_active ? 'menu-inactive' : '' }}">
                                         <div class="menu-header">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <div class="d-flex align-items-center">
@@ -156,8 +173,13 @@
                                                         <i class="ti ti-chevron-down"></i>
                                                     </button>
                                                     <div class="ms-2">
-                                                        <div class="menu-title" lang="th">
-                                                            {{ $menu->translations->where('language_code', 'th')->first()->name ?? '' }}
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="menu-title" lang="th">
+                                                                {{ $menu->translations->where('language_code', 'th')->first()->name ?? '' }}
+                                                            </div>
+                                                            @if(!$menu->is_active)
+                                                                <span class="badge bg-danger status-badge">@lang('menu.inactive')</span>
+                                                            @endif
                                                         </div>
                                                         <div class="menu-title d-none" lang="en">
                                                             {{ $menu->translations->where('language_code', 'en')->first()->name ?? '' }}
@@ -181,13 +203,18 @@
                                             <div class="submenu-container" data-parent="{{ $menu->id }}">
                                                 @if ($menu->children->count() > 0)
                                                     @foreach ($menu->children as $child)
-                                                        <div class="submenu-item" data-id="{{ $child->id }}">
+                                                        <div class="submenu-item {{ !$child->is_active ? 'submenu-inactive' : '' }}" data-id="{{ $child->id }}">
                                                             <div class="d-flex justify-content-between align-items-center">
                                                                 <div class="d-flex align-items-center">
                                                                     <i class="ti ti-grip-vertical drag-handle"></i>
                                                                     <div class="ms-2">
-                                                                        <div class="submenu-title" lang="th">
-                                                                            {{ $child->translations->where('language_code', 'th')->first()->name ?? '' }}
+                                                                        <div class="d-flex align-items-center">
+                                                                            <div class="submenu-title" lang="th">
+                                                                                {{ $child->translations->where('language_code', 'th')->first()->name ?? '' }}
+                                                                            </div>
+                                                                            @if(!$child->is_active)
+                                                                                <span class="badge bg-danger status-badge">@lang('menu.inactive')</span>
+                                                                            @endif
                                                                         </div>
                                                                         <div class="submenu-title d-none" lang="en">
                                                                             {{ $child->translations->where('language_code', 'en')->first()->name ?? '' }}

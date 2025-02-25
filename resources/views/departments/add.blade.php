@@ -3,22 +3,41 @@
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('assets/vendor/fontawesome/css/all.css') }}">
-    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/44.1.0/ckeditor5.css">
+    <script src="https://cdn.tiny.cloud/1/hn7u4cu4cokjuyws887pfvcxkwbkdc6gm82bsbpamfqjdjhy/tinymce/7/tinymce.min.js"
+        referrerpolicy="origin"></script>
+    @vite(['resources/css/department.css'])
     <style>
-        .ck-editor__editable {
-            min-height: 300px;
+        /* TinyMCE Editor Styles */
+        .tox-tinymce {
+            min-height: 700px !important;
+            height: auto !important;
+            display: flex !important;
+            flex-direction: column !important;
+            overflow: visible !important;
         }
 
-        .ck-content .image {
-            max-width: 100%;
-            margin: 1em 0;
+        .tox-editor-container {
+            flex: 1 1 auto !important;
+            display: flex !important;
+            flex-direction: column !important;
+            overflow: visible !important;
         }
 
-        .ck-content .image img {
-            max-width: 100%;
-            height: auto;
+        .tox-edit-area,
+        .tox-edit-area__iframe {
+            min-height: 650px !important;
+            height: 100% !important;
+            flex: 1 1 auto !important;
+            overflow: visible !important;
+            position: relative !important;
         }
 
+        /* Remove resize handle */
+        .tox-statusbar__resize-handle {
+            display: none !important;
+        }
+
+        /* Preview styles */
         .content-preview img {
             max-width: 100%;
             height: auto;
@@ -29,6 +48,11 @@
             transition: width 0.3s ease, height 0.3s ease;
             border: 1px solid #ddd;
             padding: 1rem;
+        }
+
+        /* TinyMCE table styles */
+        .tox .tox-collection__item-icon {
+            color: inherit !important;
         }
     </style>
 @endsection
@@ -56,7 +80,8 @@
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('departments.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('departments.store') }}" method="POST" enctype="multipart/form-data"
+                        id="departmentForm">
                         @csrf
 
                         <!-- Basic Info Section -->
@@ -111,7 +136,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <div id="previewContent"></div>
+                        <div id="previewContent" class="department-content"></div>
                     </div>
                 </div>
             </div>
@@ -120,174 +145,562 @@
 @endsection
 
 @section('script')
-    <!-- Include CKEditor from CDN -->
-    <script src="https://cdn.ckeditor.com/ckeditor5/44.1.0/ckeditor5.umd.js"></script>
     <script>
-        const {
-            ClassicEditor,
-            Essentials,
-            Paragraph,
-            Bold,
-            Font,
-            HorizontalLine,
-            Italic,
-            Heading,
-            Link,
-            List,
-            Image,
-            ImageCaption,
-            ImageResize,
-            ImageResizeEditing,
-            ImageResizeHandles,
-            ImageStyle,
-            ImageToolbar,
-            ImageUpload,
-            LinkImage,
-            Table,
-            TableToolbar,
-            BlockQuote,
-            MediaEmbed
-        } = CKEDITOR;
-        class MyUploadAdapter {
-            constructor(loader) {
-                this.loader = loader;
-            }
-
-            upload() {
-                return this.loader.file.then(file => {
-                    const formData = new FormData();
-                    formData.append('file', file);
-                    formData.append('mediable_type', 'department');
-                    formData.append('mediable_id', 1); // You might want to dynamically set this
-
-                    return fetch('{{ route('media.upload') }}', {
-                            method: 'POST',
-                            body: formData,
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(result => {
-                            if (result.success) {
-                                return {
-                                    default: result.media
-                                        .path // Assuming your server returns the image URL in this format
-                                };
-                            }
-                            return Promise.reject('Upload failed');
-                        });
-                });
-            }
-
-            abort() {
-                // Abort upload if needed
-            }
-        }
-
-        function MyCustomUploadAdapterPlugin(editor) {
-            editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
-                return new MyUploadAdapter(loader);
-            };
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
-            ClassicEditor
-                .create(document.querySelector('#overview'), {
-                    extraPlugins: [MyCustomUploadAdapterPlugin],
-                    licenseKey: '{{ env('CKEDITOR_KEY') }}',
-                    plugins: [
-                        Essentials,
-                        Paragraph,
-                        Bold,
-                        Font,
-                        Italic,
-                        Heading,
-                        HorizontalLine,
-                        Link,
-                        List,
-                        Image,
-                        ImageUpload,
-                        ImageCaption,
-                        ImageResize,
-                        ImageResizeEditing,
-                        ImageResizeHandles,
-                        ImageStyle,
-                        ImageToolbar,
-                        LinkImage,
-                        Table,
-                        TableToolbar,
-                        BlockQuote,
-                        MediaEmbed
-                    ],
-                    toolbar: {
-                        items: [
-                            'undo', 'redo',
-                            '|',
-                            'heading',
-                            '|',
-                            'fontfamily', 'fontsize', 'fontColor', 'fontBackgroundColor',
-                            '|',
-                            'bold', 'italic', 'horizontalLine',
-                            '|',
-                            'bulletedList', 'numberedList',
-                            '|',
-                            'link', 'uploadImage', 'blockQuote',
-                            '|',
-                            'insertTable', 'mediaEmbed'
-                        ],
-                    },
-                    image: {
-                        resizeOptions: [{
-                                name: 'resizeImage:original',
-                                value: null,
-                                icon: 'original'
-                            },
-                            {
-                                name: 'resizeImage:custom',
-                                label: 'Custom',
-                                icon: 'custom'
-                            },
-                            {
-                                name: 'resizeImage:25',
-                                value: '25',
-                                icon: 'small'
-                            },
-                            {
-                                name: 'resizeImage:60',
-                                value: '60',
-                                icon: 'medium'
+            // Initialize TinyMCE
+            tinymce.init({
+                selector: '#overview',
+                send_browser_spellcheck_urls: false,
+                send_client_stats: false,
+                promotion: false,
+                referrer_policy: 'origin',
+
+                // Essential plugins
+                plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount advlist preview autoresize',
+
+                // Height settings
+                height: "auto",
+                min_height: 600,
+                max_height: 2000,
+                resize: true,
+                autoresize_on_init: true,
+                autoresize_bottom_margin: 50,
+
+                setup: function(editor) {
+                    editor.on('init', function() {
+                        setupPreview(editor);
+
+                        // Only apply table styles to new tables, not existing ones with content
+                        editor.on('NewBlock', function(e) {
+                            if (e.newBlock && e.newBlock.nodeName === 'TABLE') {
+                                applyTableStyles();
                             }
-                        ],
-                        toolbar: [
-                            'imageStyle:inline',
-                            'imageStyle:block',
-                            'imageStyle:side',
-                            '|',
-                            'resizeImage:25',
-                            'resizeImage:60',
-                            'resizeImage:original',
-                            'resizeImage:custom',
-                            '|',
-                            'toggleImageCaption',
-                            'imageTextAlternative',
-                            '|',
-                            'linkImage'
-                        ]
-                    },
-                    table: {
-                        contentToolbar: ['tableColumn', 'setTableRowHeader', 'tableRow', 'mergeTableCells']
+                        });
+
+                        // Add custom border width option to the row properties dialog
+                        editor.ui.registry.addMenuButton('borderWidth', {
+                            text: 'Border Width',
+                            fetch: function(callback) {
+                                const items = [{
+                                        type: 'menuitem',
+                                        text: '1px',
+                                        onAction: function() {
+                                            editor.execCommand(
+                                                'mceTableRowProps',
+                                                false, {
+                                                    borderwidth: '1px'
+                                                });
+                                        }
+                                    },
+                                    {
+                                        type: 'menuitem',
+                                        text: '2px',
+                                        onAction: function() {
+                                            editor.execCommand(
+                                                'mceTableRowProps',
+                                                false, {
+                                                    borderwidth: '2px'
+                                                });
+                                        }
+                                    },
+                                    {
+                                        type: 'menuitem',
+                                        text: '3px',
+                                        onAction: function() {
+                                            editor.execCommand(
+                                                'mceTableRowProps',
+                                                false, {
+                                                    borderwidth: '3px'
+                                                });
+                                        }
+                                    },
+                                    {
+                                        type: 'menuitem',
+                                        text: '4px',
+                                        onAction: function() {
+                                            editor.execCommand(
+                                                'mceTableRowProps',
+                                                false, {
+                                                    borderwidth: '4px'
+                                                });
+                                        }
+                                    },
+                                    {
+                                        type: 'menuitem',
+                                        text: '5px',
+                                        onAction: function() {
+                                            editor.execCommand(
+                                                'mceTableRowProps',
+                                                false, {
+                                                    borderwidth: '5px'
+                                                });
+                                        }
+                                    }
+                                ];
+                                callback(items);
+                            }
+                        });
+                    });
+
+                    // Only apply table styles to newly created tables
+                    editor.on('TableInsertRow TableInsertCol TableNewRow TableNewCell',
+                        applyTableStyles);
+
+                    // Listen for changes to tables
+                    editor.on('NodeChange', function(e) {
+                        // Only apply styles to new tables or cells being created/modified
+                        if ((e.element.nodeName === 'TABLE' && !e.element.hasAttribute(
+                                'data-styled')) ||
+                            (e.element.nodeName === 'TR' && e.element.classList.contains(
+                                'mce-item-new')) ||
+                            (e.element.nodeName === 'TD' && e.element.classList.contains(
+                                'mce-item-new')) ||
+                            (e.element.nodeName === 'TH' && e.element.classList.contains(
+                                'mce-item-new'))) {
+                            applyTableStyles();
+
+                            // Mark as styled so we don't reapply unnecessarily
+                            if (e.element.nodeName === 'TABLE') {
+                                e.element.setAttribute('data-styled', 'true');
+                            }
+                        }
+                    });
+
+                    // Handle custom border width property in table dialogs
+                    editor.on('tableRowDialogShow', function(e) {
+                        const dialog = e.dialog;
+
+                        // Add border width field if it doesn't exist
+                        if (!dialog.find('#borderwidth').length) {
+                            const borderStyleField = dialog.find('#borderstyle')[0];
+                            if (borderStyleField) {
+                                const borderWidthField = {
+                                    type: 'selectbox',
+                                    name: 'borderwidth',
+                                    label: 'Border width',
+                                    items: [{
+                                            text: '1px',
+                                            value: '1px'
+                                        },
+                                        {
+                                            text: '2px',
+                                            value: '2px'
+                                        },
+                                        {
+                                            text: '3px',
+                                            value: '3px'
+                                        },
+                                        {
+                                            text: '4px',
+                                            value: '4px'
+                                        },
+                                        {
+                                            text: '5px',
+                                            value: '5px'
+                                        }
+                                    ]
+                                };
+                                dialog.insert(borderWidthField, borderStyleField, false);
+                            }
+                        }
+                    });
+
+                    // Listen for content changes to fix height
+                    editor.on('SetContent Change', function() {
+                        setTimeout(function() {
+                            editor.execCommand('mceAutoResize');
+                            adjustEditorHeight();
+                        }, 200);
+                    });
+
+                    // Function to update table styles based on the department-content class
+                    function applyTableStyles() {
+                        const tables = editor.getDoc().querySelectorAll('table');
+
+                        tables.forEach(table => {
+                            // Only apply default styles if the table doesn't already have inline styles
+                            if (!table.hasAttribute('style') || table.getAttribute('style')
+                                .trim() === '') {
+                                // Set table styles
+                                table.style.width = '100%';
+                                table.style.borderCollapse = 'collapse';
+                                table.style.textAlign = 'left';
+                                table.style.fontSize = '0.875rem';
+                                table.style.color = '#6b7280';
+                                table.style.marginBottom = '1.5rem';
+
+                                // Use border-width, border-style and border-color separately to allow for more control
+                                table.style.borderWidth = '1px';
+                                table.style.borderStyle = 'solid';
+                                table.style.borderColor = '#e5e7eb';
+                            }
+
+                            // Create thead if it doesn't exist
+                            if (!table.querySelector('thead') && table.rows.length > 0) {
+                                const thead = document.createElement('thead');
+                                thead.appendChild(table.rows[0].cloneNode(true));
+                                table.insertBefore(thead, table.firstChild);
+                                table.deleteRow(1);
+                            }
+
+                            // Style thead cells only if they don't have styles already
+                            const headerCells = table.querySelectorAll('thead th, thead td');
+                            headerCells.forEach(cell => {
+                                if (!cell.hasAttribute('style') || cell.getAttribute(
+                                        'style').trim() === '') {
+                                    cell.style.padding = '0.75rem 1.5rem';
+                                    cell.style.fontWeight = '600';
+                                    cell.style.textTransform = 'uppercase';
+                                    cell.style.fontSize = '0.75rem';
+                                    cell.style.borderWidth = '1px';
+                                    cell.style.borderStyle = 'solid';
+                                    cell.style.borderColor = '#e5e7eb';
+                                    cell.style.backgroundColor = '#f9fafb';
+                                    cell.style.color = '#374151';
+                                }
+                            });
+
+                            // Style tbody rows only if they don't have styles already
+                            const tbodyRows = table.querySelectorAll('tbody tr');
+                            tbodyRows.forEach((row, index) => {
+                                if (!row.hasAttribute('style') || row.getAttribute(
+                                        'style').trim() === '') {
+                                    row.style.borderBottom = index === tbodyRows
+                                        .length - 1 ? 'none' : '1px solid #e5e7eb';
+                                    row.style.backgroundColor = 'white';
+                                }
+                            });
+
+                            // Style tbody header cells only if they don't have styles already
+                            const tbodyHeaderCells = table.querySelectorAll('tbody th');
+                            tbodyHeaderCells.forEach(cell => {
+                                if (!cell.hasAttribute('style') || cell.getAttribute(
+                                        'style').trim() === '') {
+                                    cell.style.padding = '1rem 1.5rem';
+                                    cell.style.fontWeight = '500';
+                                    cell.style.whiteSpace = 'nowrap';
+                                    cell.style.borderWidth = '1px';
+                                    cell.style.borderStyle = 'solid';
+                                    cell.style.borderColor = '#e5e7eb';
+                                    cell.style.color = '#111827';
+                                }
+                            });
+
+                            // Style tbody data cells only if they don't have styles already
+                            const tbodyCells = table.querySelectorAll('tbody td');
+                            tbodyCells.forEach(cell => {
+                                if (!cell.hasAttribute('style') || cell.getAttribute(
+                                        'style').trim() === '') {
+                                    cell.style.padding = '1rem 1.5rem';
+                                    cell.style.borderWidth = '1px';
+                                    cell.style.borderStyle = 'solid';
+                                    cell.style.borderColor = '#e5e7eb';
+                                }
+                            });
+                        });
                     }
-                })
-                .then(editor => {
-                    window.editor = editor;
-                    setupPreview(editor);
-                })
-                .catch(error => {
-                    console.error('CKEditor initialization error:', error);
+                },
+
+                toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table tabledelete | tableprops tablerowprops tablecellprops | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol | align lineheight | numlist bullist indent outdent | emoticons charmap | preview | removeformat',
+
+                // Image upload handlers
+                images_upload_url: '{{ route('media.upload') }}',
+                images_upload_handler: function(blobInfo, progress) {
+                    return new Promise((resolve, reject) => {
+                        const formData = new FormData();
+                        formData.append('file', blobInfo.blob(), blobInfo.filename());
+                        formData.append('mediable_type', 'department');
+                        formData.append('mediable_id', 1); // Will be updated after department creation
+
+                        fetch('{{ route('media.upload') }}', {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(result => {
+                                if (result.success) {
+                                    resolve(result.media.path);
+                                } else {
+                                    reject({
+                                        message: 'Upload failed',
+                                        remove: true
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                reject({
+                                    message: 'Upload failed',
+                                    remove: true
+                                });
+                            });
+                    });
+                },
+
+                menubar: true,
+                image_dimensions: true,
+
+                // Class lists
+                image_class_list: [{
+                    title: 'Responsive',
+                    value: 'img-fluid'
+                }],
+
+                table_class_list: [{
+                        title: 'None',
+                        value: ''
+                    },
+                    {
+                        title: 'Responsive',
+                        value: 'table-responsive'
+                    }
+                ],
+
+                // Table settings
+                table_advtab: true,
+                table_cell_advtab: true,
+                table_row_advtab: true,
+                table_appearance_options: true,
+                table_style_by_css: true,
+                table_border_widths: [1, 2, 3, 4, 5],
+                table_border_styles: ['solid', 'dotted', 'dashed', 'double', 'groove', 'ridge', 'inset',
+                    'outset'
+                ],
+
+                // Allow inline styles
+                valid_elements: '*[*]',
+                extended_valid_elements: 'table[*],tr[*],td[*],th[*]',
+
+                // Content style based on department.css
+                content_style: `
+                    body {
+                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+                        line-height: 1.5;
+                        color: #6b7280;
+                        padding: 20px;
+                        min-height: 650px;
+                    }
+
+                    img {
+                        max-width: 100%;
+                        height: auto;
+                    }
+
+                    /* Table styling */
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        text-align: left;
+                        font-size: 0.875rem;
+                        color: #6b7280;
+                        margin-bottom: 1.5rem;
+                        border-width: 1px;
+                        border-style: solid;
+                        border-color: #e5e7eb;
+                    }
+
+                    /* Table header */
+                    table thead {
+                        font-size: 0.75rem;
+                        text-transform: uppercase;
+                        color: #374151;
+                        background-color: #f9fafb;
+                    }
+
+                    table th {
+                        padding: 0.75rem 1.5rem;
+                        font-weight: 600;
+                        border-width: 1px;
+                        border-style: solid;
+                        border-color: #e5e7eb;
+                    }
+
+                    /* Table body */
+                    table tbody tr {
+                        border-bottom: 1px solid #e5e7eb;
+                        background-color: white;
+                    }
+
+                    table tbody tr:last-child {
+                        border-bottom: none;
+                    }
+
+                    table tbody th {
+                        padding: 1rem 1.5rem;
+                        font-weight: 500;
+                        color: #111827;
+                        white-space: nowrap;
+                        border-width: 1px;
+                        border-style: solid;
+                        border-color: #e5e7eb;
+                    }
+
+                    table tbody td {
+                        padding: 1rem 1.5rem;
+                        border-width: 1px;
+                        border-style: solid;
+                        border-color: #e5e7eb;
+                    }
+
+                    /* Headings */
+                    h1, h2, h3, h4, h5, h6 {
+                        margin-top: 1.5rem;
+                        margin-bottom: 1rem;
+                        font-weight: 600;
+                        line-height: 1.25;
+                        color: #111827;
+                    }
+
+                    p {
+                        margin-bottom: 1rem;
+                    }
+
+                    ul, ol {
+                        padding-left: 2rem;
+                        margin-bottom: 1rem;
+                    }
+
+                    blockquote {
+                        padding: 1rem;
+                        border-left: 4px solid #e5e7eb;
+                        background-color: #f9fafb;
+                        margin-bottom: 1rem;
+                    }
+
+                    /* Links */
+                    a {
+                        color: #3b82f6;
+                        text-decoration: underline;
+                    }
+
+                    a:hover {
+                        color: #2563eb;
+                    }
+                `
+            });
+
+            // Handle form submission
+            document.querySelector('#departmentForm').addEventListener('submit', function(e) {
+                // Ensure content is updated before form submission
+                tinymce.triggerSave();
+            });
+        });
+
+        // Adjust editor height based on content
+        function adjustEditorHeight() {
+            const editor = tinymce.get('overview');
+            if (!editor) return;
+
+            // Calculate appropriate height
+            const contentHeight = editor.getDoc().body.scrollHeight;
+            const minHeight = 700;
+            const newHeight = Math.max(contentHeight + 100, minHeight);
+
+            // Apply heights to editor components
+            const container = editor.getContainer();
+            container.style.height = newHeight + 'px';
+
+            const iframe = editor.getContentAreaContainer().firstChild;
+            iframe.style.height = (newHeight - 50) + 'px';
+            iframe.style.position = 'relative';
+
+            editor.getDoc().body.style.minHeight = (newHeight - 100) + 'px';
+            editor.getDoc().body.style.overflow = 'auto';
+        }
+
+        // Setup preview functionality
+        function setupPreview(editor) {
+            if (!editor) {
+                console.error('Editor instance not found');
+                return;
+            }
+
+            const previewContent = document.querySelector('#previewContent');
+            const deviceButtons = {
+                mobile: {
+                    width: '375px',
+                    height: '667px'
+                },
+                tablet: {
+                    width: '768px',
+                    height: '1024px'
+                },
+                desktop: {
+                    width: '100%',
+                    height: 'auto'
+                }
+            };
+
+            const deviceSelector = createDeviceSelector(deviceButtons, previewContent);
+
+            document.querySelector('#previewBtn').addEventListener('click', () => {
+                // Get the formatted content
+                const content = editor.getContent();
+                const modalBody = document.querySelector('.modal-body');
+
+                modalBody.innerHTML = '';
+                modalBody.appendChild(deviceSelector);
+
+                // Create a wrapper with department-content class to match frontend styling
+                const previewWrapper = document.createElement('div');
+                previewWrapper.className = 'preview-content-wrapper department-content';
+                previewWrapper.style.overflow = 'auto';
+                previewWrapper.style.maxHeight = '70vh';
+                previewWrapper.appendChild(previewContent);
+                modalBody.appendChild(previewWrapper);
+
+                // Add content to preview
+                previewContent.innerHTML = content;
+                previewContent.style.width = '100%';
+                previewContent.style.height = 'auto';
+                previewContent.style.minHeight = '200px';
+
+                // Apply responsive table wrappers if not already added
+                const tables = previewContent.querySelectorAll('table:not(.table-responsive)');
+                tables.forEach(table => {
+                    if (!table.parentElement.classList.contains('table-responsive')) {
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'table-responsive';
+                        table.parentNode.insertBefore(wrapper, table);
+                        wrapper.appendChild(table);
+                    }
                 });
 
-            document.querySelector('#editForm').addEventListener('submit', submitForm);
-        });
+                // Add img-fluid class to images if not already added
+                const images = previewContent.querySelectorAll('img:not(.img-fluid)');
+                images.forEach(img => {
+                    img.classList.add('img-fluid');
+                });
+
+                // Select the most recent device when opening modal
+                deviceSelector.lastElementChild.click();
+
+                // Show the preview modal
+                const previewModal = new bootstrap.Modal(document.querySelector('#previewModal'));
+                previewModal.show();
+            });
+        }
+
+        // Create device selector for preview
+        function createDeviceSelector(deviceButtons, previewContent) {
+            const deviceSelector = document.createElement('div');
+            deviceSelector.className = 'btn-group mb-3';
+            Object.keys(deviceButtons).forEach(device => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'btn btn-outline-primary text-capitalize';
+                btn.textContent = device;
+                btn.onclick = () => {
+                    Array.from(deviceSelector.children).forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    previewContent.style.width = deviceButtons[device].width;
+                    previewContent.style.height = deviceButtons[device].height;
+                };
+                deviceSelector.appendChild(btn);
+            });
+            return deviceSelector;
+        }
     </script>
 @endsection

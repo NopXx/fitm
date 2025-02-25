@@ -6,23 +6,67 @@ use App\Models\Departments;
 use App\Models\MenuCategory;
 use App\Models\MenuDisplaySetting;
 use App\Models\MenuTranslation;
+use App\Services\MenuService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\View;
 
 class MenuController extends Controller
 {
+
+    public function __construct(
+        protected MenuService $menuService
+    ) {}
+
+    public function changeLocale(string $locale): RedirectResponse
+    {
+        if (in_array($locale, [config('app.locale'), config('app.fallback_locale')])) {
+            App::setLocale($locale);
+            session()->put('locale', $locale);
+            $this->menuService->clearMenuCache();
+        }
+
+        return back();
+    }
+
+    public function clearMenuCache(): JsonResponse
+    {
+        $this->menuService->clearMenuCache();
+
+        return response()->json([
+            'message' => 'Menu cache cleared successfully'
+        ]);
+    }
+
+    public function updateOrder12(Request $request): JsonResponse
+    {
+        $request->validate([
+            'items' => 'required|array',
+            'items.*.id' => 'required|exists:menu_categories,id',
+            'items.*.children' => 'array',
+            'items.*.children.*.id' => 'exists:menu_categories,id'
+        ]);
+
+        $this->updateOrder12($request->items);
+
+        return response()->json(['message' => 'Menu order updated successfully']);
+    }
+
     public function index()
     {
-        $menus = MenuCategory::with(['translations', 'displaySetting', 'children.translations'])
+        // Use menuService to get all menus including inactive ones
+        $menu1 = MenuCategory::with(['translations', 'displaySetting', 'children.translations'])
             ->whereNull('parent_id')
             ->orderBy('sort_order')
             ->get();
-
         $departments = Departments::with('content')->get();
-        // Log::debug($departments);
 
-        return view('menus.index', compact('menus', 'departments'));
+        return view('menus.index', compact('menu1', 'departments'));
     }
 
     public function syncDepartmentMenus()
@@ -107,7 +151,7 @@ class MenuController extends Controller
                     ],
                     [
                         'name' => $englishName,
-                        'url' => '/en/departments/' . $department->department_code
+                        'url' => '/departments/' . $department->department_code
                     ]
                 );
 
@@ -145,47 +189,60 @@ class MenuController extends Controller
         $request->validate([
             'name_th' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
-            'url_th' => 'required|string|max:255',
-            'url_en' => 'required|string|max:255',
-            'parent_id' => 'nullable|exists:menu_categories,id'
+            'url' => 'required|string|max:255',
+            'parent_id' => 'nullable|exists:menu_categories,id',
+            'show_dropdown' => 'boolean'
         ]);
 
         try {
             DB::beginTransaction();
 
-            $maxOrder = MenuCategory::where('parent_id', $request->parent_id)
-                ->max('sort_order') ?? 0;
+            // Calculate the max sort order for the new menu
+            $maxOrder = 0;
+            if ($request->parent_id) {
+                // If this is a submenu, get the max sort_order under the parent
+                $maxOrder = MenuCategory::where('parent_id', $request->parent_id)
+                    ->max('sort_order') ?? 0;
+            } else {
+                // If this is a main menu, get the max sort_order for main menus
+                $maxOrder = MenuCategory::whereNull('parent_id')
+                    ->max('sort_order') ?? 0;
+            }
 
+            // สร้างเมนู
             $menu = MenuCategory::create([
                 'parent_id' => $request->parent_id,
                 'sort_order' => $maxOrder + 1,
                 'is_active' => true
             ]);
 
-            // Create translations
+            // สร้าง translations - Updated for single URL
+            $url = $request->url;
             $menu->translations()->createMany([
                 [
                     'language_code' => 'th',
                     'name' => $request->name_th,
-                    'url' => $request->url_th
+                    'url' => $url
                 ],
                 [
                     'language_code' => 'en',
                     'name' => $request->name_en,
-                    'url' => $request->url_en
+                    'url' => "/en{$url}"
                 ]
             ]);
 
-            // Create display settings
+            // กำหนด show_dropdown = false ถ้าเป็นเมนูย่อย
             $menu->displaySetting()->create([
                 'is_visible' => true,
-                'show_dropdown' => false
+                'show_dropdown' => !$request->parent_id && $request->has('show_dropdown')
             ]);
 
             DB::commit();
-            return redirect()->route('admin.menus.index')
+            $this->menuService->clearMenuCache();
+            return redirect()->route('menus.index')
                 ->with('success', __('menu.created_successfully'));
         } catch (\Exception $e) {
+            Log::debug($e);
             DB::rollBack();
             return back()->with('error', __('menu.creation_failed'));
         }
@@ -207,9 +264,10 @@ class MenuController extends Controller
         $request->validate([
             'name_th' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
-            'url_th' => 'required|string|max:255',
-            'url_en' => 'required|string|max:255',
-            'parent_id' => 'nullable|exists:menu_categories,id'
+            'url' => 'required|string|max:255',
+            'parent_id' => 'nullable|exists:menu_categories,id',
+            'show_dropdown' => 'boolean',
+            'is_active' => 'boolean'
         ]);
 
         try {
@@ -217,24 +275,37 @@ class MenuController extends Controller
 
             $menu = MenuCategory::findOrFail($id);
 
-            // Update menu category
+            // อัพเดทเมนู - Fix for is_active checkbox
             $menu->update([
                 'parent_id' => $request->parent_id,
-                'is_active' => $request->boolean('is_active', true)
+                'is_active' => $request->has('is_active')
             ]);
 
-            // Update translations
+            // อัพเดท translations - Updated for single URL
+            $url = $request->url;
             foreach (['th', 'en'] as $lang) {
+                $urlWithPrefix = $lang === 'en' ? "/en{$url}" : $url;
+
                 $menu->translations()
                     ->where('language_code', $lang)
                     ->update([
                         'name' => $request->{"name_$lang"},
-                        'url' => $request->{"url_$lang"}
+                        'url' => $urlWithPrefix
                     ]);
             }
 
+            // กำหนด show_dropdown = false ถ้าเป็นเมนูย่อย
+            $menu->displaySetting()->updateOrCreate(
+                ['category_id' => $menu->id],
+                [
+                    'is_visible' => true,
+                    'show_dropdown' => !$request->parent_id && $request->has('show_dropdown')
+                ]
+            );
+
             DB::commit();
-            return redirect()->route('admin.menus.index')
+            $this->menuService->clearMenuCache();
+            return redirect()->route('menus.index')
                 ->with('success', __('menu.updated_successfully'));
         } catch (\Exception $e) {
             DB::rollBack();
@@ -247,6 +318,7 @@ class MenuController extends Controller
         try {
             $menu = MenuCategory::findOrFail($id);
             $menu->delete();
+            $this->menuService->clearMenuCache();
             return response()->json(['success' => true]);
         } catch (\Exception $e) {
             return response()->json(['success' => false], 500);
@@ -275,6 +347,7 @@ class MenuController extends Controller
                 ]);
             }
         }
+        $this->menuService->clearMenuCache();
 
         return response()->json(['success' => true]);
     }

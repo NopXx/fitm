@@ -18,7 +18,9 @@ return [
     'name_en' => 'ชื่อเมนู (ภาษาอังกฤษ)',
     'url_th' => 'URL (ภาษาไทย)',
     'url_en' => 'URL (ภาษาอังกฤษ)',
+    'url' => 'URL',
     'is_active' => 'เปิดใช้งาน',
+    'inactive' => 'ปิดใช้งาน',
     'display_order' => 'ลำดับการแสดงผล',
     'visibility' => 'การแสดงผล',
     'actions' => 'การจัดการ',
@@ -85,4 +87,5 @@ return [
     'sync_departments' => 'ซิงค์เมนูภาควิชา',
     'departments_synced' => 'ซิงค์เมนูภาควิชาเรียบร้อยแล้ว',
     'sync_failed' => 'ไม่สามารถซิงค์เมนูภาควิชาได้',
+    'show_dropdown' => 'แสดง DropDown'
 ];

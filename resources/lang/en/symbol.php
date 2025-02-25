@@ -13,6 +13,7 @@ return [
     'description_th' => 'Description (Thai)',
     'description_en' => 'Description (English)',
     'image' => 'Image',
+    'color_codes' => 'Color Code',
     'rgb_code' => 'RGB Code',
     'cmyk_code' => 'CMYK Code',
     'download_link' => 'Download Link',

@@ -7,6 +7,8 @@ return [
     'edit_title' => 'Edit Content',
     'create_content' => 'Create New Content',
     'edit_content' => 'Edit Content',
+    'content' => 'Content',
+    'no_content_found' => 'No content found',
 
     // Labels
     'title_th' => 'Title (Thai)',
@@ -37,4 +39,7 @@ return [
     // Confirmations
     'delete_confirm' => 'Are you sure you want to delete this content?',
     'delete_message' => "You won't be able to revert this!",
+
+    'code' => 'Content Code',
+    'code_help' => 'Enter a unique code for this content (used for retrieving and displaying content on the content page)',
 ];

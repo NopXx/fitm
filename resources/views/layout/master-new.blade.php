@@ -52,7 +52,7 @@
 </body>
 
 <!--customizer-->
-<div id="customizer"></div>
+{{-- <div id="customizer"></div> --}}
 
 <!-- scripts start-->
 <!-- scripts end-->

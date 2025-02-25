@@ -15,6 +15,7 @@ return new class extends Migration
         //
         Schema::create('contents', function (Blueprint $table) {
             $table->id();
+            $table->string('code');
             $table->string('title_th');
             $table->string('title_en');
             $table->longText('detail_th');

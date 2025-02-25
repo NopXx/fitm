@@ -40,6 +40,7 @@
                                 <table id="contentsTable" class="display app-data-table default-data-table">
                                     <thead>
                                         <tr>
+                                            <th>@lang('content.code')</th>
                                             <th>@lang('content.title_th')</th>
                                             <th>@lang('content.title_en')</th>
                                             <th>@lang('translation.action')</th>
@@ -77,6 +78,9 @@
                     },
                 },
                 columns: [{
+                        data: 'code'
+                    },
+                    {
                         data: 'title_th'
                     },
                     {
@@ -102,14 +106,14 @@
                 const data = row.data();
 
                 Swal.fire({
-                    title: '@lang("content.delete_confirm")',
-                    text: '@lang("content.delete_message")',
+                    title: '@lang('content.delete_confirm')',
+                    text: '@lang('content.delete_message')',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: '@lang("translation.confirm")',
-                    cancelButtonText: '@lang("translation.cancel")'
+                    confirmButtonText: '@lang('translation.confirm')',
+                    cancelButtonText: '@lang('translation.cancel')'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
@@ -120,16 +124,16 @@
                             },
                             success: function(response) {
                                 Swal.fire(
-                                    '@lang("translation.deleted")',
-                                    '@lang("content.deleted_success")',
+                                    '@lang('translation.deleted')',
+                                    '@lang('content.deleted_success')',
                                     'success'
                                 );
                                 content_table.ajax.reload();
                             },
                             error: function(xhr) {
                                 Swal.fire(
-                                    '@lang("translation.error")',
-                                    '@lang("content.delete_error")',
+                                    '@lang('translation.error')',
+                                    '@lang('content.delete_error')',
                                     'error'
                                 );
                             }

@@ -20,10 +20,16 @@ class ContentController extends Controller
         $contents = Content::select([
             'id',
             'title_th',
-            'title_en'
+            'title_en',
+            'code'
         ])->get();
 
         return response()->json($contents);
+    }
+
+    public function frontend($code) {
+        $content = Content::where('code', $code)->first();
+        return view('contents.frontend', compact('content'));
     }
 
     public function create()
@@ -37,7 +43,8 @@ class ContentController extends Controller
             'title_th' => 'required',
             'title_en' => 'required',
             'detail_th' => 'required',
-            'detail_en' => 'required'
+            'detail_en' => 'required',
+            'code' => 'required|unique:contents,code'
         ]);
 
         if ($validator->fails()) {
@@ -54,8 +61,10 @@ class ContentController extends Controller
                 'title_th' => $request->title_th,
                 'title_en' => $request->title_en,
                 'detail_th' => $request->detail_th,
-                'detail_en' => $request->detail_en
+                'detail_en' => $request->detail_en,
+                'code' => $request->code
             ]);
+
 
             DB::commit();
 
@@ -89,11 +98,13 @@ class ContentController extends Controller
 
     public function update(Request $request, $id)
     {
+        Log::debug($request);
         $validator = Validator::make($request->all(), [
             'title_th' => 'required',
             'title_en' => 'required',
             'detail_th' => 'required',
-            'detail_en' => 'required'
+            'detail_en' => 'required',
+            'code' => 'required|unique:contents,code,' . $id
         ]);
 
         if ($validator->fails()) {
@@ -111,7 +122,8 @@ class ContentController extends Controller
                 'title_th' => $request->title_th,
                 'title_en' => $request->title_en,
                 'detail_th' => $request->detail_th,
-                'detail_en' => $request->detail_en
+                'detail_en' => $request->detail_en,
+                'code' => $request->code
             ]);
 
             DB::commit();

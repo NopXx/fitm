@@ -15,6 +15,11 @@ class SymbolController extends Controller
         return view('symbols.index', compact('symbols'));
     }
 
+    public function frontend() {
+        $symbols = Symbol::orderBy('id', 'asc')->get();
+        return view('symbols.frontend', compact('symbols'));
+    }
+
     public function create()
     {
         return view('symbols.add');

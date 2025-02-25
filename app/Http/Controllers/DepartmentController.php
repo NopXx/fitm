@@ -91,6 +91,7 @@ class DepartmentController extends Controller
     {
         try {
             $department = Departments::with('content')->findOrFail($id);
+            Log::debug($department);
             return view('departments.edit', compact('department'));
         } catch (\Exception $e) {
             return redirect()->route('departments.index')
@@ -101,7 +102,7 @@ class DepartmentController extends Controller
     public function updateDepartment(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'department_code' => 'required|unique:departments,department_code,' . $id . ',department_id',
+            'department_code' => 'required|unique:departments,department_code,' . $id . ',id', // Changed from department_id to id
             'department_name_th' => 'required'
         ]);
 

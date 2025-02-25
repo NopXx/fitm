@@ -18,6 +18,11 @@ class HistoricalEventController extends Controller
         return view('historical-events.index', compact('events'));
     }
 
+    public function frontend() {
+        $events = HistoricalEvent::orderBy('year', 'desc')->get();
+        return view('historical-events.frontend', compact('events'));
+    }
+
 
     public function data()
     {
