@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.bg-primary-light {
+    background-color: #00AFF0
+}
+
+/* Mobile menu transition */
+#navbar-menu {
+    transition: all 0.3s ease;
+}
+
+#navbar-menu.hidden {
+    display: none;
+}
+
+/* Override Flowbite dark mode */
+.dark .bg-primary-light {
+    background-color: #00AFF0;
+}
+
+/* Theme toggle button styles */
+/* #theme-toggle:hover {
+    color: #ffffff;
+} */
+
+/* .dark #theme-toggle:hover {
+    color: #ffffff;
+} */
+
+/* Dark mode background override */
+.dark .bg-primary-light {
+    background-color: #1a1a1a;
+}
+
+[x-cloak] {
+    display: none !important;
+}
