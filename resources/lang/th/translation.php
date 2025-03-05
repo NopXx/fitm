@@ -55,4 +55,11 @@ return [
     'advanced_table' => 'ตารางขั้นสูง',
     'preview' => 'ตัวอย่าง',
     'remove_image' => 'ลบรูปภาพ',
+    'mark_as_important' => 'ทำเครื่องหมายเป็นข่าวสำคัญ',
+    'important_news_note' => 'ข่าวสำคัญจะถูกแสดงอย่างโดดเด่นบนหน้าแรก',
+    'important' => 'สำคัญ',
+    'featured' => 'แนะนำ',
+    'featured_news' => 'ข่าวแนะนำ',
+    'latest_news' => 'ข่าวล่าสุด',
+    'important_updates' => 'อัปเดตสำคัญ',
 ];

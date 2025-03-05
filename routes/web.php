@@ -11,8 +11,12 @@ use App\Http\Controllers\LangController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\NewController;
+use App\Http\Controllers\OnlineServiceController;
 use App\Http\Controllers\SymbolController;
+use App\Models\FitmNews;
+use App\Models\FitmVideo;
 use App\Models\News;
+use App\Models\OnlineService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
@@ -42,6 +46,8 @@ Route::group(['middleware' => 'auth'], function () {
         // edit news
         Route::get('/new/edit/{new}', [NewController::class, 'edit'])->name('new.edit');
         Route::put('/new/update/{new}', [NewController::class, 'update'])->name('new.update');
+        Route::delete('/new/delete/{new}', [NewController::class, 'delete'])->name('new.delete');
+
 
         // department
         Route::get('/department', [DepartmentController::class, 'index'])->name('department.index');
@@ -80,14 +86,102 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::resource('contents', ContentController::class);
         Route::get('/contents/get-contents', [ContentController::class, 'show']);
+
+        Route::get('online-services', [OnlineServiceController::class, 'index'])->name('online-services.index');
+        Route::get('online-services/get-services', [OnlineServiceController::class, 'getServices'])->name('online-services.get-services');
+        Route::get('online-services/create', [OnlineServiceController::class, 'create'])->name('online-services.create');
+        Route::post('online-services', [OnlineServiceController::class, 'store'])->name('online-services.store');
+        Route::get('online-services/{onlineService}/edit', [OnlineServiceController::class, 'edit'])->name('online-services.edit');
+        Route::put('online-services/{onlineService}', [OnlineServiceController::class, 'update'])->name('online-services.update');
+        Route::delete('online-services/delete/{id}', [OnlineServiceController::class, 'destroy'])->name('online-services.delete');
+
+        // List all news (DataTable AJAX endpoint)
+        Route::get('/fitmnews', [App\Http\Controllers\FitmNewsController::class, 'index'])->name('fitmnews.index');
+        // Add new form
+        Route::get('/fitmnews/add', [App\Http\Controllers\FitmNewsController::class, 'add'])->name('fitmnews.add');
+        // Store new record
+        Route::post('/fitmnews/store', [App\Http\Controllers\FitmNewsController::class, 'store'])->name('fitmnews.store');
+        // Edit form
+        Route::get('/fitmnews/edit/{id}', [App\Http\Controllers\FitmNewsController::class, 'edit'])->name('fitmnews.edit');
+        // Update record
+        Route::put('/fitmnews/update/{id}', [App\Http\Controllers\FitmNewsController::class, 'update'])->name('fitmnews.update');
+        // Delete record
+        Route::delete('/fitmnews/delete/{id}', [App\Http\Controllers\FitmNewsController::class, 'destroy'])->name('fitmnews.destroy');
+
+        Route::get('/fitmvideos', [App\Http\Controllers\FitmVideosController::class, 'index'])->name('fitmvideos.index');
+        Route::get('/fitmvideos/add', [App\Http\Controllers\FitmVideosController::class, 'create'])->name('fitmvideos.add');
+        Route::post('/fitmvideos/store', [App\Http\Controllers\FitmVideosController::class, 'store'])->name('fitmvideos.store');
+        Route::get('/fitmvideos/edit/{id}', [App\Http\Controllers\FitmVideosController::class, 'edit'])->name('fitmvideos.edit');
+        Route::put('/fitmvideos/update/{id}', [App\Http\Controllers\FitmVideosController::class, 'update'])->name('fitmvideos.update');
+        Route::delete('/fitmvideos/destroy/{id}', [App\Http\Controllers\FitmVideosController::class, 'destroy'])->name('fitmvideos.destroy');
+
+        // User Management Routes
+        Route::get('users', [App\Http\Controllers\UserController::class, 'index'])->name('users.index');
+        Route::get('users/add', [App\Http\Controllers\UserController::class, 'add'])->name('users.add');
+        Route::post('users/store', [App\Http\Controllers\UserController::class, 'store'])->name('users.store');
+        Route::get('users/edit/{user}', [App\Http\Controllers\UserController::class, 'edit'])->name('users.edit');
+        Route::put('users/update/{user}', [App\Http\Controllers\UserController::class, 'update'])->name('users.update');
+        Route::delete('users/destroy/{user}', [App\Http\Controllers\UserController::class, 'destroy'])->name('users.destroy');
     });
 });
 
 Route::get('/', function () {
-    $news_show = News::where('display_type', 2)->get();
-    $news = News::where('display_type', 1)->get();
-    return view('index', compact('news_show', 'news'));
+    $news_show = News::where('display_type', 2)->where('status', 1)->get();
+
+    // Get all news types that have at least one active news item
+    $newsTypes = News::where('display_type', 1)
+        ->where('status', 1)
+        ->distinct()
+        ->pluck('new_type');
+
+    $news = collect();
+
+    // For each news type, get news items prioritizing important ones
+    foreach ($newsTypes as $type) {
+        // First get all important news for this type
+        $importantNews = News::where('display_type', 1)
+            ->where('status', 1)
+            ->where('new_type', $type)
+            ->where('is_important', true)
+            ->orderBy('effective_date', 'desc')
+            ->get();
+
+        // If we have more than 8 important news, use all of them
+        if ($importantNews->count() > 8) {
+            $typeNews = $importantNews;
+        } else {
+            // Otherwise, get important news + regular news up to 8 total
+            $regularNewsCount = 8 - $importantNews->count();
+
+            if ($regularNewsCount > 0) {
+                $regularNews = News::where('display_type', 1)
+                    ->where('status', 1)
+                    ->where('new_type', $type)
+                    ->where('is_important', false)
+                    ->orderBy('effective_date', 'desc')
+                    ->limit($regularNewsCount)
+                    ->get();
+
+                $typeNews = $importantNews->concat($regularNews);
+            } else {
+                $typeNews = $importantNews;
+            }
+        }
+
+        $news = $news->concat($typeNews);
+    }
+
+    $services = OnlineService::where('active', true)
+        ->orderBy('order')
+        ->get();
+    $fitmnews = FitmNews::orderBy('issue_name', 'desc')->get();
+
+    $videos = FitmVideo::orderBy('created_at', 'desc')->get();
+
+    return view('index', compact('news_show', 'news', 'services', 'fitmnews', 'videos'));
 });
+
+Route::get('/news/fitmnews', [App\Http\Controllers\FitmNewsController::class, 'index']);
 
 Route::get('departments/{id}', [DepartmentViewController::class, 'index']);
 

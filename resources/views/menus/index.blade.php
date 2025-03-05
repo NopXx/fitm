@@ -269,6 +269,10 @@
                 }
             });
 
+            var lang = {
+                'confirm': '@lang('menu.confirm_delete')'
+            }
+
             // Submenu toggle handlers
             document.querySelectorAll('.toggle-submenu').forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -315,7 +319,7 @@
             // Delete menu handler
             document.querySelectorAll('.delete-menu').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    if (confirm(Lang.get('menu.confirm_delete'))) {
+                    if (confirm(lang.confirm)) {
                         const menuId = this.dataset.id;
                         fetch(`/admin/menus/${menuId}`, {
                                 method: 'DELETE',

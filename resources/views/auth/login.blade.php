@@ -15,7 +15,7 @@
                         <div class="login-form-container">
                             <div class="mb-4">
                                 <a class="logo d-inline-block" href="{{route('index')}}">
-                                    <img src="{{asset('assets/images/logo/1.png')}}" width="250" alt="#">
+                                    <img src="{{asset('assets/images/fitm-logo.png')}}" width="250" alt="#">
                                 </a>
                             </div>
                             <div class="form_container">
@@ -46,11 +46,6 @@
                                         @error('password')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
-                                    </div>
-
-                                    <div class="mb-3 form-check">
-                                        <input type="checkbox" class="form-check-input" id="formCheck1" name="remember">
-                                        <label class="form-check-label" for="formCheck1">Remember me</label>
                                     </div>
 
                                     <div>

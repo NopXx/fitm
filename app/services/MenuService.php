@@ -24,7 +24,7 @@ class MenuService
     }
 
     /**
-     * Fetch fresh menu data from database
+     * Fetch fresh menu data from database - fixed to avoid duplicate ORDER BY
      */
     protected function fetchMenusFromDatabase(): Collection
     {
@@ -32,9 +32,11 @@ class MenuService
             ->with([
                 'translations',
                 'displaySetting',
+                // Explicit loading of children without chaining methods that might add duplicate ordering
                 'children' => function ($query) {
-                    $query->orderBy('sort_order')
-                        ->where('is_active', true);
+                    $query->where('is_active', true)
+                          ->select('*')  // Explicit select to avoid inheriting previous ordering
+                          ->orderByRaw('sort_order ASC'); // Use orderByRaw for more control
                 },
                 'children.translations',
                 'children.displaySetting'
@@ -84,11 +86,20 @@ class MenuService
     public function getAdminMenu()
     {
         return Cache::remember('admin_menu', 86400, function () {
-            return MenuCategory::with(['translations', 'displaySetting', 'children.translations', 'children.displaySetting'])
-                ->whereNull('parent_id')
-                ->orderBy('sort_order')
-                ->get();
-            // No filtering of children - we want to see all menus in admin
+            // Use a different query approach to avoid duplicate ordering
+            $query = MenuCategory::query()
+                ->with([
+                    'translations',
+                    'displaySetting',
+                    // No ordering in relationship definitions
+                    'children',
+                    'children.translations',
+                    'children.displaySetting'
+                ])
+                ->whereNull('parent_id');
+
+            // Add explicit ordering only once
+            return $query->orderBy('sort_order')->get();
         });
     }
 }

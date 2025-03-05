@@ -19,7 +19,7 @@ class NewController extends Controller
 
     public function getNews()
     {
-        $new = News::all();
+        $new = News::with('new_type')->get();
         return response()->json($new);
     }
 
@@ -44,6 +44,7 @@ class NewController extends Controller
                 'effective_date' => 'required|date_format:Y-m-d H:i',
                 'link' => 'nullable|url',
                 'status' => 'required|integer|in:0,1', // 0 = inactive, 1 = active
+                'is_important' => 'nullable|boolean',
             ]);
 
             // Handle file upload
@@ -61,11 +62,12 @@ class NewController extends Controller
             $new->new_type = $request->new_type;
             $new->detail = $request->detail; // Fixed typo
             $new->content = $request->content;
-            $new->cover = 'news/' . $coverPath;
+            $new->cover = $coverPath == null ? null : 'news/' . $coverPath;
             $new->effective_date = $request->effective_date;
             $new->view_count = 0; // Default view count
             $new->link = $request->link;
             $new->status = $request->status;
+            $new->is_important = $request->has('is_important') ? 1 : 0;
             $new->created_at = now();
             $new->created_by = Auth::id(); // Assuming the user is logged in
             $new->updated_at = now();
@@ -151,6 +153,7 @@ class NewController extends Controller
             'effective_date' => 'required|date_format:Y-m-d H:i',
             'link' => 'nullable|url',
             'status' => 'required|integer|in:0,1',
+            'is_important' => 'nullable|boolean',
         ]);
 
         // Handle file upload
@@ -186,6 +189,7 @@ class NewController extends Controller
         $new->effective_date = $request->effective_date;
         $new->link = $request->link;
         $new->status = $request->status;
+        $new->is_important = $request->has('is_important') ? 1 : 0;
         $new->updated_at = now();
         $new->updated_by = Auth::id();
         $new->save();
@@ -202,6 +206,43 @@ class NewController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Error creating news: '
+            ], 500);
+        }
+    }
+
+    public function delete(News $new)
+    {
+        try {
+            // Delete associated cover image if it exists
+            if ($new->cover && Storage::disk('public')->exists($new->cover)) {
+                Storage::disk('public')->delete($new->cover);
+            }
+
+            // Soft delete the news item
+            $new->deleted_at = now();
+            $new->deleted_by = Auth::id();
+            $new->save();
+
+            // Perform the actual delete
+            $deleted = $new->delete();
+
+            if ($deleted) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'News deleted successfully'
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to delete news'
+                ], 500);
+            }
+        } catch (\Exception $e) {
+            Log::error('News deletion error: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error deleting news: ' . $e->getMessage()
             ], 500);
         }
     }

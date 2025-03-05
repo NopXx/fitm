@@ -50,6 +50,8 @@
                                             <th>@lang('translation.title')</th>
                                             <th>@lang('translation.effective_date')</th>
                                             <th>@lang('translation.description')</th>
+                                            <th>@lang('translation.type')</th>
+                                            <th>@lang('translation.important')</th>
                                             <th>@lang('translation.action')</th>
                                         </tr>
                                     </thead>
@@ -65,6 +67,21 @@
 @endsection
 @section('script')
     <script src="{{ asset('assets/vendor/datatable/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/sweetalert/sweetalert.js') }}"></script>
+
+    <script>
+        var lang = {
+            'confirm': '@lang('new.confirm_delete')',
+            'yes_delete': '@lang('new.yes_delete')',
+            'cancel': '@lang('new.cancel')',
+            'deleted': '@lang('new.deleted')',
+            'delete_success': '@lang('new.delete_success')',
+            'error': '@lang('new.error')',
+            'delete_error': '@lang('new.delete_error')',
+            'filter_by_type': '@lang('new.filter_by_type')',
+            'all_types': '@lang('new.all_types')'
+        };
+    </script>
 
     {{-- init page newjs --}}
     <script src="{{ asset('assets/js/new_init.js') }}"></script>

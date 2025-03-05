@@ -2,7 +2,7 @@
 <nav>
     <div class="app-logo">
         <a class="logo d-inline-block" href="{{ route('index') }}">
-            <img src="{{ asset('../assets/images/logo/1.png') }}" alt="#">
+            <img src="{{ asset('../assets/images/fitm-logo.png') }}" alt="#">
         </a>
 
         <span class="bg-light-primary toggle-semi-nav">
@@ -14,17 +14,27 @@
             <li class="app-divider-v dotted py-1"></li>
             <li class="no-sub">
                 <a class="" href="{{ route('dashboard.index') }}">
-                    <i class="ph-fill  ph-house-line"></i> @lang('translation.home')
+                    <i class="ph  ph-house-line"></i> @lang('translation.home')
                 </a>
             </li>
             <li class="no-sub">
                 <a class="" href="{{ route('new.index') }}">
-                    <i class="ph-fill  ph-newspaper"></i> @lang('new.title')
+                    <i class="ph ph-newspaper"></i> @lang('new.title')
                 </a>
             </li>
             <li class="no-sub">
-                <a class="" href="#">
-                    <i class="ph-fill  ph-user-circle-gear"></i> @lang('translation.members')
+                <a class="" href="{{ route('fitmnews.index') }}">
+                    <i class="ph ph-newspaper-clipping"></i> @lang('fitmnews.title')
+                </a>
+            </li>
+            <li class="no-sub">
+                <a class="" href="{{ route('fitmvideos.index') }}">
+                    <i class="ph ph-video"></i> @lang('fitmvideos.title')
+                </a>
+            </li>
+            <li class="no-sub">
+                <a class="" href="{{ route('users.index') }}">
+                    <i class="ph  ph-user-circle-gear"></i> @lang('translation.members')
                 </a>
             </li>
             <li class="no-sub">
@@ -35,7 +45,7 @@
 
             <li class="no-sub">
                 <a class="" href="{{ route('historical-events.index') }}">
-                    <i class="ph-bold ph-clock-clockwise"></i> @lang('historical_event.title')
+                    <i class="ph ph-clock-clockwise"></i> @lang('historical_event.title')
                 </a>
             </li>
             <li class="no-sub">
@@ -51,6 +61,11 @@
             <li class="no-sub">
                 <a class="" href="{{ route('contents.index') }}">
                     <i class="ph-duotone  ph-file"></i> @lang('content.title')
+                </a>
+            </li>
+            <li class="no-sub">
+                <a class="" href="{{ route('online-services.index') }}">
+                    <i class="ph ph-app-window"></i> @lang('online_services.title')
                 </a>
             </li>
             {{-- <li class="no-sub">

@@ -419,6 +419,7 @@
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
+                            code: this.code.value,
                             title_th: this.title_th.value,
                             title_en: this.title_en.value,
                             detail_th: tinymce.get('detail_th').getContent(),

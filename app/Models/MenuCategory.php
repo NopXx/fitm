@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class MenuCategory extends Model
 {
+    protected $table = 'menu_categories';
+
     protected $fillable = [
         'system_name',
         'parent_id',
@@ -25,9 +27,10 @@ class MenuCategory extends Model
         return $this->belongsTo(MenuCategory::class, 'parent_id');
     }
 
+    // Remove the orderBy here - we'll apply it when loading
     public function children(): HasMany
     {
-        return $this->hasMany(MenuCategory::class, 'parent_id')->orderBy('sort_order');
+        return $this->hasMany(MenuCategory::class, 'parent_id');
     }
 
     public function translations(): HasMany

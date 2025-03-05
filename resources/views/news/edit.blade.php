@@ -139,7 +139,9 @@
                                     <select class="form-select" name="new_type" required>
                                         <option value="">@lang('translation.select_type')</option>
                                         @foreach ($newtypes as $newtype)
-                                            <option value="{{ $newtype->id }}" {{ $new->new_type == $newtype->id ? 'selected' : '' }}>{{ $newtype->new_type_name }}</option>
+                                            <option value="{{ $newtype->id }}"
+                                                {{ $new->new_type == $newtype->id ? 'selected' : '' }}>
+                                                {{ $newtype->new_type_name }}</option>
                                         @endforeach
                                     </select>
                                     <label>@lang('translation.type')</label>
@@ -181,6 +183,13 @@
                                         </option>
                                     </select>
                                     <label>@lang('translation.status')</label>
+                                </div>
+
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="is_important"
+                                        name="is_important" value="1" {{ $new->is_important ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="is_important">@lang('translation.mark_as_important')</label>
+                                    <div class="form-text">@lang('translation.important_news_note')</div>
                                 </div>
                             </div>
 

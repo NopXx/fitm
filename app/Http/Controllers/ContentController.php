@@ -44,7 +44,7 @@ class ContentController extends Controller
             'title_en' => 'required',
             'detail_th' => 'required',
             'detail_en' => 'required',
-            'code' => 'required|unique:contents,code'
+            'code' => 'required'
         ]);
 
         if ($validator->fails()) {

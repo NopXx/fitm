@@ -107,7 +107,7 @@
 
                 Swal.fire({
                     title: '@lang('content.delete_confirm')',
-                    text: '@lang('content.delete_message')',
+                    text: `@lang('content.delete_message')`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',

@@ -74,7 +74,8 @@
                                 <div class="card select-card">
                                     <div class="card-header d-flex align-items-center">
                                         <h5 class="mb-0">Style 1</h5>
-                                        <input type="radio" name="display_type" value="1" class="ms-2 form-check-input" required>
+                                        <input type="radio" name="display_type" value="1"
+                                            class="ms-2 form-check-input" required>
                                     </div>
                                     <div class="card">
                                         <img id="previewStyle1Cover" src="{{ asset('../assets/images/size/600x400.png') }}"
@@ -94,7 +95,8 @@
                                 <div class="card select-card">
                                     <div class="card-header d-flex align-items-center">
                                         <h5 class="mb-0">Style 2</h5>
-                                        <input type="radio" name="display_type" value="2" class="ms-2 form-check-input" required>
+                                        <input type="radio" name="display_type" value="2"
+                                            class="ms-2 form-check-input" required>
                                     </div>
                                     <div class="card-body p-0"> <!-- Changed padding to 0 -->
                                         <div class="fade-a app-arrow">
@@ -104,13 +106,11 @@
                                                     class="img-fluid" alt="Cover Preview">
                                             </div>
                                             <div class="item">
-                                                <img
-                                                    src="{{ asset('../assets/images/size/1200x600.png') }}"
+                                                <img src="{{ asset('../assets/images/size/1200x600.png') }}"
                                                     class="img-fluid" alt="Cover Preview">
                                             </div>
                                             <div class="item">
-                                                <img
-                                                    src="{{ asset('../assets/images/size/1200x600.png') }}"
+                                                <img src="{{ asset('../assets/images/size/1200x600.png') }}"
                                                     class="img-fluid" alt="Cover Preview">
                                             </div>
                                         </div>
@@ -181,6 +181,14 @@
                                         <option value="0">@lang('translation.inactive')</option>
                                     </select>
                                     <label>@lang('translation.status')</label>
+                                </div>
+
+                                <!-- Add this right after the status dropdown in add.blade.php -->
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="is_important"
+                                        name="is_important" value="1">
+                                    <label class="form-check-label" for="is_important">@lang('translation.mark_as_important')</label>
+                                    <div class="form-text">@lang('translation.important_news_note')</div>
                                 </div>
                             </div>
                             {{-- editor --}}
