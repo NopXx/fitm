@@ -9,7 +9,7 @@
     <div class="container-fluid">
         <div class="row m-1">
             <div class="col-12">
-                <h4 class="main-title">@lang('historical_event.create_event')</h4>
+                <h4 class="main-title">@lang('historical_event.add_event')</h4>
                 <ul class="app-line-breadcrumbs mb-3">
                     <li>
                         <a href="{{ route('historical-events.index') }}" class="f-s-14 f-w-500">
@@ -17,7 +17,7 @@
                         </a>
                     </li>
                     <li>
-                        <span>@lang('historical_event.create_event')</span>
+                        <span>@lang('historical_event.create_title')</span>
                     </li>
                 </ul>
             </div>

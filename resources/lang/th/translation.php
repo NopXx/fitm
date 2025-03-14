@@ -34,6 +34,7 @@ return [
     'are_you_sure' => 'คุณแน่ใจหรือไม่?',
     'yes' => 'ใช่',
     'no' => 'ไม่ใช่',
+    'confirm' => 'ตกลง',
     'delete_confirmation' => 'คุณต้องการลบข่าวนี้ใช่หรือไม่?',
     'new_deleted_successfully' => 'ลบข่าวสำเร็จ!',
     'new_updated_successfully' => 'อัปเดตข่าวสำเร็จ!',
@@ -62,4 +63,58 @@ return [
     'featured_news' => 'ข่าวแนะนำ',
     'latest_news' => 'ข่าวล่าสุด',
     'important_updates' => 'อัปเดตสำคัญ',
+
+    'visitor_statistics' => 'สถิติผู้เข้าชมเว็บไซต์',
+    'active_visitors' => 'ผู้เข้าชมปัจจุบัน',
+    'today_visitors' => 'ผู้เข้าชมวันนี้',
+    'total_visitors' => 'ผู้เข้าชมทั้งหมด',
+    'total_page_views' => 'จำนวนเข้าชมทั้งหมด',
+    'visitors_trend' => 'จำนวนเข้าดูเว็บไซต์',
+    'most_visited_pages' => 'หน้าที่มีคนเข้าชมมากที่สุด',
+    'page' => 'หน้า',
+    'visits' => 'จำนวนเข้าชม',
+    'percentage' => 'เปอร์เซ็นต์',
+    'visitors' => 'ผู้เข้าชม',
+    'no_page_visits_data' => 'ไม่มีข้อมูลการเข้าชมหน้าเว็บ',
+
+    // คำแปลใหม่สำหรับ MarMarMar Sun
+    'current_visitors' => 'ผู้เข้าชมปัจจุบัน',
+    'online_now' => 'ออนไลน์ตอนนี้',
+    'activity_history' => 'ประวัติการเข้าชม',
+    'visited_page' => 'เข้าชมหน้า :page',
+
+    // Form fields
+    'browse' => 'เลือกไฟล์',
+    'drag_drop_or' => 'ลากและวางไฟล์ หรือ',
+    'display_new' => 'แสดงข่าว',
+    'style' => 'รูปแบบ',
+    'title' => 'หัวข้อ',
+    'description' => 'คำอธิบาย',
+    'title_th' => 'หัวข้อ',
+    'title_en' => 'หัวข้อ (ภาษาอังกฤษ)',
+    'description_th' => 'คำอธิบาย',
+    'description_en' => 'คำอธิบาย (ภาษาอังกฤษ)',
+    'display_date' => 'วันที่แสดง',
+    'external_link' => 'ลิงก์ภายนอก',
+    'type' => 'ประเภท',
+    'select_type' => 'เลือกประเภท',
+    'status' => 'สถานะ',
+    'active' => 'เปิดใช้งาน',
+    'inactive' => 'ปิดใช้งาน',
+    'mark_as_important' => 'ทำเครื่องหมายเป็นสำคัญ',
+    'important_news_note' => 'ข่าวที่สำคัญจะแสดงอยู่ด้านบนของรายการข่าวทั้งหมด',
+
+    // Language tabs
+    'thai_information' => 'ข้อมูลภาษาไทย',
+    'english_information_optional' => 'ข้อมูลภาษาอังกฤษ (ไม่บังคับ)',
+    'thai_content' => 'เนื้อหาภาษาไทย',
+    'english_content_optional' => 'เนื้อหาภาษาอังกฤษ (ไม่บังคับ)',
+
+    // Placeholders
+    'thai_content_placeholder' => 'เนื้อหาภาษาไทย',
+    'english_content_placeholder' => 'เนื้อหาภาษาอังกฤษ',
+
+    // Preview elements
+    'last_updated' => 'อัปเดตล่าสุด',
+    'just_now' => 'เมื่อสักครู่',
 ];

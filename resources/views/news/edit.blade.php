@@ -1,20 +1,53 @@
 @extends('layout.master-new')
 @section('title', __('new.edit_new'))
 @section('css')
-    <!-- เพิ่ม CSS เหมือนหน้า add -->
+    <!-- filepond css -->
     <link rel="stylesheet" href="{{ asset('assets/vendor/filepond/filepond.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendor/filepond/image-preview.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/vendor/trumbowyg/trumbowyg.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/vendor/datepikar/flatpickr.min.css') }}">
+
+    <!-- TinyMCE -->
+    <script src="https://cdn.tiny.cloud/1/hn7u4cu4cokjuyws887pfvcxkwbkdc6gm82bsbpamfqjdjhy/tinymce/7/tinymce.min.js"
+        referrerpolicy="origin"></script>
+
+    <!-- flatpickr css-->
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datepikar/flatpickr.min.css') }}">
 
     <!-- slick css -->
     <link rel="stylesheet" href="{{ asset('assets/vendor/slick/slick.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendor/slick/slick-theme.css') }}">
 
-@endsection
-
-@section('main-content')
     <style>
+        /* TinyMCE Editor Styles */
+        .tox-tinymce {
+            min-height: 600px !important;
+            height: auto !important;
+            display: flex !important;
+            flex-direction: column !important;
+            overflow: visible !important;
+        }
+
+        .tox-editor-container {
+            flex: 1 1 auto !important;
+            display: flex !important;
+            flex-direction: column !important;
+            overflow: visible !important;
+        }
+
+        .tox-edit-area,
+        .tox-edit-area__iframe {
+            min-height: 350px !important;
+            height: 100% !important;
+            flex: 1 1 auto !important;
+            overflow: visible !important;
+            position: relative !important;
+        }
+
+        /* Remove resize handle */
+        .tox-statusbar__resize-handle {
+            display: none !important;
+        }
+
+        /* Fade slider styles */
         .fade-a-nav .slider-1,
         .fade-a-nav .slider-2,
         .fade-a-nav .slider-3 {
@@ -25,7 +58,6 @@
             justify-content: center;
             align-items: center;
             min-height: 50px;
-            /* Adjust this value as needed */
         }
 
         .fade-a-nav .card-title {
@@ -37,14 +69,17 @@
             margin: 0 auto;
         }
     </style>
+@endsection
+
+@section('main-content')
     <div class="container-fluid">
         <!-- Breadcrumb -->
         <div class="row m-1">
             <div class="col-12">
                 <h4 class="main-title">@lang('new.edit_new')</h4>
                 <ul class="app-line-breadcrumbs mb-3">
-                    <li><a href="{{ route('new.index') }}">@lang('translation.news')</a></li>
-                    <li class="active">@lang('translation.edit')</li>
+                    <li><a href="{{ route('new.index') }}" class="f-s-14 f-w-500">@lang('translation.news')</a></li>
+                    <li class="active"><span class="f-s-14 f-w-500">@lang('translation.edit')</span></li>
                 </ul>
             </div>
         </div>
@@ -57,27 +92,29 @@
                         enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-                        <input type="hidden" name="content" value="{{ old('content', $new->content) }}">
+                        <input type="hidden" name="content_th" value="{{ old('content_th', $new->content_th) }}">
+                        <input type="hidden" name="content_en" value="{{ old('content_en', $new->content_en) }}">
 
-                        <h5>Display New</h5>
+                        <h5>@lang('translation.display_new')</h5>
                         <div class="row">
                             <!-- Style 1 -->
                             <div class="col-md-4 col-sm-12">
-                                <div class="card select-card">
+                                <div class="card select-card {{ $new->display_type == 1 ? 'border-primary' : '' }}">
                                     <div class="card-header d-flex align-items-center">
-                                        <h5 class="mb-0">Style 1</h5>
+                                        <h5 class="mb-0">@lang('translation.style') 1</h5>
                                         <input type="radio" name="display_type" value="1"
                                             class="ms-2 form-check-input" {{ $new->display_type == 1 ? 'checked' : '' }}
                                             required>
                                     </div>
                                     <div class="card">
-                                        <img id="previewStyle1Cover" src="{{ asset('../assets/images/size/600x400.png') }}"
+                                        <img id="previewStyle1Cover"
+                                            src="{{ $new->cover ? asset('storage/' . $new->cover) : asset('../assets/images/size/600x400.png') }}"
                                             class="card-img-top" alt="Cover Preview">
                                         <div class="card-body">
-                                            <h5 class="card-title" id="previewTitle1">@lang('translation.title')</h5>
-                                            <p class="card-text" id="previewDetail1">@lang('translation.description')</p>
-                                            <p class="card-text"><small class="text-body-secondary">Last updated
-                                                    just now</small></p>
+                                            <h5 class="card-title" id="previewTitle1">{{ $new->title }}</h5>
+                                            <p class="card-text" id="previewDetail1">{{ $new->detail }}</p>
+                                            <p class="card-text"><small class="text-body-secondary">@lang('translation.last_updated')
+                                                    @lang('translation.just_now')</small></p>
                                         </div>
                                     </div>
                                 </div>
@@ -85,18 +122,18 @@
 
                             <!-- Style 2 -->
                             <div class="col-md-8 col-sm-12">
-                                <div class="card select-card">
+                                <div class="card select-card {{ $new->display_type == 2 ? 'border-primary' : '' }}">
                                     <div class="card-header d-flex align-items-center">
-                                        <h5 class="mb-0">Style 2</h5>
+                                        <h5 class="mb-0">@lang('translation.style') 2</h5>
                                         <input type="radio" name="display_type" value="2"
                                             class="ms-2 form-check-input" {{ $new->display_type == 2 ? 'checked' : '' }}
                                             required>
                                     </div>
-                                    <div class="card-body p-0"> <!-- Changed padding to 0 -->
+                                    <div class="card-body p-0">
                                         <div class="fade-a app-arrow">
                                             <div class="item">
                                                 <img id="previewStyle2Cover"
-                                                    src="{{ asset('../assets/images/size/1200x600.png') }}"
+                                                    src="{{ $new->cover ? asset('storage/' . $new->cover) : asset('../assets/images/size/1200x600.png') }}"
                                                     class="img-fluid" alt="Cover Preview">
                                             </div>
                                             <div class="item">
@@ -111,8 +148,8 @@
                                         <div class="slider fade-a-nav app-arrow">
                                             <!-- Added padding for text -->
                                             <div class="slider-1">
-                                                <h5 class="card-title" id="previewTitle2">@lang('translation.title')</h5>
-                                                <p class="card-text" id="previewDetail2">@lang('translation.description')</p>
+                                                <h5 class="card-title" id="previewTitle2">{{ $new->title }}</h5>
+                                                <p class="card-text" id="previewDetail2">{{ $new->detail }}</p>
                                             </div>
                                             <div class="slider-2">
                                                 <h5 class="card-title">@lang('translation.title') 2</h5>
@@ -127,64 +164,110 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Information Tabs (Thai/English) -->
+                        <div class="row">
+                            <div class="col-12">
+                                <ul class="nav nav-pills mb-3" id="infoTabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active d-flex align-items-center" id="thai-info-tab"
+                                            data-bs-toggle="pill" data-bs-target="#thai-info" type="button"
+                                            role="tab">
+                                            <span class="badge bg-primary me-2">TH</span> @lang('translation.thai_information')
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link d-flex align-items-center" id="english-info-tab"
+                                            data-bs-toggle="pill" data-bs-target="#english-info" type="button"
+                                            role="tab">
+                                            <span class="badge bg-secondary me-2">EN</span> @lang('translation.english_information_optional')
+                                        </button>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content p-3 border rounded" id="infoTabsContent">
+                                    <!-- Thai Information Tab -->
+                                    <div class="tab-pane fade show active" id="thai-info" role="tabpanel"
+                                        aria-labelledby="thai-info-tab">
+                                        <div class="mb-3">
+                                            <label for="title_th" class="form-label">@lang('translation.title_th')</label>
+                                            <input type="text" class="form-control" id="title_th" name="title_th"
+                                                value="{{ old('title_th', $new->title_th) }}" required>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="detail_th" class="form-label">@lang('translation.description_th')</label>
+                                            <textarea class="form-control" id="detail_th" name="detail_th" rows="5" required>{{ old('detail_th', $new->detail_th) }}</textarea>
+                                        </div>
+                                    </div>
+
+                                    <!-- English Information Tab -->
+                                    <div class="tab-pane fade" id="english-info" role="tabpanel"
+                                        aria-labelledby="english-info-tab">
+                                        <div class="mb-3">
+                                            <label for="title_en" class="form-label">@lang('translation.title_en')</label>
+                                            <input type="text" class="form-control" id="title_en" name="title_en"
+                                                value="{{ old('title_en', $new->title_en) }}">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="detail_en" class="form-label">@lang('translation.description_en')</label>
+                                            <textarea class="form-control" id="detail_en" name="detail_en" rows="5">{{ old('detail_en', $new->detail_en) }}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Common fields - before the tabs -->
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="effective_date" class="form-label">@lang('translation.display_date')</label>
+                                    <input type="text" class="form-control basic-date" name="effective_date"
+                                        value="{{ old('effective_date', $new->effective_date ? \Carbon\Carbon::parse($new->effective_date)->format('Y-m-d H:i') : '') }}"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="link" class="form-label">@lang('translation.external_link')</label>
+                                    <input type="text" class="form-control" id="link" name="link"
+                                        value="{{ old('link', $new->link) }}">
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" name="title"
-                                        value="{{ old('title', $new->title) }}" required>
-                                    <label>@lang('translation.title')</label>
-                                </div>
-
-                                <div class="form-floating mb-3">
+                                <div class="mb-3">
+                                    <label for="new_type" class="form-label">@lang('translation.type')</label>
                                     <select class="form-select" name="new_type" required>
                                         <option value="">@lang('translation.select_type')</option>
                                         @foreach ($newtypes as $newtype)
                                             <option value="{{ $newtype->id }}"
                                                 {{ $new->new_type == $newtype->id ? 'selected' : '' }}>
-                                                {{ $newtype->new_type_name }}</option>
+                                                {{ $newtype->new_type_name }}
+                                            </option>
                                         @endforeach
                                     </select>
-                                    <label>@lang('translation.type')</label>
-                                </div>
-
-                                <div class="form-floating mb-3">
-                                    <textarea class="form-control" name="detail" required>{{ old('detail', $new->detail) }}</textarea>
-                                    <label>@lang('translation.description')</label>
-                                </div>
-
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control basic-date" name="effective_date"
-                                        value="{{ old('effective_date', $new->effective_date ? \Carbon\Carbon::parse($new->effective_date)->format('Y-m-d H:i') : '') }}"
-                                        required>
-                                    <label>@lang('translation.effective_date')</label>
-                                </div>
-
-
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" name="link"
-                                        value="{{ old('link', $new->link) }}">
-                                    <label>@lang('translation.external_link')</label>
                                 </div>
                             </div>
-
                             <div class="col-md-6">
-                                <div class="file-uploader-box mb-3">
-                                    <input class="filepond-1" type="file" id="fileupload-2" name="cover"
-                                        accept="image/png, image/jpeg, image/gif"
-                                        data-file="{{ $new->cover ? asset('storage/' . $new->cover) : '' }}">
-
-                                </div>
-
-                                <div class="form-floating mb-3">
+                                <div class="mb-3">
+                                    <label for="status" class="form-label">@lang('translation.status')</label>
                                     <select class="form-select" name="status" required>
                                         <option value="1" {{ $new->status ? 'selected' : '' }}>@lang('translation.active')
                                         </option>
                                         <option value="0" {{ !$new->status ? 'selected' : '' }}>@lang('translation.inactive')
                                         </option>
                                     </select>
-                                    <label>@lang('translation.status')</label>
                                 </div>
+                            </div>
+                        </div>
 
+                        <div class="row mb-4">
+                            <div class="col-md-6">
                                 <div class="form-check form-switch mb-3">
                                     <input class="form-check-input" type="checkbox" id="is_important"
                                         name="is_important" value="1" {{ $new->is_important ? 'checked' : '' }}>
@@ -192,12 +275,53 @@
                                     <div class="form-text">@lang('translation.important_news_note')</div>
                                 </div>
                             </div>
-
-                            <div class="col-xl-12 editor-details">
-                                <div id="editor">{!! old('content', $new->content) !!}</div>
+                            <div class="col-md-6">
+                                <div class="file-uploader-box mb-3">
+                                    <input class="filepond-1" type="file" id="fileupload-2" name="cover"
+                                        accept="image/png, image/jpeg, image/gif"
+                                        data-file="{{ $new->cover ? asset('storage/' . $new->cover) : '' }}">
+                                </div>
                             </div>
+                        </div>
 
-                            <div class="col-12 mt-3">
+                        <!-- Content Tabs (Thai/English) -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <ul class="nav nav-pills mb-3" id="contentTabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active d-flex align-items-center" id="thai-content-tab"
+                                            data-bs-toggle="pill" data-bs-target="#thai-content" type="button"
+                                            role="tab">
+                                            <span class="badge bg-primary me-2">TH</span> @lang('translation.thai_content')
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link d-flex align-items-center" id="english-content-tab"
+                                            data-bs-toggle="pill" data-bs-target="#english-content" type="button"
+                                            role="tab">
+                                            <span class="badge bg-secondary me-2">EN</span> @lang('translation.english_content_optional')
+                                        </button>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content border rounded" id="contentTabsContent">
+                                    <!-- Thai Content Tab -->
+                                    <div class="tab-pane fade show active" id="thai-content" role="tabpanel"
+                                        aria-labelledby="thai-content-tab">
+                                        <div id="editor-th">{!! old('content_th', $new->content_th) !!}</div>
+                                    </div>
+
+                                    <!-- English Content Tab -->
+                                    <div class="tab-pane fade" id="english-content" role="tabpanel"
+                                        aria-labelledby="english-content-tab">
+                                        <div id="editor-en">{!! old('content_en', $new->content_en) !!}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-12">
                                 <div class="text-start">
                                     <button type="submit" class="btn btn-primary">@lang('translation.save')</button>
                                     <a href="{{ route('new.index') }}"
@@ -213,84 +337,52 @@
 @endsection
 
 @section('script')
-
-    <!-- Trumbowyg js -->
-    <script src="{{ asset('assets/vendor/trumbowyg/trumbowyg.min.js') }}"></script>
-
-    <!-- Load FilePond core first -->
-    <script src="{{ asset('assets/vendor/filepond/filepond.min.js') }}"></script>
-    <!-- Then load plugins -->
+    <!-- filepond -->
     <script src="{{ asset('assets/vendor/filepond/file-encode.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/filepond/validate-size.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/filepond/validate-type.js') }}"></script>
     <script src="{{ asset('assets/vendor/filepond/exif-orientation.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/filepond/image-preview.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/filepond/filepond.min.js') }}"></script>
 
     <!-- flatpickr js-->
     <script src="{{ asset('assets/vendor/datepikar/flatpickr.js') }}"></script>
-    {{-- flatpickr js th --}}
     <script src="https://npmcdn.com/flatpickr/dist/l10n/th.js"></script>
+
     @php
         $lang = session()->get('lang') == null ? 'th' : session()->get('lang');
     @endphp
     <script>
-        var locale = '{{ $lang }}'
-        var csrf = '{{ csrf_token() }}'
-    </script>
+        var locale = '{{ $lang }}';
+        var csrf = '{{ csrf_token() }}';
+        const DEFAULT_IMAGE = "{{ asset('../assets/images/size/600x400.png') }}";
+        const DEFAULT_IMAGE_STYLE2 = "{{ asset('../assets/images/size/1200x600.png') }}";
+        var existingFile = '{{ $new->cover ? asset('storage/' . $new->cover) : '' }}';
 
-    <script>
-        // กำหนดค่าเริ่มต้นให้ FilePond
-        var existingFile = document.querySelector('input[name="cover"]').dataset.file;
-    </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Title and Detail Inputs
-            var titleInput = document.querySelector('input[name="title"]');
-            var detailInput = document.querySelector('textarea[name="detail"]');
-
-            // Preview Elements
-            var previewTitle1 = document.getElementById("previewTitle1");
-            var previewDetail1 = document.getElementById("previewDetail1");
-            var previewTitle2 = document.getElementById("previewTitle2");
-            var previewDetail2 = document.getElementById("previewDetail2");
-
-            // Cover Upload
-            let coverUpload = document.getElementById("fileupload-2");
-            var previewStyle1Cover = document.getElementById("previewStyle1Cover");
-            var previewStyle2Cover = document.getElementById("previewStyle2Cover");
-
-            previewTitle1.textContent = titleInput.value || "@lang('translation.title')";
-            previewTitle2.textContent = titleInput.value || "@lang('translation.title')";
-            previewDetail1.textContent = detailInput.value || "@lang('translation.description')";
-            previewDetail2.textContent = detailInput.value || "@lang('translation.description')";
-
-            // Update Title Preview
-            titleInput.addEventListener("input", function() {
-                previewTitle1.textContent = this.value || "@lang('translation.title')";
-                previewTitle2.textContent = this.value || "@lang('translation.title')";
-            });
-
-            // Update Detail Preview
-            detailInput.addEventListener("input", function() {
-                previewDetail1.textContent = this.value || "@lang('translation.description')";
-                previewDetail2.textContent = this.value || "@lang('translation.description')";
-            });
+        // Browse link for filepond
+        document.addEventListener('DOMContentLoaded', function() {
+            const browseLink = document.querySelector('.browse-link');
+            if (browseLink) {
+                browseLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.querySelector('input[type="file"]').click();
+                });
+            }
         });
     </script>
 
-    <!-- ใช้สคริปต์เดียวกันกับหน้า add แต่ปรับ id form -->
-    <script src="{{ asset('assets/js/edit_new_init.js') }}"></script>
+    <!-- Title and Detail Preview Script -->
+    <script src="{{ asset('assets/js/news_preview.js') }}"></script>
+
+    <!-- TinyMCE Integration -->
     <script>
-        // เปลี่ยน selector เป็น form edit
-        document.getElementById('editNewForm').addEventListener('submit', function(e) {
-            document.querySelector('input[name="content"]').value = $('#editor').trumbowyg('html');
-        });
+        // For edit page, set the news ID for image uploads
+        var editNewsId = {{ $new->id }};
+        var media_url = '{{ route('media.upload') }}'
     </script>
+    <script src="{{ asset('assets/js/news_tinymce_init.js') }}"></script>
 
     <!-- slick-file -->
     <script src="{{ asset('assets/vendor/slick/slick.min.js') }}"></script>
-
-    <!--  js -->
     <script src="{{ asset('assets/js/slick.js') }}"></script>
 @endsection

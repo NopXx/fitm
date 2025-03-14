@@ -71,10 +71,10 @@
     <!-- News section -->
     <div class="max-w-screen-xl mx-auto px-4 py-8 dark:bg-gray-900">
         <!-- News Sections using the component -->
-        <x-news-section title="ข่าวประชาสัมพันธ์" :news="$news" :type-id="11" link="#" />
-        <x-news-section title="ข่าวทุนวิจัย/อบรม" :news="$news" :type-id="12" link="#" />
-        <x-news-section title="ข่าวจัดซื้อจัดจ้าง" :news="$news" :type-id="13" link="#" />
-        <x-news-section title="ข่าววิชาการ" :news="$news" :type-id="14" link="#" />
+        <x-news-section title="ข่าวประชาสัมพันธ์" :news="$news" :type-id="11" link="/news" />
+        <x-news-section title="ข่าวทุนวิจัย/อบรม" :news="$news" :type-id="12" link="/news" />
+        <x-news-section title="ข่าวจัดซื้อจัดจ้าง" :news="$news" :type-id="13" link="news" />
+        <x-news-section title="ข่าววิชาการ" :news="$news" :type-id="14" link="/news" />
     </div>
     <!-- End of News section -->
 
@@ -102,6 +102,17 @@
 
             <!-- FITM News Desktop Carousel with Embla structure -->
             <section class="embla hidden md:block" id="fitm-news-desktop-carousel">
+                <div class="flex justify-between items-center mb-6 mt-6">
+                    <h2 class="text-xl font-bold dark:text-white">FITM News</h2>
+                    <a href="{{ route('news.index') }}"
+                        class="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                        ข่าวทั้งหมด
+                        <svg class="w-4 h-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m9 18 6-6-6-6" />
+                        </svg>
+                    </a>
+                </div>
                 <div class="embla__viewport">
                     <div class="embla__container">
                         @foreach ($fitmnews as $item)
@@ -137,6 +148,17 @@
 
             <!-- FITM News Mobile Carousel with Embla structure -->
             <section class="embla block md:hidden" id="fitm-news-carousel">
+                <div class="flex justify-between items-center mb-6 mt-6">
+                    <h2 class="text-xl font-bold dark:text-white">FITM News</h2>
+                    <a href="{{ route('news.index') }}"
+                        class="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                        ข่าวทั้งหมด
+                        <svg class="w-4 h-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m9 18 6-6-6-6" />
+                        </svg>
+                    </a>
+                </div>
                 <div class="embla__viewport">
                     <div class="embla__container">
                         @foreach ($fitmnews as $item)

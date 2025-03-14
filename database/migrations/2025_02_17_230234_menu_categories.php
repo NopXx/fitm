@@ -16,10 +16,10 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
-            $table->foreign('parent_id')
-                  ->references('id')
-                  ->on('menu_categories')
-                  ->onDelete('set null');
+            // $table->foreign('parent_id')
+            //       ->references('id')
+            //       ->on('menu_categories')
+            //       ->onDelete('set null');
         });
     }
 

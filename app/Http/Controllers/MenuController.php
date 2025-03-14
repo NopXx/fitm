@@ -227,7 +227,7 @@ class MenuController extends Controller
                 [
                     'language_code' => 'en',
                     'name' => $request->name_en,
-                    'url' => "/en{$url}"
+                    'url' => $url
                 ]
             ]);
 
@@ -284,7 +284,7 @@ class MenuController extends Controller
             // อัพเดท translations - Updated for single URL
             $url = $request->url;
             foreach (['th', 'en'] as $lang) {
-                $urlWithPrefix = $lang === 'en' ? "/en{$url}" : $url;
+                $urlWithPrefix = $lang === 'en' ? $url : $url;
 
                 $menu->translations()
                     ->where('language_code', $lang)

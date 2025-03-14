@@ -68,6 +68,16 @@
                     <i class="ph ph-app-window"></i> @lang('online_services.title')
                 </a>
             </li>
+            <li class="no-sub">
+                <a class="" href="{{ route('boards.index') }}">
+                    <i class="ph ph-chalkboard-simple"></i> @lang('boards.title')
+                </a>
+            </li>
+            <li class="no-sub">
+                <a class="" href="{{ route('personnel.admin.index') }}">
+                    <i class="ph ph-address-book"></i> @lang('personnel.title')
+                </a>
+            </li>
             {{-- <li class="no-sub">
                 <a class="" href="{{route('widget')}}">
                     <i class="ph-duotone  ph-squares-four"></i> Widgets

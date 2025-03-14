@@ -56,7 +56,7 @@ $(function () {
             }
         },
         columns: [{
-                data: 'title'
+                data: 'title_th'
             },
             {
                 data: null,
@@ -65,7 +65,10 @@ $(function () {
                 }
             },
             {
-                data: 'display_type'
+                data: 'display_type',
+                render: function (data) {
+                    return `${lang.style} ${data}`;
+                }
             },
             {
                 data: 'new_type.new_type_name'

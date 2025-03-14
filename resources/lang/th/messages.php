@@ -9,4 +9,6 @@ return [
     'licensing' => 'ลิขสิทธิ์',
     'cookie_policy' => 'นโยบายคุกกี้',
     'contact' => 'ติดต่อ',
+    'today_visitors' => 'ผู้เข้าชมวันนี้',
+    'total_visitors' => 'ผู้เข้าชมทั้งหมด',
 ];

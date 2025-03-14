@@ -82,7 +82,6 @@
                                 <label class="form-label">@lang('online_services.link') <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="link" id="link" value="{{ $service->link }}" required>
                                 <div class="invalid-feedback" id="link_error"></div>
-                                <small class="text-muted">@lang('online_services.link_hint', ['default' => 'https://example.com'])</small>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">@lang('online_services.active')</label>
@@ -94,7 +93,6 @@
                             <div class="col-md-3">
                                 <label class="form-label">@lang('online_services.order')</label>
                                 <input type="number" class="form-control" name="order" value="{{ $service->order }}" min="0">
-                                <small class="text-muted">@lang('online_services.order_hint')</small>
                             </div>
                         </div>
 
@@ -110,14 +108,13 @@
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="removeImage" name="remove_image" value="1">
                                             <label class="form-check-label" for="removeImage">
-                                                @lang('online_services.remove_image')
+                                                @lang('translation.remove_image')
                                             </label>
                                         </div>
                                     </div>
                                 @endif
                                 <input type="file" class="form-control" name="image" id="imageInput" accept="image/*">
                                 <div class="invalid-feedback" id="image_error"></div>
-                                <small class="text-muted">@lang('online_services.image_change')</small>
                                 <div id="imagePreviewContainer" class="mt-2" style="display: none;">
                                     <img id="imagePreview" src="#" alt="Image Preview" class="image-preview">
                                 </div>

@@ -9,4 +9,6 @@ return [
     'licensing' => 'Licensing',
     'cookie_policy' => 'Cookie Policy',
     'contact' => 'Contact',
+    'today_visitors' => 'Today\'s Visitors',
+    'total_visitors' => 'Total Visitors',
 ];

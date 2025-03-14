@@ -26,6 +26,7 @@ return [
     'next' => 'Next',
     'page' => 'Page',
     'of' => 'of',
+    'confirm' => 'Confirm',
     'total_records' => 'Total Records',
     'add_new' => 'Add New',
     'cancel' => 'Cancel',
@@ -62,5 +63,59 @@ return [
     'featured_news' => 'Featured News',
     'latest_news' => 'Latest News',
     'important_updates' => 'Important Updates',
+
+    'visitor_statistics' => 'Visitor Statistics',
+    'active_visitors' => 'Active Visitors',
+    'today_visitors' => 'Today\'s Visitors',
+    'total_visitors' => 'Total Visitors',
+    'total_page_views' => 'Total Page Views',
+    'visitors_trend' => 'Website Visitors',
+    'most_visited_pages' => 'Most Visited Pages',
+    'page' => 'Page',
+    'visits' => 'Visits',
+    'percentage' => 'Percentage',
+    'visitors' => 'Visitors',
+    'no_page_visits_data' => 'No page visits data available',
+
+    // คำแปลใหม่สำหรับ MarMarMar Sun
+    'current_visitors' => 'Current Visitors',
+    'online_now' => 'Online Now',
+    'activity_history' => 'Activity History',
+    'visited_page' => 'Visited page :page',
+
+    // Form fields
+    'browse' => 'Browse',
+    'drag_drop_or' => 'Drag & Drop your files or',
+    'display_new' => 'Display News',
+    'style' => 'Style',
+    'title' => 'Title',
+    'description' => 'Description',
+    'title_th' => 'Title',
+    'title_en' => 'Title (English)',
+    'description_th' => 'Description',
+    'description_en' => 'Description (English)',
+    'display_date' => 'Display Date',
+    'external_link' => 'External Link',
+    'type' => 'Type',
+    'select_type' => 'Select Type',
+    'status' => 'Status',
+    'active' => 'Active',
+    'inactive' => 'Inactive',
+    'mark_as_important' => 'Mark as Important',
+    'important_news_note' => 'Important news will appear at the top of all news listings',
+
+    // Language tabs
+    'thai_information' => 'Thai Information',
+    'english_information_optional' => 'English Information (Optional)',
+    'thai_content' => 'Thai Content',
+    'english_content_optional' => 'English Content (Optional)',
+
+    // Placeholders
+    'thai_content_placeholder' => 'Thai content',
+    'english_content_placeholder' => 'English content',
+
+    // Preview elements
+    'last_updated' => 'Last updated',
+    'just_now' => 'just now',
 
 ];

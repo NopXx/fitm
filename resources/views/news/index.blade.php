@@ -49,7 +49,7 @@
                                         <tr>
                                             <th>@lang('translation.title')</th>
                                             <th>@lang('translation.effective_date')</th>
-                                            <th>@lang('translation.description')</th>
+                                            <th>@lang('translation.display_new')</th>
                                             <th>@lang('translation.type')</th>
                                             <th>@lang('translation.important')</th>
                                             <th>@lang('translation.action')</th>
@@ -79,7 +79,8 @@
             'error': '@lang('new.error')',
             'delete_error': '@lang('new.delete_error')',
             'filter_by_type': '@lang('new.filter_by_type')',
-            'all_types': '@lang('new.all_types')'
+            'all_types': '@lang('new.all_types')',
+            'style': '@lang('translation.style')'
         };
     </script>
 

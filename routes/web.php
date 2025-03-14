@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\BoardController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentContentController;
@@ -11,8 +12,12 @@ use App\Http\Controllers\LangController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\NewController;
+use App\Http\Controllers\NewsFrontendController;
 use App\Http\Controllers\OnlineServiceController;
+use App\Http\Controllers\PersonnelAdminController;
+use App\Http\Controllers\PersonnelController;
 use App\Http\Controllers\SymbolController;
+use App\Http\Controllers\VisitorController;
 use App\Models\FitmNews;
 use App\Models\FitmVideo;
 use App\Models\News;
@@ -33,9 +38,6 @@ Route::get('locale/{locale}', [MenuController::class, 'changeLocale'])
 
 Route::group(['middleware' => 'auth'], function () {
     Route::prefix('admin')->group(function () {
-
-        Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
-
         // News
         Route::resource('new', NewController::class);
         Route::get('news', [NewController::class, 'getNews'])->name('new.getNews');
@@ -122,6 +124,24 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('users/edit/{user}', [App\Http\Controllers\UserController::class, 'edit'])->name('users.edit');
         Route::put('users/update/{user}', [App\Http\Controllers\UserController::class, 'update'])->name('users.update');
         Route::delete('users/destroy/{user}', [App\Http\Controllers\UserController::class, 'destroy'])->name('users.destroy');
+
+        Route::get('/', [VisitorController::class, 'dashboard'])->name('dashboard.index');
+        Route::get('/api/visitors/stats', [VisitorController::class, 'apiStats']);
+        Route::get('/api/visitors/daily-stats', [VisitorController::class, 'apiDailyStats']);
+
+        Route::get('/boards', [BoardController::class, 'index'])->name('boards.index');
+        Route::get('/boards/add', [BoardController::class, 'add'])->name('boards.add');
+        Route::post('/boards/store', [BoardController::class, 'store'])->name('boards.store');
+        Route::get('/boards/edit/{id}', [BoardController::class, 'edit'])->name('boards.edit');
+        Route::put('/boards/update/{id}', [BoardController::class, 'update'])->name('boards.update');
+        Route::delete('/boards/destroy/{id}', [BoardController::class, 'destroy'])->name('boards.destroy');
+
+        Route::get('/personnel', [PersonnelAdminController::class, 'index'])->name('personnel.admin.index');
+        Route::get('/personnel/add', [PersonnelAdminController::class, 'add'])->name('personnel.admin.add');
+        Route::post('/personnel/store', [PersonnelAdminController::class, 'store'])->name('personnel.admin.store');
+        Route::get('/personnel/edit/{id}', [PersonnelAdminController::class, 'edit'])->name('personnel.admin.edit');
+        Route::put('/personnel/update/{id}', [PersonnelAdminController::class, 'update'])->name('personnel.admin.update');
+        Route::delete('/personnel/destroy/{id}', [PersonnelAdminController::class, 'destroy'])->name('personnel.admin.destroy');
     });
 });
 
@@ -193,6 +213,14 @@ Route::get('/contents/{code}', [ContentController::class, 'frontend'])->name('co
 
 Route::post('admin/clear-menu-cache', [MenuController::class, 'clearMenuCache'])
     ->name('admin.clear-menu-cache');
+
+// News routes
+Route::get('/news', [NewsFrontendController::class, 'index'])->name('news.index');
+Route::get('/news/{id}', [NewsFrontendController::class, 'show'])->name('news.show');
+
+Route::get('/personnel', [PersonnelController::class, 'index'])->name('personnel.index');
+Route::get('/personnel/board/{board_id}', [PersonnelController::class, 'showByBoard'])->name('personnel.board');
+Route::get('/personnel/{id}', [PersonnelController::class, 'show'])->name('personnel.show');
 
 Route::prefix('template')->group(function () {
     Route::view('index', 'template.index')->name('index');

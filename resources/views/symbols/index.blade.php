@@ -129,7 +129,7 @@
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: '@lang('translation.yes_delete')',
+                    confirmButtonText: '@lang('translation.confirm')',
                     cancelButtonText: '@lang('translation.cancel')'
                 }).then((result) => {
                     if (result.isConfirmed) {

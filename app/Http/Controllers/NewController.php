@@ -35,11 +35,14 @@ class NewController extends Controller
         try {
             // Validate input
             $request->validate([
-                'title' => 'required|string|max:255',
+                'title_th' => 'required|string|max:255',
+                'title_en' => 'nullable|string|max:255',
                 'display_type' => 'required',
                 'new_type' => 'required',
-                'detail' => 'required|string',
-                'content' => 'required|string',
+                'detail_th' => 'required|string',
+                'detail_en' => 'nullable|string',
+                'content_th' => 'nullable|string',
+                'content_en' => 'nullable|string',
                 'cover' => 'nullable|string', // Allow string paths
                 'effective_date' => 'required|date_format:Y-m-d H:i',
                 'link' => 'nullable|url',
@@ -57,11 +60,14 @@ class NewController extends Controller
             // Insert into database
             $new = new News();
             $new->no = News::all()->count() + 1;
-            $new->title = $request->title;
+            $new->title_th = $request->title_th;
+            $new->title_en = $request->title_en;
             $new->display_type = $request->display_type;
             $new->new_type = $request->new_type;
-            $new->detail = $request->detail; // Fixed typo
-            $new->content = $request->content;
+            $new->detail_th = $request->detail_th;
+            $new->detail_en = $request->detail_en;
+            $new->content_th = $request->content_th;
+            $new->content_en = $request->content_en;
             $new->cover = $coverPath == null ? null : 'news/' . $coverPath;
             $new->effective_date = $request->effective_date;
             $new->view_count = 0; // Default view count
@@ -117,6 +123,7 @@ class NewController extends Controller
             return response()->json(['error' => 'Upload failed: ' . $e->getMessage()], 500);
         }
     }
+
     public function destroy(Request $request)
     {
         try {
@@ -144,11 +151,14 @@ class NewController extends Controller
 
         // Validate input
         $request->validate([
-            'title' => 'required|string|max:255',
+            'title_th' => 'required|string|max:255',
+            'title_en' => 'nullable|string|max:255',
             'display_type' => 'required',
             'new_type' => 'required',
-            'detail' => 'required|string',
-            'content' => 'required|string',
+            'detail_th' => 'required|string',
+            'detail_en' => 'nullable|string',
+            'content_th' => 'nullable|string',
+            'content_en' => 'nullable|string',
             'cover' => 'nullable|string',
             'effective_date' => 'required|date_format:Y-m-d H:i',
             'link' => 'nullable|url',
@@ -179,12 +189,15 @@ class NewController extends Controller
                 $coverPath = Str::after($tmpPath, 'storage/');
             }
         }
-        $new->cover = $coverPath;
-        $new->title = $request->title;
+
+        $new->title_th = $request->title_th;
+        $new->title_en = $request->title_en;
         $new->display_type = $request->display_type;
         $new->new_type = $request->new_type;
-        $new->detail = $request->detail; // Fixed typo
-        $new->content = $request->content;
+        $new->detail_th = $request->detail_th;
+        $new->detail_en = $request->detail_en;
+        $new->content_th = $request->content_th;
+        $new->content_en = $request->content_en;
         $new->cover = $coverPath;
         $new->effective_date = $request->effective_date;
         $new->link = $request->link;
@@ -193,8 +206,6 @@ class NewController extends Controller
         $new->updated_at = now();
         $new->updated_by = Auth::id();
         $new->save();
-
-
 
         if ($new) {
             return response()->json([

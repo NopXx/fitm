@@ -145,13 +145,14 @@
 
                 // Confirm deletion using SweetAlert.
                 Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
+                    title: '@lang('department.delete_confirm')',
+                    text: "@lang('content.delete_message')",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
+                    confirmButtonText: '@lang('translation.confirm')',
+                    cancelButtonText: '@lang('translation.cancel')'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
@@ -162,16 +163,16 @@
                             },
                             success: function(response) {
                                 Swal.fire(
-                                    'Deleted!',
-                                    'Record has been deleted.',
+                                    '@lang('translation.deleted')',
+                                    '@lang('department.deleted_success')',
                                     'success'
                                 );
                                 table.ajax.reload();
                             },
                             error: function(xhr) {
                                 Swal.fire(
-                                    'Error!',
-                                    'Something went wrong.',
+                                    '@lang('translation.error')',
+                                    '@lang('department.delete_error')',
                                     'error'
                                 );
                             }

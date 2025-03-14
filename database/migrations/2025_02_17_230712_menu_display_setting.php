@@ -18,10 +18,10 @@ return new class extends Migration
             $table->string('target', 20)->nullable();
             $table->timestamps();
 
-            $table->foreign('category_id')
-                ->references('id')
-                ->on('menu_categories')
-                ->onDelete('cascade');
+            // $table->foreign('category_id')
+            //     ->references('id')
+            //     ->on('menu_categories')
+            //     ->onDelete('cascade');
         });
     }
 

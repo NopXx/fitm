@@ -1,13 +1,11 @@
-<nav class="bg-primary-light sticky top-0 z-50" x-data="{ mobileMenuOpen: false, activeDropdown: null, scrolled: false }" @keydown.escape="mobileMenuOpen = false; activeDropdown = null" x-cloak
-    x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 0 })">
+<nav class="bg-primary-light sticky top-0 z-50" x-data="{ mobileMenuOpen: false, activeDropdown: null, scrolled: false }"
+    @keydown.escape="mobileMenuOpen = false; activeDropdown = null" x-cloak x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 0 })">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4 transition-all duration-300"
         :class="{ 'py-2': scrolled, 'py-4': !scrolled }">
         {{-- Logo --}}
         <a href="{{ url('/') }}" class="flex items-center">
-            <img src="{{ asset('assets/images/fitm-logo-2.png') }}"
-                 :class="{ 'h-10': scrolled, 'h-14': !scrolled }"
-                 class="transition-all duration-300"
-                 alt="FITM Logo" />
+            <img src="{{ asset('assets/images/fitm-logo-2.png') }}" :class="{ 'h-10': scrolled, 'h-14': !scrolled }"
+                class="transition-all duration-300" alt="FITM Logo" />
         </a>
 
         <!-- Desktop Menu Dropdown -->
@@ -35,7 +33,7 @@
                                             d="M19 9l-7 7-7-7" />
                                     </svg>
                                 @endif
-                             </a>
+                            </a>
 
                             @if ($hasChildren && $showDropdown)
                                 <div x-show="activeDropdown === '{{ $menu->id }}'"
@@ -127,7 +125,7 @@
                     class="text-white text-lg {{ App::getLocale() === 'en' ? 'underline' : '' }}">Eng</a>
             </div>
 
-            {{-- Mobile Menu Items --}}
+            <!-- Mobile Menu Items -->
             <div class="space-y-2">
                 @foreach ($menus as $menu)
                     @php
@@ -138,18 +136,22 @@
 
                     @if ($isVisible)
                         <div x-data="{ open: false }">
-                            <button @click="open = !open"
-                                class="w-full flex items-center justify-between text-white py-3 text-xl">
-                                <span>{{ $translation?->name }}</span>
+                            <div class="flex w-full">
+                                <a href="{{ $translation?->url ?? '#' }}" class="grow text-white py-3 text-xl">
+                                    {{ $translation?->name }}
+                                </a>
                                 @if ($hasChildren)
-                                    <svg class="w-5 h-5 transform transition-transform duration-200"
-                                        :class="{ 'rotate-180': open }" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 9l-7 7-7-7" />
-                                    </svg>
+                                    <button @click="open = !open"
+                                        class="flex items-center justify-center text-white py-3 px-2">
+                                        <svg class="w-5 h-5 transform transition-transform duration-200"
+                                            :class="{ 'rotate-180': open }" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </button>
                                 @endif
-                            </button>
+                            </div>
 
                             @if ($hasChildren)
                                 <div x-show="open" x-transition:enter="transition ease-out duration-100"

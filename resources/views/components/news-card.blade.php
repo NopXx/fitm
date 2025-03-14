@@ -1,6 +1,6 @@
 <div class="{{ $isMobile ? 'w-full flex-shrink-0 px-1' : 'bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-colors duration-200' }}">
     <div class="{{ !$isMobile ? '' : 'bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden h-full' }}">
-        <a href="{{ $item->link ?? '#' }}" {{ $item->link != '' ? 'target="_blank"' : '' }}>
+        <a href="{{ $item->link ?? '/news/'. $item->id }}" {{ $item->link != '' ? 'target="_blank"' : '' }}>
             <div class="aspect-w-16 aspect-h-9 bg-gray-200 dark:bg-gray-700">
                 @if ($item->cover)
                     <img src="{{ asset('storage/' . $item->cover) }}" alt="{{ $item->title }}"

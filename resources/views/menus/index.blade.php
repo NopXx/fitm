@@ -177,8 +177,9 @@
                                                             <div class="menu-title" lang="th">
                                                                 {{ $menu->translations->where('language_code', 'th')->first()->name ?? '' }}
                                                             </div>
-                                                            @if(!$menu->is_active)
-                                                                <span class="badge bg-danger status-badge">@lang('menu.inactive')</span>
+                                                            @if (!$menu->is_active)
+                                                                <span
+                                                                    class="badge bg-danger status-badge">@lang('menu.inactive')</span>
                                                             @endif
                                                         </div>
                                                         <div class="menu-title d-none" lang="en">
@@ -203,7 +204,8 @@
                                             <div class="submenu-container" data-parent="{{ $menu->id }}">
                                                 @if ($menu->children->count() > 0)
                                                     @foreach ($menu->children as $child)
-                                                        <div class="submenu-item {{ !$child->is_active ? 'submenu-inactive' : '' }}" data-id="{{ $child->id }}">
+                                                        <div class="submenu-item {{ !$child->is_active ? 'submenu-inactive' : '' }}"
+                                                            data-id="{{ $child->id }}">
                                                             <div class="d-flex justify-content-between align-items-center">
                                                                 <div class="d-flex align-items-center">
                                                                     <i class="ti ti-grip-vertical drag-handle"></i>
@@ -212,8 +214,9 @@
                                                                             <div class="submenu-title" lang="th">
                                                                                 {{ $child->translations->where('language_code', 'th')->first()->name ?? '' }}
                                                                             </div>
-                                                                            @if(!$child->is_active)
-                                                                                <span class="badge bg-danger status-badge">@lang('menu.inactive')</span>
+                                                                            @if (!$child->is_active)
+                                                                                <span
+                                                                                    class="badge bg-danger status-badge">@lang('menu.inactive')</span>
                                                                             @endif
                                                                         </div>
                                                                         <div class="submenu-title d-none" lang="en">
@@ -255,6 +258,8 @@
 
 @section('script')
     <script src="{{ asset('assets/vendor/sortable/Sortable.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/sweetalert/sweetalert.js') }}"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
@@ -319,23 +324,53 @@
             // Delete menu handler
             document.querySelectorAll('.delete-menu').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    if (confirm(lang.confirm)) {
-                        const menuId = this.dataset.id;
-                        fetch(`/admin/menus/${menuId}`, {
-                                method: 'DELETE',
-                                headers: {
-                                    'X-CSRF-TOKEN': document.querySelector(
-                                        'meta[name="csrf-token"]').content,
-                                    'Accept': 'application/json'
-                                }
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    window.location.reload();
-                                }
-                            });
-                    }
+                    Swal.fire({
+                        title: '@lang('symbol.confirm_delete')',
+                        text: lang.confirm,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: '@lang('translation.confirm')',
+                        cancelButtonText: '@lang('translation.cancel')'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            const menuId = this.dataset.id;
+                            fetch(`/admin/menus/${menuId}`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'X-CSRF-TOKEN': document.querySelector(
+                                            'meta[name="csrf-token"]').content,
+                                        'Accept': 'application/json'
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        Swal.fire(
+                                            '@lang('menu.deleted')',
+                                            '@lang('menu.menu_deleted_success')',
+                                            'success'
+                                        ).then(() => {
+                                            window.location.reload();
+                                        });
+                                    } else {
+                                        Swal.fire(
+                                            '@lang('menu.error')',
+                                            '@lang('menu.delete_failed')',
+                                            'error'
+                                        );
+                                    }
+                                })
+                                .catch(error => {
+                                    Swal.fire(
+                                        '@lang('menu.error')',
+                                        '@lang('menu.delete_failed')',
+                                        'error'
+                                    );
+                                });
+                        }
+                    });
                 });
             });
 

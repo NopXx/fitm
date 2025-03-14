@@ -1,6 +1,6 @@
 @extends('layout.app')
 @section('css')
-    @vite(['resources/css/department.css'])
+    @vite(['resources/css/tinymce-content.css'])
 @endsection
 @section('content')
     <div class="max-w-screen-xl mx-auto px-4 py-8 dark:bg-gray-900">

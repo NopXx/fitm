@@ -57,7 +57,7 @@
                 <h4 class="main-title">@lang('users.edit_user')</h4>
                 <ul class="app-line-breadcrumbs mb-3">
                     <li><a href="{{ route('users.index') }}">@lang('users.title')</a></li>
-                    <li class="active">@lang('translation.edit')</li>
+                    <li class="active">@lang('users.edit_user')</li>
                 </ul>
             </div>
         </div>

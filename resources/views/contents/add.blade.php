@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/fontawesome/css/all.css') }}">
     <script src="https://cdn.tiny.cloud/1/hn7u4cu4cokjuyws887pfvcxkwbkdc6gm82bsbpamfqjdjhy/tinymce/7/tinymce.min.js"
         referrerpolicy="origin"></script>
-    @vite(['resources/css/department.css'])
+    @vite(['resources/css/tinymce-content.css'])
     <style>
         /* TinyMCE Editor Styles */
         .tox-tinymce {
@@ -116,7 +116,6 @@
                         <div class="row">
                             <div class="col-12">
                                 <button type="submit" class="btn btn-primary">@lang('content.save')</button>
-                                <button type="button" class="btn btn-info" id="previewBtn">@lang('content.preview')</button>
                                 <a href="{{ route('contents.index') }}" class="btn btn-secondary">@lang('content.cancel')</a>
                             </div>
                         </div>
@@ -173,7 +172,7 @@
                     return new Promise((resolve, reject) => {
                         const formData = new FormData();
                         formData.append('file', blobInfo.blob(), blobInfo.filename());
-                        formData.append('mediable_type', 'department');
+                        formData.append('mediable_type', 'contents');
                         formData.append('mediable_id', 1); // จะถูกอัปเดตหลังจากสร้างเนื้อหา
 
                         fetch('{{ route('media.upload') }}', {
