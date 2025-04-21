@@ -3,8 +3,7 @@
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('assets/vendor/fontawesome/css/all.css') }}">
-    <script src="https://cdn.tiny.cloud/1/hn7u4cu4cokjuyws887pfvcxkwbkdc6gm82bsbpamfqjdjhy/tinymce/7/tinymce.min.js"
-        referrerpolicy="origin"></script>
+    <script src="{{ asset('assets/vendor/tinymce/tinymce.min.js') }}" referrerpolicy="origin"></script>
     @vite(['resources/css/tinymce-content.css'])
     <style>
         /* TinyMCE Editor Styles */
@@ -54,6 +53,19 @@
         .tox .tox-collection__item-icon {
             color: inherit !important;
         }
+
+        /* Language Tabs */
+        .lang-tabs {
+            margin-bottom: 15px;
+        }
+
+        .lang-tabs .nav-link.active {
+            font-weight: 600;
+        }
+
+        .tab-pane {
+            padding-top: 15px;
+        }
     </style>
 @endsection
 
@@ -97,6 +109,11 @@
                                 <input type="text" class="form-control" name="department_name_th"
                                     value="{{ $department->department_name_th }}" required>
                             </div>
+                            <div class="col-md-6 mt-3">
+                                <label class="form-label">@lang('department.name_en')</label>
+                                <input type="text" class="form-control" name="department_name_en"
+                                    value="{{ $department->department_name_en }}">
+                            </div>
                         </div>
 
                         <div class="row">
@@ -105,9 +122,42 @@
                                 <hr>
                             </div>
 
+                            <!-- Language Tabs for Overview -->
                             <div class="col-12 mb-4">
-                                <label class="form-label">@lang('department.overview')</label>
-                                <textarea id="overview" name="overview">{{ $department->content->overview ?? '' }}</textarea>
+                                <div class="lang-tabs">
+                                    <ul class="nav nav-tabs" id="overviewLangTab" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" id="overview-th-tab" data-bs-toggle="tab"
+                                                data-bs-target="#overview-th-content" type="button" role="tab"
+                                                aria-controls="overview-th-content" aria-selected="true">
+                                                @lang('translation.thai_information')
+                                            </button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="overview-en-tab" data-bs-toggle="tab"
+                                                data-bs-target="#overview-en-content" type="button" role="tab"
+                                                aria-controls="overview-en-content" aria-selected="false">
+                                                @lang('translation.english_information')
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="tab-content" id="overviewLangTabContent">
+                                    <!-- Thai Overview -->
+                                    <div class="tab-pane fade show active" id="overview-th-content" role="tabpanel"
+                                        aria-labelledby="overview-th-tab">
+                                        <label class="form-label">@lang('department.overview') (@lang('translation.thai_information'))</label>
+                                        <textarea id="overview_th" name="overview_th">{{ $department->overview_th }}</textarea>
+                                    </div>
+
+                                    <!-- English Overview -->
+                                    <div class="tab-pane fade" id="overview-en-content" role="tabpanel"
+                                        aria-labelledby="overview-en-tab">
+                                        <label class="form-label">@lang('department.overview') (@lang('translation.english_information'))</label>
+                                        <textarea id="overview_en" name="overview_en">{{ $department->overview_en }}</textarea>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -131,7 +181,38 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <div id="previewContent" class="department-content"></div>
+                        <div class="lang-tabs">
+                            <ul class="nav nav-tabs" id="previewLangTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="preview-th-tab" data-bs-toggle="tab"
+                                        data-bs-target="#preview-th-content" type="button" role="tab"
+                                        aria-controls="preview-th-content" aria-selected="true">
+                                        @lang('translation.thai_information')
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="preview-en-tab" data-bs-toggle="tab"
+                                        data-bs-target="#preview-en-content" type="button" role="tab"
+                                        aria-controls="preview-en-content" aria-selected="false">
+                                        @lang('translation.english_information')
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="tab-content" id="previewLangTabContent">
+                            <!-- Thai Preview -->
+                            <div class="tab-pane fade show active" id="preview-th-content" role="tabpanel"
+                                aria-labelledby="preview-th-tab">
+                                <div id="previewContentTh" class="department-content"></div>
+                            </div>
+
+                            <!-- English Preview -->
+                            <div class="tab-pane fade" id="preview-en-content" role="tabpanel"
+                                aria-labelledby="preview-en-tab">
+                                <div id="previewContentEn" class="department-content"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -142,9 +223,42 @@
 @section('script')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize TinyMCE
+            // Initialize TinyMCE for Thai content
+            initTinyMCE('#overview_th');
+
+            // Initialize TinyMCE for English content
+            initTinyMCE('#overview_en');
+
+            // Handle form submission
+            document.querySelector('#editForm').addEventListener('submit', submitForm);
+
+            // Setup preview button
+            document.querySelector('#previewBtn').addEventListener('click', function() {
+                // Get content from both editors
+                const thContent = tinymce.get('overview_th').getContent();
+                const enContent = tinymce.get('overview_en').getContent();
+
+                // Apply content to preview containers
+                const previewContentTh = document.querySelector('#previewContentTh');
+                const previewContentEn = document.querySelector('#previewContentEn');
+
+                previewContentTh.innerHTML = thContent;
+                previewContentEn.innerHTML = enContent;
+
+                // Apply responsive table wrappers and image classes
+                applyResponsiveClasses(previewContentTh);
+                applyResponsiveClasses(previewContentEn);
+
+                // Show the modal
+                const previewModal = new bootstrap.Modal(document.querySelector('#previewModal'));
+                previewModal.show();
+            });
+        });
+
+        // Initialize TinyMCE with all the configuration
+        function initTinyMCE(selector) {
             tinymce.init({
-                selector: '#overview',
+                selector: selector,
                 send_browser_spellcheck_urls: false,
                 send_client_stats: false,
                 promotion: false,
@@ -163,8 +277,6 @@
 
                 setup: function(editor) {
                     editor.on('init', function() {
-                        setupPreview(editor);
-
                         // Only apply table styles to new tables, not existing ones with content
                         editor.on('NewBlock', function(e) {
                             if (e.newBlock && e.newBlock.nodeName === 'TABLE') {
@@ -304,7 +416,7 @@
                     editor.on('SetContent Change', function() {
                         setTimeout(function() {
                             editor.execCommand('mceAutoResize');
-                            adjustEditorHeight();
+                            adjustEditorHeight(editor);
                         }, 200);
                     });
 
@@ -575,14 +687,10 @@
                     }
                 `
             });
-
-            // Handle form submission
-            document.querySelector('#editForm').addEventListener('submit', submitForm);
-        });
+        }
 
         // Adjust editor height based on content
-        function adjustEditorHeight() {
-            const editor = tinymce.get('overview');
+        function adjustEditorHeight(editor) {
             if (!editor) return;
 
             // Calculate appropriate height
@@ -602,105 +710,46 @@
             editor.getDoc().body.style.overflow = 'auto';
         }
 
-        // Setup preview functionality
-        function setupPreview(editor) {
-            if (!editor) {
-                console.error('Editor instance not found');
-                return;
-            }
+        // Apply responsive classes to tables and images in preview
+        function applyResponsiveClasses(container) {
+            if (!container) return;
 
-            const previewContent = document.querySelector('#previewContent');
-            const deviceButtons = {
-                mobile: {
-                    width: '375px',
-                    height: '667px'
-                },
-                tablet: {
-                    width: '768px',
-                    height: '1024px'
-                },
-                desktop: {
-                    width: '100%',
-                    height: 'auto'
+            // Apply responsive table wrappers if not already added
+            const tables = container.querySelectorAll('table:not(.table-responsive)');
+            tables.forEach(table => {
+                if (!table.parentElement.classList.contains('table-responsive')) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'table-responsive';
+                    table.parentNode.insertBefore(wrapper, table);
+                    wrapper.appendChild(table);
                 }
-            };
-
-            const deviceSelector = createDeviceSelector(deviceButtons, previewContent);
-
-            document.querySelector('#previewBtn').addEventListener('click', () => {
-                // Get the formatted content
-                const content = editor.getContent();
-                const modalBody = document.querySelector('.modal-body');
-
-                modalBody.innerHTML = '';
-                modalBody.appendChild(deviceSelector);
-
-                // Create a wrapper with department-content class to match frontend styling
-                const previewWrapper = document.createElement('div');
-                previewWrapper.className = 'preview-content-wrapper department-content';
-                previewWrapper.style.overflow = 'auto';
-                previewWrapper.style.maxHeight = '70vh';
-                previewWrapper.appendChild(previewContent);
-                modalBody.appendChild(previewWrapper);
-
-                // Add content to preview
-                previewContent.innerHTML = content;
-                previewContent.style.width = '100%';
-                previewContent.style.height = 'auto';
-                previewContent.style.minHeight = '200px';
-
-                // Apply responsive table wrappers if not already added
-                const tables = previewContent.querySelectorAll('table:not(.table-responsive)');
-                tables.forEach(table => {
-                    if (!table.parentElement.classList.contains('table-responsive')) {
-                        const wrapper = document.createElement('div');
-                        wrapper.className = 'table-responsive';
-                        table.parentNode.insertBefore(wrapper, table);
-                        wrapper.appendChild(table);
-                    }
-                });
-
-                // Add img-fluid class to images if not already added
-                const images = previewContent.querySelectorAll('img:not(.img-fluid)');
-                images.forEach(img => {
-                    img.classList.add('img-fluid');
-                });
-
-                // Select the most recent device when opening modal
-                deviceSelector.lastElementChild.click();
-
-                // Show the preview modal
-                const previewModal = new bootstrap.Modal(document.querySelector('#previewModal'));
-                previewModal.show();
             });
-        }
 
-        // Create device selector for preview
-        function createDeviceSelector(deviceButtons, previewContent) {
-            const deviceSelector = document.createElement('div');
-            deviceSelector.className = 'btn-group mb-3';
-            Object.keys(deviceButtons).forEach(device => {
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = 'btn btn-outline-primary text-capitalize';
-                btn.textContent = device;
-                btn.onclick = () => {
-                    Array.from(deviceSelector.children).forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    previewContent.style.width = deviceButtons[device].width;
-                    previewContent.style.height = deviceButtons[device].height;
-                };
-                deviceSelector.appendChild(btn);
+            // Add img-fluid class to images if not already added
+            const images = container.querySelectorAll('img:not(.img-fluid)');
+            images.forEach(img => {
+                img.classList.add('img-fluid');
             });
-            return deviceSelector;
         }
 
         // Handle form submission
         async function submitForm(e) {
             e.preventDefault();
             const departmentId = {{ $department->id }};
+
+            // Ensure content is updated before form submission
+            tinymce.triggerSave();
+
+            // Get form data
+            const formData = new FormData(this);
+            const formDataObj = {};
+            for (const [key, value] of formData.entries()) {
+                formDataObj[key] = value;
+            }
+
             try {
-                const departmentResponse = await fetch(`/admin/department/update/${departmentId}`, {
+                // Send a single request to update all department fields
+                const response = await fetch(`/admin/department/update/${departmentId}`, {
                     method: 'PUT',
                     headers: {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -708,36 +757,31 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        department_code: this.department_code.value,
-                        department_name_th: this.department_name_th.value
+                        department_code: formDataObj.department_code,
+                        department_name_th: formDataObj.department_name_th,
+                        department_name_en: formDataObj.department_name_en,
+                        overview_th: tinymce.get('overview_th').getContent(),
+                        overview_en: tinymce.get('overview_en').getContent(),
+                        status: 'draft' // Default to draft status
                     })
                 });
 
-                const contentResponse = await fetch(`/admin/department/${departmentId}/content`, {
-                    method: 'PUT',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        overview: tinymce.get('overview').getContent(),
-                        status: 'draft'
-                    })
-                });
+                const result = await response.json();
 
-                const [departmentResult, contentResult] = await Promise.all([
-                    departmentResponse.json(),
-                    contentResponse.json()
-                ]);
-
-                if (departmentResult.success && contentResult.success) {
+                if (result.success) {
                     window.location.href = '{{ route('department.index') }}';
                 } else {
-                    console.error('Failed to update:', departmentResult.message, contentResult.message);
+                    console.error('Failed to update department:', result.message);
+
+                    if (result.errors) {
+                        // Display validation errors
+                        const errorMessages = Object.values(result.errors).flat();
+                        alert('Error: ' + errorMessages.join('\n'));
+                    }
                 }
             } catch (error) {
                 console.error('Error:', error);
+                alert('An error occurred while saving. Please try again.');
             }
         }
     </script>
