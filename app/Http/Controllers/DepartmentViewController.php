@@ -10,7 +10,7 @@ class DepartmentViewController extends Controller
 {
     public function index($id) {
         $id = Departments::where('department_code', $id)->first();
-        $department = Departments::with('content')->findOrFail($id->id);
+        $department = Departments::findOrFail($id->id);
         Log::debug($department);
         return view('department.index', compact('department'));
     }

@@ -16,6 +16,7 @@ use App\Http\Controllers\NewsFrontendController;
 use App\Http\Controllers\OnlineServiceController;
 use App\Http\Controllers\PersonnelAdminController;
 use App\Http\Controllers\PersonnelController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SymbolController;
 use App\Http\Controllers\VisitorController;
 use App\Models\FitmNews;
@@ -50,8 +51,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('/new/update/{new}', [NewController::class, 'update'])->name('new.update');
         Route::delete('/new/delete/{new}', [NewController::class, 'delete'])->name('new.delete');
 
-
-        // department
+        // Department routes
         Route::get('/department', [DepartmentController::class, 'index'])->name('department.index');
         Route::get('/department/create', [DepartmentController::class, 'createDepartment'])->name('departments.create');
         Route::post('/department/store', [DepartmentController::class, 'store'])->name('departments.store');
@@ -60,13 +60,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::delete('/department/delete/{id}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
         Route::get('/departments', [DepartmentController::class, 'getDepartments']);
 
-        // Department Content routes
-        Route::get('department/{department}/content', [DepartmentContentController::class, 'edit'])
-            ->name('departments.content.edit');
-        Route::put('department/{department}/content', [DepartmentContentController::class, 'update'])
-            ->name('departments.content.update');
-        Route::get('department/{department}/content/preview', [DepartmentContentController::class, 'preview'])
-            ->name('departments.content.preview');
         // Media routes
         Route::post('media/upload', [MediaController::class, 'upload'])
             ->name('media.upload');
@@ -208,6 +201,8 @@ Route::get('departments/{id}', [DepartmentViewController::class, 'index']);
 Route::get('history', [HistoricalEventController::class, 'frontend']);
 
 Route::get('symbol', [SymbolController::class, 'frontend']);
+
+Route::get('/search', [SearchController::class, 'index'])->name('search');
 
 Route::get('/contents/{code}', [ContentController::class, 'frontend'])->name('content.show');
 

@@ -24,9 +24,6 @@
                                     @csrf
                                     <div class="mb-3 text-center">
                                         <h3>Login to your Account</h3>
-                                        <p class="f-s-12 text-secondary">
-                                            Get started with our app, just create an account and enjoy the experience.
-                                        </p>
                                     </div>
 
                                     <div class="mb-3">
@@ -36,7 +33,6 @@
                                         @error('email')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
-                                        <div class="form-text text">We'll never share your email with anyone else.</div>
                                     </div>
 
                                     <div class="mb-3">

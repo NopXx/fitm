@@ -1,5 +1,5 @@
-<nav class="bg-primary-light sticky top-0 z-50" x-data="{ mobileMenuOpen: false, activeDropdown: null, scrolled: false }"
-    @keydown.escape="mobileMenuOpen = false; activeDropdown = null" x-cloak x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 0 })">
+<nav class="bg-primary-light dark:bg-gray-900 sticky top-0 z-50" x-data="{ mobileMenuOpen: false, activeDropdown: null, scrolled: false, searchOpen: false }"
+    @keydown.escape="mobileMenuOpen = false; activeDropdown = null; searchOpen = false" x-cloak x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 0 })">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4 transition-all duration-300"
         :class="{ 'py-2': scrolled, 'py-4': !scrolled }">
         {{-- Logo --}}
@@ -23,7 +23,7 @@
                         <li class="relative group">
                             <a href="{{ $translation?->url ?? '#' }}"
                                 @mouseenter="activeDropdown = '{{ $menu->id }}'"
-                                class="text-white hover:text-gray-100 flex items-center {{ $menu->displaySetting?->css_class }}">
+                                class="text-white hover:text-gray-100 dark:text-gray-200 dark:hover:text-white flex items-center {{ $menu->displaySetting?->css_class }}">
                                 {{ $translation?->name }}
                                 @if ($hasChildren && $showDropdown)
                                     <svg class="w-4 h-4 ml-1"
@@ -44,7 +44,7 @@
                                     x-transition:leave-start="transform opacity-100 scale-100"
                                     x-transition:leave-end="transform opacity-0 scale-95"
                                     @mouseleave="activeDropdown = null"
-                                    class="absolute left-0 mt-2 w-56 bg-white rounded-md shadow-lg z-50">
+                                    class="absolute left-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-md shadow-lg z-50">
                                     @foreach ($menu->children->where('is_active', true)->sortBy('sort_order') as $child)
                                         @php
                                             $childTranslation = $child->translations->firstWhere(
@@ -53,7 +53,7 @@
                                             );
                                         @endphp
                                         <a href="{{ $childTranslation?->url ?? '#' }}"
-                                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ $child->displaySetting?->css_class }}">
+                                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 {{ $child->displaySetting?->css_class }}">
                                             {{ $childTranslation?->name }}
                                         </a>
                                     @endforeach
@@ -65,11 +65,18 @@
             </ul>
         </div>
 
-        {{-- Theme and Language Controls --}}
+        {{-- Theme, Search and Language Controls --}}
         <div class="flex items-center gap-4">
+            <!-- Search Button (Desktop & Mobile) -->
+            <button @click="searchOpen = !searchOpen" class="text-white dark:text-gray-400 hover:bg-gray-700 dark:hover:bg-gray-600 rounded-lg text-sm p-2.5" aria-label="เปิดการค้นหา">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </button>
+
             <!-- Theme Toggle Button -->
             <button id="theme-toggle" type="button"
-                class="text-white dark:text-gray-400 hover:bg-gray-700 rounded-lg text-sm p-2.5">
+                class="text-white dark:text-gray-400 hover:bg-gray-700 dark:hover:bg-gray-600 rounded-lg text-sm p-2.5">
                 <!-- Dark mode icon -->
                 <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
                     xmlns="http://www.w3.org/2000/svg">
@@ -87,14 +94,14 @@
             {{-- Language Switcher --}}
             <div class="hidden md:flex items-center gap-2">
                 <a href="{{ route('changeLang', 'th') }}"
-                    class="text-white text-sm font-medium {{ App::getLocale() === 'th' ? 'underline' : '' }}">ไทย</a>
-                <span class="text-white">|</span>
+                    class="text-white dark:text-gray-200 text-sm font-medium {{ App::getLocale() === 'th' ? 'underline' : '' }}">ไทย</a>
+                <span class="text-white dark:text-gray-200">|</span>
                 <a href="{{ route('changeLang', 'en') }}"
-                    class="text-white text-sm font-medium {{ App::getLocale() === 'en' ? 'underline' : '' }}">Eng</a>
+                    class="text-white dark:text-gray-200 text-sm font-medium {{ App::getLocale() === 'en' ? 'underline' : '' }}">Eng</a>
             </div>
 
             {{-- Mobile Menu Toggle --}}
-            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-white p-2 z-50"
+            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-white dark:text-gray-200 p-2 z-50"
                 :aria-expanded="mobileMenuOpen" aria-label="Toggle menu">
                 <svg x-show="!mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -106,6 +113,37 @@
         </div>
     </div>
 
+    {{-- Search Panel --}}
+    <div x-show="searchOpen" x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0 transform -translate-y-10"
+        x-transition:enter-end="opacity-100 transform translate-y-0"
+        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100 transform translate-y-0"
+        x-transition:leave-end="opacity-0 transform -translate-y-10"
+        @click.away="searchOpen = false"
+        class="absolute inset-x-0 top-full bg-white dark:bg-gray-800 shadow-lg py-4 px-6 md:px-8 z-40">
+        <form action="{{ route('search') }}" method="GET" class="max-w-screen-xl mx-auto">
+            <div class="relative">
+                <label for="search-input" class="sr-only">ค้นหา</label>
+                <input id="search-input" name="q" type="text"
+                       class="block w-full p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                       placeholder="ค้นหาในเว็บไซต์..."
+                       @keydown.escape="searchOpen = false"
+                       required>
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+                <button type="submit" class="absolute inset-y-0 right-0 flex items-center pr-3 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300">
+                    ค้นหา <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                </button>
+            </div>
+        </form>
+    </div>
+
     {{-- Mobile Menu Panel --}}
     <div x-show="mobileMenuOpen" x-transition:enter="transition ease-out duration-200"
         x-transition:enter-start="opacity-0 transform -translate-x-full"
@@ -113,16 +151,16 @@
         x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="opacity-100 transform translate-x-0"
         x-transition:leave-end="opacity-0 transform -translate-x-full" @click.away="mobileMenuOpen = false"
-        class="fixed inset-0 z-40 bg-gray-900 bg-opacity-95 md:hidden overflow-y-auto">
+        class="fixed inset-0 z-40 bg-gray-900 bg-opacity-95 dark:bg-gray-900 dark:bg-opacity-95 md:hidden overflow-y-auto">
 
         <div class="min-h-screen px-4 py-4 space-y-4">
             {{-- Mobile Language Switcher --}}
-            <div class="flex justify-center items-center gap-4 py-4 border-b border-gray-700">
+            <div class="flex justify-center items-center gap-4 py-4 border-b border-gray-700 dark:border-gray-600">
                 <a href="{{ route('changeLang', 'th') }}" @click="mobileMenuOpen = false"
-                    class="text-white text-lg {{ App::getLocale() === 'th' ? 'underline' : '' }}">ไทย</a>
-                <span class="text-white">|</span>
+                    class="text-white dark:text-gray-200 text-lg {{ App::getLocale() === 'th' ? 'underline' : '' }}">ไทย</a>
+                <span class="text-white dark:text-gray-200">|</span>
                 <a href="{{ route('changeLang', 'en') }}" @click="mobileMenuOpen = false"
-                    class="text-white text-lg {{ App::getLocale() === 'en' ? 'underline' : '' }}">Eng</a>
+                    class="text-white dark:text-gray-200 text-lg {{ App::getLocale() === 'en' ? 'underline' : '' }}">Eng</a>
             </div>
 
             <!-- Mobile Menu Items -->
@@ -137,12 +175,12 @@
                     @if ($isVisible)
                         <div x-data="{ open: false }">
                             <div class="flex w-full">
-                                <a href="{{ $translation?->url ?? '#' }}" class="grow text-white py-3 text-xl">
+                                <a href="{{ $translation?->url ?? '#' }}" class="grow text-white dark:text-gray-200 py-3 text-xl">
                                     {{ $translation?->name }}
                                 </a>
                                 @if ($hasChildren)
                                     <button @click="open = !open"
-                                        class="flex items-center justify-center text-white py-3 px-2">
+                                        class="flex items-center justify-center text-white dark:text-gray-200 py-3 px-2">
                                         <svg class="w-5 h-5 transform transition-transform duration-200"
                                             :class="{ 'rotate-180': open }" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24">
@@ -166,7 +204,7 @@
                                                     ->first();
                                             @endphp
                                             <a href="{{ $childTranslation?->url ?? '#' }}"
-                                                @click="mobileMenuOpen = false" class="block text-white py-2 text-lg">
+                                                @click="mobileMenuOpen = false" class="block text-white dark:text-gray-200 py-2 text-lg">
                                                 {{ $childTranslation?->name }}
                                             </a>
                                         @endif

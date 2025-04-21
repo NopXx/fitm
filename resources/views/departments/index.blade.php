@@ -4,7 +4,22 @@
 @section('css')
     <link rel="stylesheet" href="{{ asset('assets/vendor/fontawesome/css/all.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatable/jquery.dataTables.min.css') }}">
-
+    <style>
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .status-draft {
+            background-color: #f3f4f6;
+            color: #6b7280;
+        }
+        .status-published {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+    </style>
 @endsection
 
 @section('main-content')
@@ -56,7 +71,8 @@
                                             <thead>
                                                 <tr>
                                                     <th>@lang('department.code')</th>
-                                                    <th>@lang('department.name')</th>
+                                                    <th>@lang('department.name_th')</th>
+                                                    <th>@lang('department.name_en')</th>
                                                     <th>@lang('translation.action')</th>
                                                 </tr>
                                             </thead>
@@ -97,20 +113,32 @@
                             return response;
                         },
                     },
-                    columns: [{
+                    columns: [
+                        {
                             data: 'department_code'
                         },
                         {
                             data: 'department_name_th'
                         },
                         {
+                            data: 'department_name_en',
+                            render: function(data) {
+                                return data || '-';
+                            }
+                        },
+                        {
                             data: null,
                             render: function(data, type, row) {
+                                let contentEditBtn = '';
+                                let contentPreviewBtn = '';
+
                                 return `
-                                <a href="/admin/department/edit/${data.id}" type="button" class="btn btn-light-primary icon-btn b-r-4">
+                                ${contentEditBtn}
+                                ${contentPreviewBtn}
+                                <a href="/admin/department/edit/${data.id}" type="button" class="btn btn-light-primary icon-btn b-r-4 me-1" title="@lang('department.edit')">
                                     <i class="ti ti-edit text-primary"></i>
                                 </a>
-                                <button type="button" class="btn btn-light-danger icon-btn b-r-4 delete-btn">
+                                <button type="button" class="btn btn-light-danger icon-btn b-r-4 delete-btn" title="@lang('department.delete')">
                                     <i class="ti ti-trash"></i>
                                 </button>`;
                             }
@@ -121,14 +149,6 @@
 
             // Initialize DataTables
             departmentTable();
-
-
-
-            // Adjust DataTables columns when a tab becomes visible.
-            // This fixes rendering issues when DataTables are inside hidden tabs.
-            // $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
-            //     $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
-            // });
 
             // Delete button handler
             $('.app-data-table').on('click', '.delete-btn', function() {

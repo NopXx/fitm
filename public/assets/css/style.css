@@ -294,7 +294,7 @@ body[text=large-text] {
 
 body {
   font-size: var(--font-size);
-  font-family: "Golos Text", sans-serif;
+  font-family: "Noto Sans Thai", sans-serif;
   color: var(--font-color);
   background-color: var(--bodybg-color);
 }

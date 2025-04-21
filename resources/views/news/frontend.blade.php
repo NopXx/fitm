@@ -1,8 +1,10 @@
 @extends('layout.app')
+@section('title')
+    @lang('translation.news')
+@endsection
 
 @section('css')
     @vite(['resources/css/new.css'])
-
 @endsection
 
 @section('content')
@@ -163,6 +165,24 @@
             </div>
         </div>
 
+        <div class="mb-6">
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                    </svg>
+                </div>
+                <input type="search" id="newsSearch"
+                    class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 transition-colors duration-200"
+                    placeholder="{{ __('new.search_news') }}" aria-label="{{ __('new.search_news') }}">
+                <button id="clearSearch"
+                    class="absolute right-2.5 bottom-2.5 hidden bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-700 text-white font-medium rounded-lg text-sm px-4 py-2 transition-colors duration-200">
+                    {{ __('new.clear') }}
+                </button>
+            </div>
+        </div>
         <!-- News Tabs Section -->
         <div class="mb-8">
             <div class="border-b border-gray-200 dark:border-gray-700 transition-colors duration-200">
@@ -438,6 +458,9 @@
 
             // Set up news filters
             initializeFilters();
+
+            // Initialize search functionality
+            initializeSearch();
 
             // Handle window resize events for responsive layouts
             window.addEventListener('resize', function() {
@@ -871,6 +894,104 @@
                     text: opt.text
                 })));
             }
+        }
+
+        // SEARCH FUNCTIONALITY
+        function initializeSearch() {
+            const searchInput = document.getElementById('newsSearch');
+            const clearButton = document.getElementById('clearSearch');
+
+            if (!searchInput || !clearButton) return;
+
+            // Show/hide clear button based on search input
+            searchInput.addEventListener('input', function() {
+                clearButton.style.display = this.value ? 'block' : 'none';
+                performSearch();
+            });
+
+            // Clear search
+            clearButton.addEventListener('click', function() {
+                searchInput.value = '';
+                clearButton.style.display = 'none';
+                performSearch();
+                searchInput.focus();
+            });
+
+            // Search on Enter key
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    performSearch();
+                }
+            });
+
+            // Function to perform search
+            function performSearch() {
+                const searchTerm = searchInput.value.toLowerCase().trim();
+                const activeTabPanel = document.querySelector('#newsTabContent [role="tabpanel"]:not(.hidden)');
+                const activeTabId = activeTabPanel ? activeTabPanel.id : 'regular-news';
+
+                // Determine which cards to search based on active tab
+                let cards;
+                let noResultsTitle, noResultsMessage;
+
+                if (activeTabId === 'regular-news') {
+                    cards = document.querySelectorAll('#regularNewsGrid .news-card');
+                    noResultsTitle = '{{ __('new.no_news_found') }}';
+                    noResultsMessage = '{{ __('new.no_match_search') }}';
+                } else {
+                    cards = document.querySelectorAll('#fitmNewsGrid .fitm-news-card');
+                    noResultsTitle = '{{ __('new.no_fitm_news_found') }}';
+                    noResultsMessage = '{{ __('new.no_match_search') }}';
+                }
+
+                let visibleCount = 0;
+
+                // Process each card
+                cards.forEach(card => {
+                    // Only search cards that are not hidden by other filters
+                    if (card.style.display !== 'none' || searchTerm === '') {
+                        const title = card.querySelector('h5').textContent.toLowerCase();
+                        const description = card.querySelector('p').textContent.toLowerCase();
+
+                        // Show or hide based on search
+                        if (searchTerm === '' || title.includes(searchTerm) || description.includes(searchTerm)) {
+                            card.style.display = '';
+                            visibleCount++;
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    }
+                });
+
+                // Handle "no results" message
+                const grid = activeTabId === 'regular-news' ?
+                    document.getElementById('regularNewsGrid') :
+                    document.getElementById('fitmNewsGrid');
+
+                toggleNoResultsMessage(grid, visibleCount, noResultsTitle, noResultsMessage);
+
+                console.log(`Search completed for "${searchTerm}". Found ${visibleCount} results.`);
+            }
+            // Tab switching should re-apply search
+            const tabs = document.querySelectorAll('[data-tabs-target]');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Add small delay to ensure tab content is visible
+                    setTimeout(performSearch, 350);
+                });
+            });
+
+            // When filters change, re-apply search
+            const newsTypeFilter = document.getElementById('newsTypeFilter');
+            const issueFilter = document.getElementById('issueFilter');
+            const filterReset = document.getElementById('filterReset');
+            const fitmFilterReset = document.getElementById('fitmFilterReset');
+
+            if (newsTypeFilter) newsTypeFilter.addEventListener('change', () => setTimeout(performSearch, 100));
+            if (issueFilter) issueFilter.addEventListener('change', () => setTimeout(performSearch, 100));
+            if (filterReset) filterReset.addEventListener('click', () => setTimeout(performSearch, 100));
+            if (fitmFilterReset) fitmFilterReset.addEventListener('click', () => setTimeout(performSearch, 100));
         }
     </script>
 @endsection

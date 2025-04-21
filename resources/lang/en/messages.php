@@ -4,7 +4,7 @@ return [
     'faculty_name_short' => 'Faculty of Industrial Technology and Management',
     'address' => '129 Moo 21, Noen Hom, Mueang District, Prachinburi Province 25230',
     'follow_us' => 'Follow Us',
-    'copyright' => 'Copyright © 2024 Faculty of Industrial Technology and Management',
+    'copyright' => 'Copyright © :year Faculty of Industrial Technology and Management',
     'terms' => 'Terms',
     'licensing' => 'Licensing',
     'cookie_policy' => 'Cookie Policy',

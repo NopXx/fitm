@@ -13,6 +13,30 @@
             border-radius: 5px;
             margin-top: 10px;
         }
+        .lang-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+        .lang-badge-th {
+            background-color: #e2f0ff;
+            color: #0d6efd;
+        }
+        .lang-badge-en {
+            background-color: #e2f5e9;
+            color: #198754;
+        }
+        .language-switcher {
+            text-align: right;
+            margin-bottom: 15px;
+        }
+        .language-switcher .btn {
+            font-size: 0.8rem;
+            padding: 2px 8px;
+        }
     </style>
 @endsection
 
@@ -46,6 +70,10 @@
                     </div>
 
                     <ul class="app-side-timeline" id="timeline-container">
+                        @php
+                            $locale = app()->getLocale();
+                        @endphp
+
                         @foreach ($events as $index => $event)
                             <li class="side-timeline-section {{ $index % 2 == 0 ? 'left-side' : 'right-side' }}">
                                 <div class="side-timeline-icon">
@@ -56,7 +84,12 @@
                                 </div>
                                 <div class="timeline-content">
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <h6 class="mt-2 text-primary">{{ $event->title }}</h6>
+                                        @if($locale == 'en' && isset($event->title_en) && !empty($event->title_en))
+                                            <h6 class="mt-2 text-primary">{{ $event->title_en }}</h6>
+                                        @else
+                                            <h6 class="mt-2 text-primary">{{ $event->title_th ?? $event->title }}</h6>
+                                        @endif
+
                                         <div>
                                             <a href="{{ route('historical-events.edit', $event->id) }}"
                                                 class="btn btn-light-primary btn-sm icon-btn">
@@ -69,11 +102,20 @@
                                         </div>
                                     </div>
                                     <p class="text-dark">พ.ศ. {{ $event->year }}</p>
-                                    <div>
-                                        {!! $event->description !!}
-                                    </div>
+
+                                    @if($locale == 'en' && isset($event->description_en) && !empty($event->description_en))
+                                        <div class="mb-3">
+                                            {!! $event->description_en !!}
+                                        </div>
+                                    @else
+                                        <div class="mb-3">
+                                            {!! $event->description_th ?? $event->description !!}
+                                        </div>
+                                    @endif
+
                                     @if ($event->image_path)
-                                        <img src="{{ asset('storage/' . $event->image_path) }}" alt="{{ $event->title }}"
+                                        <img src="{{ asset('storage/' . $event->image_path) }}"
+                                            alt="{{ $locale == 'en' && isset($event->title_en) && !empty($event->title_en) ? $event->title_en : ($event->title_th ?? $event->title) }}"
                                             class="timeline-image">
                                     @endif
                                 </div>

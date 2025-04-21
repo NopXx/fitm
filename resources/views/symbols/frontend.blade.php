@@ -1,4 +1,7 @@
 @extends('layout.app')
+@section('title')
+    @lang('symbol.title')
+@endsection
 @section('css')
     <style>
         /* Custom Timeline Styling */

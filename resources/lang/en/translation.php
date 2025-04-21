@@ -5,6 +5,8 @@ return [
     'add' => 'Add',
     'edit' => 'Edit',
     'delete' => 'Delete',
+    'deleted' => 'Deleted',
+    'error' => 'Error',
     'view' => 'View',
     'details' => 'Details',
     'news' => 'News',
@@ -106,9 +108,11 @@ return [
 
     // Language tabs
     'thai_information' => 'Thai Information',
+    'english_information' => 'English Information',
     'english_information_optional' => 'English Information (Optional)',
     'thai_content' => 'Thai Content',
     'english_content_optional' => 'English Content (Optional)',
+    'optional' => 'Optional',
 
     // Placeholders
     'thai_content_placeholder' => 'Thai content',

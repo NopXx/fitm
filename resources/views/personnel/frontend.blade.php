@@ -1,5 +1,9 @@
 @extends('layout.app')
 
+@section('title')
+    @lang('personnel.title')
+@endsection
+
 @section('css')
     <style>
         .org-chart {
@@ -30,7 +34,7 @@
         .org-chart-leader-img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
         }
 
         .org-chart-leader-name {
@@ -149,7 +153,7 @@
         .org-chart-person-img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
         }
 
         .reports-indicator {
@@ -268,18 +272,29 @@
     <div class="container mx-auto px-4 py-8">
         <!-- หัวข้อและเมนูเลือก board -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800 mb-4 md:mb-0">{{ __('personnel.title') }}</h1>
+            <h1 class="text-3xl font-bold text-gray-800 mb-4">{{ __('personnel.title') }}</h1>
 
-            <!-- เมนูเลือก board -->
-            <div class="bg-white rounded-lg shadow-sm p-2">
-                <nav class="flex flex-wrap gap-2">
+            <!-- เมนูแบบ dropdown -->
+            <div class="relative">
+                <button id="boardMenuButton"
+                    class="bg-white flex items-center justify-between w-full md:w-64 px-4 py-2 text-sm font-medium text-gray-700 dark:text-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none">
+                    <span>{{ $boards->where('id', request()->get('board_id', $boards->first()->id ?? null))->first()->board_name ?? 'เลือกหน่วยงาน' }}</span>
+                    <svg class="w-5 h-5 ml-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </button>
+
+                <div id="boardMenu"
+                    class="hidden absolute z-10 mt-1 w-full md:w-64 bg-white dark:bg-gray-800 shadow-lg rounded-md py-1">
                     @foreach ($boards as $navBoard)
                         <a href="{{ route('personnel.index', ['board_id' => $navBoard->id]) }}"
-                            class="px-4 py-2 text-sm font-medium rounded-md {{ request()->get('board_id') == $navBoard->id || (!request()->has('board_id') && $loop->first) ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:bg-gray-100' }}">
+                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-700 dark:hover:text-blue-400 {{ request()->get('board_id') == $navBoard->id || (!request()->has('board_id') && $loop->first) ? 'bg-blue-50 dark:bg-blue-900 text-blue dark:text-blue-400 font-medium' : '' }}">
                             {{ $navBoard->board_name }}
                         </a>
                     @endforeach
-                </nav>
+                </div>
             </div>
         </div>
 
@@ -353,21 +368,23 @@
 
                 @if ($hasLeader)
                     <div class="org-chart-leader">
-                        <div class="org-chart-leader-img-wrapper">
-                            @if ($leader->image)
-                                <img src="{{ asset('storage/' . $leader->image) }}" alt="{{ $leader->full_name }}"
-                                    class="org-chart-leader-img">
-                            @else
-                                <div class="org-chart-leader-img bg-gray-100 flex items-center justify-center">
-                                    <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 20 20"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                                            clip-rule="evenodd">
-                                        </path>
-                                    </svg>
-                                </div>
-                            @endif
-                        </div>
+                        <a href="{{ route('personnel.show', $leader->id) }}" class="org-chart-person">
+                            <div class="org-chart-leader-img-wrapper">
+                                @if ($leader->image)
+                                    <img src="{{ asset('storage/' . $leader->image) }}" alt="{{ $leader->full_name }}"
+                                        class="org-chart-leader-img">
+                                @else
+                                    <div class="org-chart-leader-img bg-gray-100 flex items-center justify-center">
+                                        <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 20 20"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                @endif
+                            </div>
+                        </a>
                         <div class="org-chart-leader-name">{{ $leader->full_name }}</div>
                         <div class="org-chart-leader-title">{{ $leader->position }}</div>
                         @if ($leader->order_title)
@@ -398,13 +415,6 @@
                                                     </svg>
                                                 </div>
                                             @endif
-                                            <div class="reports-indicator">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                    stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M19 9l-7 7-7-7"></path>
-                                                </svg>
-                                            </div>
                                         </div>
                                         <div class="org-chart-person-name">{{ $person->full_name }}</div>
                                         <div class="org-chart-person-title">{{ $person->position }}</div>
@@ -465,13 +475,6 @@
                                                     </svg>
                                                 </div>
                                             @endif
-                                            <div class="reports-indicator">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                    stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M19 9l-7 7-7-7"></path>
-                                                </svg>
-                                            </div>
                                         </div>
                                         <div class="org-chart-person-name">{{ $person->full_name }}</div>
                                         <div class="org-chart-person-title">{{ $person->position }}</div>
@@ -489,7 +492,6 @@
 
 @section('script-app')
     <script>
-
         // จัดรูปแบบวันที่ด้วย moment.js
         document.addEventListener('DOMContentLoaded', function() {
             const dateElements = document.querySelectorAll('.last-updated-date');
@@ -498,6 +500,21 @@
                 const timestamp = element.getAttribute('data-timestamp');
                 if (timestamp) {
                     element.textContent = moment(timestamp).format('D MMM YYYY');
+                }
+            });
+
+            document.getElementById('boardMenuButton').addEventListener('click', function() {
+                const menu = document.getElementById('boardMenu');
+                menu.classList.toggle('hidden');
+            });
+
+            // Close the menu when clicking outside
+            document.addEventListener('click', function(event) {
+                const button = document.getElementById('boardMenuButton');
+                const menu = document.getElementById('boardMenu');
+
+                if (!button.contains(event.target) && !menu.contains(event.target)) {
+                    menu.classList.add('hidden');
                 }
             });
         });

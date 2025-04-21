@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/filepond/image-preview.min.css') }}">
 
     <!-- TinyMCE -->
-    <script src="https://cdn.tiny.cloud/1/hn7u4cu4cokjuyws887pfvcxkwbkdc6gm82bsbpamfqjdjhy/tinymce/7/tinymce.min.js"
+    <script src="{{ asset('assets/vendor/tinymce/tinymce.min.js') }}"
         referrerpolicy="origin"></script>
 
     <!-- flatpickr css-->

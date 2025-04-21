@@ -3,17 +3,12 @@
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('assets/vendor/fontawesome/css/all.css') }}">
-    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/44.1.0/ckeditor5.css">
     <style>
         .preview-image {
             max-width: 200px;
             height: auto;
             margin-top: 10px;
             border-radius: 5px;
-        }
-
-        .ck-editor__editable {
-            min-height: 300px;
         }
     </style>
 @endsection
@@ -46,7 +41,7 @@
                         @csrf
                         @method('PUT')
 
-                        <!-- Year and Title -->
+                        <!-- Year -->
                         <div class="row mb-4">
                             <div class="col-md-6">
                                 <label class="form-label">@lang('historical_event.year')</label>
@@ -57,25 +52,65 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label">@lang('historical_event.title')</label>
-                                <input type="text" class="form-control @error('title') is-invalid @enderror"
-                                    name="title" value="{{ old('title', $historicalEvent->title) }}" required>
-                                @error('title')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                        </div>
+
+                        <!-- Thai Content Section -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5>@lang('historical_event.thai_content')</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-4">
+                                    <div class="col-md-12">
+                                        <label class="form-label">@lang('historical_event.title_th')</label>
+                                        <input type="text" class="form-control @error('title_th') is-invalid @enderror"
+                                            name="title_th" value="{{ old('title_th', $historicalEvent->title_th ?? $historicalEvent->title) }}" required>
+                                        @error('title_th')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="row mb-4">
+                                    <div class="col-12">
+                                        <label class="form-label">@lang('historical_event.description_th')</label>
+                                        <textarea name="description_th" class="form-control @error('description_th') is-invalid @enderror"
+                                            rows="5" required>{{ old('description_th', $historicalEvent->description_th ?? $historicalEvent->description) }}</textarea>
+                                        @error('description_th')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Description -->
-                        <div class="row mb-4">
-                            <div class="col-12">
-                                <label class="form-label">@lang('historical_event.description')</label>
-                                <textarea id="description" name="description" class="form-control @error('description') is-invalid @enderror"
-                                    rows="5" required>{{ old('description', $historicalEvent->description) }}</textarea>
-                                @error('description')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                        <!-- English Content Section (Optional) -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5>@lang('historical_event.english_content') (@lang('translation.optional'))</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-4">
+                                    <div class="col-md-12">
+                                        <label class="form-label">@lang('historical_event.title_en')</label>
+                                        <input type="text" class="form-control @error('title_en') is-invalid @enderror"
+                                            name="title_en" value="{{ old('title_en', $historicalEvent->title_en ?? '') }}">
+                                        @error('title_en')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="row mb-4">
+                                    <div class="col-12">
+                                        <label class="form-label">@lang('historical_event.description_en')</label>
+                                        <textarea name="description_en" class="form-control @error('description_en') is-invalid @enderror"
+                                            rows="5">{{ old('description_en', $historicalEvent->description_en ?? '') }}</textarea>
+                                        @error('description_en')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -128,61 +163,8 @@
 @endsection
 
 @section('script')
-    <script src="https://cdn.ckeditor.com/ckeditor5/44.1.0/ckeditor5.umd.js"></script>
     <script>
-        const {
-            ClassicEditor,
-            Essentials,
-            Paragraph,
-            Bold,
-            Italic,
-            Heading,
-            Link,
-            List,
-            Table,
-            BlockQuote,
-            MediaEmbed
-        } = CKEDITOR;
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize CKEditor
-            ClassicEditor
-                .create(document.querySelector('#description'), {
-                    extraPlugins: [
-                        Essentials,
-                        Paragraph,
-                        Bold,
-                        Italic,
-                        Heading,
-                        Link,
-                        List,
-                        Table,
-                        BlockQuote,
-                        MediaEmbed
-                    ],
-                    licenseKey: '{{ env('CKEDITOR_KEY') }}',
-                    toolbar: {
-                        items: [
-                            'heading',
-                            '|',
-                            'bold',
-                            'italic',
-                            '|',
-                            'bulletedList',
-                            'numberedList',
-                            '|',
-                            'link',
-                            'imageUpload',
-                            'blockQuote',
-                            '|',
-                            'undo',
-                            'redo'
-                        ]
-                    }
-                })
-                .catch(error => {
-                    console.error('CKEditor initialization error:', error);
-                });
-
             // Image Preview Handler
             const imageInput = document.getElementById('imageInput');
             const newImagePreview = document.getElementById('newImagePreview');

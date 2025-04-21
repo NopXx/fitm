@@ -1,10 +1,15 @@
 <!-- Animation css -->
-<link rel="stylesheet" href="{{ asset('assets/vendor/animation/animate.min.css') }}" >
+<link rel="stylesheet" href="{{ asset('assets/vendor/animation/animate.min.css') }}">
 
 <!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai&display=swap" rel="stylesheet">
+<style>
+    * {
+        font-family: "Noto Sans Thai", sans-serif;
+    }
+</style>
 
 <!-- Weather icon css-->
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/weather/weather-icons.css') }}">

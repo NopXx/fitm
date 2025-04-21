@@ -1,4 +1,7 @@
 @extends('layout.app')
+@section('title')
+    @lang('historical_event.title')
+@endsection
 @section('css')
     <style>
         /* Custom Timeline Styling */
@@ -155,17 +158,43 @@
             <!-- Timeline Container -->
             <div class="p-6">
                 <div class="timeline-container" id="timeline-container">
+                    @php
+                        $locale = app()->getLocale();
+                    @endphp
+
                     @foreach ($events as $index => $event)
                         <div class="timeline-item {{ $index % 2 == 0 ? 'left' : 'right' }}">
                             <div class="timeline-content dark:bg-gray-700">
-                                <h3 class="text-xl font-bold text-blue-600 dark:text-blue-400">{{ $event->title }}</h3>
-                                <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">พ.ศ. {{ $event->year }}</p>
+                                @if ($locale == 'en' && isset($event->title_en) && !empty($event->title_en))
+                                    <h3 class="text-xl font-bold text-blue-600 dark:text-blue-400">{{ $event->title_en }}
+                                    </h3>
+                                @else
+                                    <h3 class="text-xl font-bold text-blue-600 dark:text-blue-400">
+                                        {{ $event->title_th ?? $event->title }}</h3>
+                                @endif
+
+                                @if ($locale == 'en')
+                                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">{{ $event->year - 543 }}</p>
+                                @else
+                                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">พ.ศ. {{ $event->year }}</p>
+                                @endif
+
+
+
                                 <div class="mt-3 prose prose-sm max-w-none text-gray-700 dark:text-gray-300">
-                                    {!! $event->description !!}
+                                    @if ($locale == 'en' && isset($event->description_en) && !empty($event->description_en))
+                                        {!! $event->description_en !!}
+                                    @else
+                                        {!! $event->description_th ?? $event->description !!}
+                                    @endif
                                 </div>
+
+
+
                                 @if ($event->image_path)
-                                    <img src="{{ asset('storage/' . $event->image_path) }}" alt="{{ $event->title }}"
-                                        class="timeline-image mt-4">
+                                    <img src="{{ asset('storage/' . $event->image_path) }}"
+                                        alt="{{ $locale == 'en' && isset($event->title_en) && !empty($event->title_en) ? $event->title_en : $event->title_th ?? $event->title }}"
+                                        class="timeline-image mt-4 rounded-md">
                                 @endif
                             </div>
                         </div>

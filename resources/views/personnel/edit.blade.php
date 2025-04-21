@@ -59,6 +59,7 @@
 @endsection
 
 @section('main-content')
+
     <div class="container-fluid">
         <!-- Breadcrumb -->
         <div class="row m-1">
@@ -79,89 +80,127 @@
                         method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group mb-3">
-                                    <label for="board_id" class="form-label">@lang('personnel.board')</label>
-                                    <select name="board_id" id="board_id" class="form-select" required>
-                                        <option value="">@lang('personnel.select_board')</option>
-                                        @foreach ($boards as $board)
-                                            <option value="{{ $board->id }}"
-                                                {{ $personnel->board_id == $board->id ? 'selected' : '' }}>
-                                                {{ $board->board_name_th }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
 
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" name="firstname_th"
-                                        value="{{ old('firstname_th', $personnel->firstname_th) }}" required>
-                                    <label>@lang('personnel.firstname_th')</label>
-                                </div>
+                        <!-- Language Tabs -->
+                        <ul class="nav nav-tabs mb-3" id="languageTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="thai-tab" data-bs-toggle="tab"
+                                    data-bs-target="#thai-content" type="button" role="tab"
+                                    aria-controls="thai-content" aria-selected="true">
+                                    @lang('translation.thai_information')
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="english-tab" data-bs-toggle="tab"
+                                    data-bs-target="#english-content" type="button" role="tab"
+                                    aria-controls="english-content" aria-selected="false">
+                                    @lang('translation.english_information_optional')
+                                </button>
+                            </li>
+                        </ul>
 
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" name="lastname_th"
-                                        value="{{ old('lastname_th', $personnel->lastname_th) }}" required>
-                                    <label>@lang('personnel.lastname_th')</label>
-                                </div>
+                        <div class="tab-content" id="languageTabsContent">
+                            <!-- Thai Content Tab -->
+                            <div class="tab-pane fade show active" id="thai-content" role="tabpanel"
+                                aria-labelledby="thai-tab">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <select name="board_id" id="board_id" class="form-select" required>
+                                                <option value="">@lang('personnel.select_board')</option>
+                                                @foreach ($boards as $board)
+                                                    <option value="{{ $board->id }}"
+                                                        {{ $personnel->board_id == $board->id ? 'selected' : '' }}>
+                                                        {{ $board->board_name_th }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
 
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" name="firstname_en"
-                                        value="{{ old('firstname_en', $personnel->firstname_en) }}">
-                                    <label>@lang('personnel.firstname_en')</label>
-                                </div>
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" name="firstname_th"
+                                                value="{{ old('firstname_th', $personnel->firstname_th) }}" required>
+                                            <label>@lang('personnel.firstname_th')</label>
+                                        </div>
 
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" name="lastname_en"
-                                        value="{{ old('lastname_en', $personnel->lastname_en) }}">
-                                    <label>@lang('personnel.lastname_en')</label>
-                                </div>
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" name="lastname_th"
+                                                value="{{ old('lastname_th', $personnel->lastname_th) }}" required>
+                                            <label>@lang('personnel.lastname_th')</label>
+                                        </div>
 
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" name="position_th"
-                                        value="{{ old('position_th', $personnel->position_th) }}" required>
-                                    <label>@lang('personnel.position_th')</label>
-                                </div>
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" name="position_th"
+                                                value="{{ old('position_th', $personnel->position_th) }}" required>
+                                            <label>@lang('personnel.position_th')</label>
+                                        </div>
+                                    </div>
 
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" name="position_en"
-                                        value="{{ old('position_en', $personnel->position_en) }}">
-                                    <label>@lang('personnel.position_en')</label>
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input type="number" class="form-control" name="display_order"
+                                                value="{{ old('display_order', $personnel->display_order) }}">
+                                            <label>@lang('personnel.display_order')</label>
+                                        </div>
+
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" name="order_title_th"
+                                                value="{{ old('order_title_th', $personnel->order_title_th) }}">
+                                            <label>@lang('personnel.order_title_th')</label>
+                                        </div>
+
+                                        <div class="form-floating mb-3">
+                                            <input type="email" class="form-control" name="email" placeholder="Email"
+                                                value="{{ old('email', $personnel->email) }}">
+                                            <label>@lang('personnel.email')</label>
+                                        </div>
+
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" name="phone" placeholder="Phone"
+                                                value="{{ old('phone', $personnel->phone) }}">
+                                            <label>@lang('personnel.phone')</label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
+                            <!-- English Content Tab -->
+                            <div class="tab-pane fade" id="english-content" role="tabpanel" aria-labelledby="english-tab">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" name="firstname_en"
+                                                value="{{ old('firstname_en', $personnel->firstname_en) }}">
+                                            <label>@lang('personnel.firstname_en')</label>
+                                        </div>
+
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" name="lastname_en"
+                                                value="{{ old('lastname_en', $personnel->lastname_en) }}">
+                                            <label>@lang('personnel.lastname_en')</label>
+                                        </div>
+
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" name="position_en"
+                                                value="{{ old('position_en', $personnel->position_en) }}">
+                                            <label>@lang('personnel.position_en')</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" name="order_title_en"
+                                                value="{{ old('order_title_en', $personnel->order_title_en) }}">
+                                            <label>@lang('personnel.order_title_en')</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Common Fields (outside tabs) -->
+                        <div class="row mt-4">
                             <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    <input type="number" class="form-control" name="display_order"
-                                        value="{{ old('display_order', $personnel->display_order) }}">
-                                    <label>@lang('personnel.display_order')</label>
-                                </div>
-
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" name="order_title_th"
-                                        value="{{ old('order_title_th', $personnel->order_title_th) }}">
-                                    <label>@lang('personnel.order_title_th')</label>
-                                </div>
-
-                                <div class="form-floating mb-3">
-                                    <input type="email" class="form-control" name="email"
-                                        placeholder="Email" value="{{ old('email', $personnel->email) }}">
-                                    <label>@lang('personnel.email')</label>
-                                </div>
-
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" name="phone"
-                                        placeholder="Phone" value="{{ old('phone', $personnel->phone) }}">
-                                    <label>@lang('personnel.phone')</label>
-                                </div>
-
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" name="order_title_en"
-                                        value="{{ old('order_title_en', $personnel->order_title_en) }}">
-                                    <label>@lang('personnel.order_title_en')</label>
-                                </div>
-
                                 <div class="form-group mb-3">
                                     <label for="image" class="form-label">@lang('personnel.image')</label>
                                     <input type="file" class="form-control" name="image" id="image"
@@ -175,7 +214,9 @@
                                         @endif
                                     </div>
                                 </div>
+                            </div>
 
+                            <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label class="d-block mb-2">@lang('personnel.status')</label>
                                     <label class="switch">

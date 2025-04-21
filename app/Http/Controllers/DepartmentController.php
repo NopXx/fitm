@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Careers;
-use App\Models\DepartmentContent;
 use App\Models\Departments;
 use App\Models\Programs;
 use Illuminate\Http\Request;
@@ -24,7 +23,9 @@ class DepartmentController extends Controller
         $departments = Departments::select([
             'id',
             'department_code',
-            'department_name_th'
+            'department_name_th',
+            'department_name_en',
+            'status'
         ])->get();
 
         return response()->json($departments);
@@ -40,7 +41,9 @@ class DepartmentController extends Controller
         $validator = Validator::make($request->all(), [
             'department_code' => 'required',
             'department_name_th' => 'required',
-            'overview' => 'required'
+            'department_name_en' => 'nullable',
+            'overview_th' => 'required',
+            'overview_en' => 'nullable',
         ]);
 
         if ($validator->fails()) {
@@ -53,20 +56,15 @@ class DepartmentController extends Controller
         try {
             DB::beginTransaction();
 
-            // Create department
+            // Create department with content directly in the same table
             $department = Departments::create([
                 'department_code' => $request->department_code,
-                'department_name_th' => $request->department_name_th
+                'department_name_th' => $request->department_name_th,
+                'department_name_en' => $request->department_name_en,
+                'overview_th' => $request->overview_th,
+                'overview_en' => $request->overview_en,
+                'status' => 'draft'
             ]);
-
-            // Create department content
-            if ($department) {
-                DepartmentContent::create([
-                    'department_id' => $department->id,
-                    'overview' => $request->overview,
-                    'status' => 'draft'
-                ]);
-            }
 
             DB::commit();
 
@@ -90,8 +88,7 @@ class DepartmentController extends Controller
     public function editDepartment($id)
     {
         try {
-            $department = Departments::with('content')->findOrFail($id);
-            Log::debug($department);
+            $department = Departments::findOrFail($id);
             return view('departments.edit', compact('department'));
         } catch (\Exception $e) {
             return redirect()->route('departments.index')
@@ -102,8 +99,11 @@ class DepartmentController extends Controller
     public function updateDepartment(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'department_code' => 'required|unique:departments,department_code,' . $id . ',id', // Changed from department_id to id
-            'department_name_th' => 'required'
+            'department_code' => 'required|unique:departments,department_code,' . $id . ',id',
+            'department_name_th' => 'required',
+            'department_name_en' => 'nullable',
+            'overview_th' => 'required',
+            'overview_en' => 'nullable',
         ]);
 
         if ($validator->fails()) {
@@ -119,7 +119,11 @@ class DepartmentController extends Controller
             $department = Departments::findOrFail($id);
             $department->update([
                 'department_code' => $request->department_code,
-                'department_name_th' => $request->department_name_th
+                'department_name_th' => $request->department_name_th,
+                'department_name_en' => $request->department_name_en,
+                'overview_th' => $request->overview_th,
+                'overview_en' => $request->overview_en,
+                'status' => 'draft'
             ]);
 
             DB::commit();

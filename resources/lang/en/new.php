@@ -16,4 +16,8 @@ return [
     'error' => 'Error!',
     'filter_by_type' => 'Filter by Type:',
     'all_types' => 'All Types',
+    'search_news' => 'Search news...',
+    'clear' => 'Clear',
+    'no_match_search' => 'No news matching your search criteria.',
+    'no_news_found' => 'No news found.',
 ];

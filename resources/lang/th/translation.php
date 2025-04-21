@@ -5,6 +5,8 @@ return [
     'add' => 'เพิ่ม',
     'edit' => 'แก้ไข',
     'delete' => 'ลบ',
+    'deleted' => 'ลบแล้ว',
+    'error' => 'ผิดพลาด',
     'view' => 'ดู',
     'details' => 'รายละเอียด',
     'news' => 'ข่าว',
@@ -106,9 +108,11 @@ return [
 
     // Language tabs
     'thai_information' => 'ข้อมูลภาษาไทย',
+    'english_information' => 'ข้อมูลภาษาอังกฤษ',
     'english_information_optional' => 'ข้อมูลภาษาอังกฤษ (ไม่บังคับ)',
     'thai_content' => 'เนื้อหาภาษาไทย',
     'english_content_optional' => 'เนื้อหาภาษาอังกฤษ (ไม่บังคับ)',
+    'optional' => 'Optional',
 
     // Placeholders
     'thai_content_placeholder' => 'เนื้อหาภาษาไทย',

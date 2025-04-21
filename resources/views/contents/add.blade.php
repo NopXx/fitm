@@ -3,8 +3,7 @@
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('assets/vendor/fontawesome/css/all.css') }}">
-    <script src="https://cdn.tiny.cloud/1/hn7u4cu4cokjuyws887pfvcxkwbkdc6gm82bsbpamfqjdjhy/tinymce/7/tinymce.min.js"
-        referrerpolicy="origin"></script>
+    <script src="{{ asset('assets/vendor/tinymce/tinymce.min.js') }}" referrerpolicy="origin"></script>
     @vite(['resources/css/tinymce-content.css'])
     <style>
         /* TinyMCE Editor Styles */
@@ -80,6 +79,7 @@
                 <div class="card-body">
                     <form action="{{ route('contents.store') }}" id="createForm" method="POST">
                         @csrf
+                        <!-- Common Fields -->
                         <div class="row mb-4">
                             <div class="col-md-12">
                                 <label class="form-label">@lang('content.code')</label>
@@ -88,28 +88,59 @@
                                 <small class="text-muted">@lang('content.code_help')</small>
                             </div>
                         </div>
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <label class="form-label">@lang('content.title_th')</label>
-                                <input type="text" class="form-control" name="title_th" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">@lang('content.title_en')</label>
-                                <input type="text" class="form-control" name="title_en" required>
-                            </div>
-                        </div>
 
-                        <div class="row mb-4">
-                            <div class="col-12">
-                                <label class="form-label">@lang('content.detail_th')</label>
-                                <textarea id="detail_th" name="detail_th"></textarea>
-                            </div>
-                        </div>
+                        <!-- Language Tabs -->
+                        <ul class="nav nav-tabs mb-3" id="languageTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="thai-tab" data-bs-toggle="tab"
+                                    data-bs-target="#thai-content" type="button" role="tab"
+                                    aria-controls="thai-content" aria-selected="true">
+                                    @lang('translation.thai_information')
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="english-tab" data-bs-toggle="tab"
+                                    data-bs-target="#english-content" type="button" role="tab"
+                                    aria-controls="english-content" aria-selected="false">
+                                    @lang('translation.english_information')
+                                </button>
+                            </li>
+                        </ul>
 
-                        <div class="row mb-4">
-                            <div class="col-12">
-                                <label class="form-label">@lang('content.detail_en')</label>
-                                <textarea id="detail_en" name="detail_en"></textarea>
+                        <div class="tab-content" id="languageTabsContent">
+                            <!-- Thai Content Tab -->
+                            <div class="tab-pane fade show active" id="thai-content" role="tabpanel"
+                                aria-labelledby="thai-tab">
+                                <div class="row mb-4">
+                                    <div class="col-md-12">
+                                        <label class="form-label">@lang('content.title_th')</label>
+                                        <input type="text" class="form-control" name="title_th" required>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-4">
+                                    <div class="col-12">
+                                        <label class="form-label">@lang('content.detail_th')</label>
+                                        <textarea id="detail_th" name="detail_th"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- English Content Tab -->
+                            <div class="tab-pane fade" id="english-content" role="tabpanel" aria-labelledby="english-tab">
+                                <div class="row mb-4">
+                                    <div class="col-md-12">
+                                        <label class="form-label">@lang('content.title_en')</label>
+                                        <input type="text" class="form-control" name="title_en" required>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-4">
+                                    <div class="col-12">
+                                        <label class="form-label">@lang('content.detail_en')</label>
+                                        <textarea id="detail_en" name="detail_en"></textarea>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

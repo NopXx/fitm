@@ -1,4 +1,7 @@
 @extends('layout.app')
+@section('title')
+    {{ Str::limit($news->title, 40) }}
+@endsection
 
 @section('css')
     @vite(['resources/css/tinymce-content.css'])

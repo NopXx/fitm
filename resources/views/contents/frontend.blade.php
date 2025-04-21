@@ -1,4 +1,7 @@
 @extends('layout.app')
+@section('title')
+{{ app()->getLocale() == 'th' ? $content->title_th ?? __('content.content') : $content->title_en ?? __('content.content') }}
+@endsection
 
 @section('css')
     @vite(['resources/css/tinymce-content.css'])

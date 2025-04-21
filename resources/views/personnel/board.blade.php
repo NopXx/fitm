@@ -1,10 +1,12 @@
 @extends('layout.app')
-
+@section('title')
+    {{ $board->board_name }}
+@endsection
 @section('css')
     <style>
         .personnel-card-img {
             height: 240px;
-            object-fit: cover;
+            object-fit: contain;
         }
 
         .personnel-card {

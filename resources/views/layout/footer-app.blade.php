@@ -169,7 +169,7 @@
             </div>
 
             <!-- Copyright -->
-            <p class="text-sm">{{ __('messages.copyright') }}</p>
+            <p class="text-sm">{{ __('messages.copyright', ['year' => date('Y')]) }}</p>
         </div>
     </div>
 </footer>

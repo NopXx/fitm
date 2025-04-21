@@ -39,10 +39,12 @@ class HistoricalEventController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'year' => 'required|integer|min:2500|max:2999',
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'year' => 'required|integer',
+            'title_th' => 'required|string|max:255',
+            'description_th' => 'required|string',
+            'title_en' => 'nullable|string|max:255',
+            'description_en' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif'
         ]);
 
         try {
@@ -71,16 +73,19 @@ class HistoricalEventController extends Controller
         return view('historical-events.edit', compact('historicalEvent'));
     }
 
-    public function update(Request $request, $id)  // แก้ไขพารามิเตอร์
+    public function update(Request $request, $id)
     {
-        $historicalEvent = HistoricalEvent::findOrFail($id); // เพิ่ม findOrFail
+        $historicalEvent = HistoricalEvent::findOrFail($id);
 
         $validated = $request->validate([
-            'year' => 'required|integer|min:2500|max:2999',
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'year' => 'required|integer',
+            'title_th' => 'required|string|max:255',
+            'description_th' => 'required|string',
+            'title_en' => 'nullable|string|max:255',
+            'description_en' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif'
         ]);
+        Log::debug($request);
 
         try {
             // Handle image removal

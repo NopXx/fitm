@@ -117,7 +117,7 @@ class MenuController extends Controller
             );
 
             // Get all departments
-            $departments = Departments::with('content')->get();
+            $departments = Departments::get();
 
             foreach ($departments as $index => $department) {
                 // Create or update department menu
@@ -143,7 +143,7 @@ class MenuController extends Controller
                 );
 
                 // English translation
-                $englishName = $department->content->department_name_en ?? $department->department_name_th;
+                $englishName = $department->department_name_en ?? $department->department_name_th;
                 MenuTranslation::updateOrCreate(
                     [
                         'category_id' => $menuItem->id,  // Changed from menu_category_id

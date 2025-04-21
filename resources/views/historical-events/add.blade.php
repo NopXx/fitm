@@ -31,18 +31,51 @@
                         <div class="row mb-4">
                             <div class="col-md-6">
                                 <label class="form-label">@lang('historical_event.year')</label>
-                                <input type="number" class="form-control" name="year" required min="2500" max="2999">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">@lang('historical_event.title')</label>
-                                <input type="text" class="form-control" name="title" required>
+                                <input type="number" class="form-control" name="year" required min="2500" max="2999" value="{{ old('year') }}">
                             </div>
                         </div>
 
-                        <div class="row mb-4">
-                            <div class="col-12">
-                                <label class="form-label">@lang('historical_event.description')</label>
-                                <textarea id="description" name="description" class="form-control" rows="5" required></textarea>
+                        <!-- Thai Content Section -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5>@lang('historical_event.thai_content')</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-4">
+                                    <div class="col-md-12">
+                                        <label class="form-label">@lang('historical_event.title_th')</label>
+                                        <input type="text" class="form-control" name="title_th" required value="{{ old('title_th') }}">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-4">
+                                    <div class="col-12">
+                                        <label class="form-label">@lang('historical_event.description_th')</label>
+                                        <textarea id="description_th" name="description_th" class="form-control" rows="5" required>{{ old('description_th') }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- English Content Section (Optional) -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5>@lang('historical_event.english_content') (@lang('translation.optional'))</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-4">
+                                    <div class="col-md-12">
+                                        <label class="form-label">@lang('historical_event.title_en')</label>
+                                        <input type="text" class="form-control" name="title_en" value="{{ old('title_en') }}">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-4">
+                                    <div class="col-12">
+                                        <label class="form-label">@lang('historical_event.description_en')</label>
+                                        <textarea id="description_en" name="description_en" class="form-control" rows="5">{{ old('description_en') }}</textarea>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

@@ -44,8 +44,24 @@ $(function () {
 
                         // Add event listener for the filter
                         $('#boardFilter').on('change', function () {
-                            let filterValue = $(this).val();
-                            table.column(3).search(filterValue ? filterValue : '', true, false).draw();
+                            const boardId = $(this).val();
+
+                            // Use custom filtering function instead of basic search
+                            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex, rowData) {
+                                // If no filter is selected, show all rows
+                                if (!boardId) {
+                                    return true;
+                                }
+
+                                // Return true if the board ID matches the selected filter
+                                return rowData.board && rowData.board.id == boardId;
+                            });
+
+                            // Redraw the table to apply the filter
+                            table.draw();
+
+                            // Remove the filter function after drawing
+                            $.fn.dataTable.ext.search.pop();
                         });
                     }
                 }, 100); // Small delay to ensure DataTable is fully initialized
@@ -103,8 +119,6 @@ $(function () {
             }
         ]
     });
-
-    // No need for a separate event handler as it's now defined in the DataTable initialization
 
     // Add event handler for delete button
     $('#personnelTable').on('click', '.delete-btn', function () {

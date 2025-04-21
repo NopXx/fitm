@@ -72,7 +72,6 @@
     <script src="{{ asset('assets/vendor/datatable/jquery.dataTables.min.js') }}"></script>
     <!-- sweetalert js-->
     <script src="{{ asset('assets/vendor/sweetalert/sweetalert.js') }}"></script>
-    <script src="{{ asset('assets/vendor/moment/moment.min.js') }}"></script>
 
     <script>
         var lang = {

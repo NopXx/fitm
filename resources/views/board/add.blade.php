@@ -1,5 +1,5 @@
 @extends('layout.master-new')
-@section('title', __('translation.add_new'))
+@section('title', __('boards.add_new'))
 @section('css')
     <style>
         .switch {
@@ -60,7 +60,7 @@
                         <a href="{{ route('boards.index') }}" class="f-s-14 f-w-500">@lang('boards.title')</a>
                     </li>
                     <li class="active">
-                        <a href="#" class="f-s-14 f-w-500">@lang('translation.add_new')</a>
+                        <a href="#" class="f-s-14 f-w-500">@lang('boards.add_new')</a>
                     </li>
                 </ul>
             </div>
