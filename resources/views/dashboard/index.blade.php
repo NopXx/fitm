@@ -174,6 +174,51 @@
                         @endif
                     </div>
                 </div>
+                <!-- เพิ่มหลังจากส่วนแสดงหน้าที่เข้าชมมากที่สุด -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <p>@lang('translation.visitor_regions')</p>
+                    </div>
+                    <div class="card-body">
+                        @if (count($topRegions) > 0)
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>@lang('translation.region')</th>
+                                            <th>@lang('translation.visitors')</th>
+                                            <th>@lang('translation.percentage')</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $totalRegionVisits = array_sum(array_column($topRegions, 'count'));
+                                        @endphp
+                                        @foreach ($topRegions as $region)
+                                            <tr>
+                                                <td>{{ $region['region'] }}</td>
+                                                <td>{{ $region['count'] }}</td>
+                                                <td>
+                                                    <div class="progress" style="height: 6px;">
+                                                        <div class="progress-bar" role="progressbar"
+                                                            style="width: {{ $totalRegionVisits > 0 ? ($region['count'] / $totalRegionVisits) * 100 : 0 }}%">
+                                                        </div>
+                                                    </div>
+                                                    <span
+                                                        class="small">{{ $totalRegionVisits > 0 ? number_format(($region['count'] / $totalRegionVisits) * 100, 1) : 0 }}%</span>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <div class="alert alert-info text-center">
+                                @lang('translation.no_region_data')
+                            </div>
+                        @endif
+                    </div>
+                </div>
             </div>
         </div>
         <!-- Breadcrumb end -->

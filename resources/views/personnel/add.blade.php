@@ -137,10 +137,14 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <div class="form-floating mb-3">
-                                            <input type="number" class="form-control" name="display_order"
-                                                placeholder="Display Order" value="0">
-                                            <label>@lang('personnel.display_order')</label>
+                                        <div class="form-group mb-3">
+                                            <select name="display_order" id="display_order" class="form-select" required>
+                                                <option value="">@lang('personnel.display_order') *</option>
+                                                <option value="0">@lang('personnel.order_no_0')</option>
+                                                <option value="1">@lang('personnel.order_no_1')</option>
+                                                <option value="2">@lang('personnel.order_no_2')</option>
+                                                <option value="3">@lang('personnel.order_no_3')</option>
+                                            </select>
                                         </div>
 
                                         <div class="form-floating mb-3">
@@ -157,6 +161,10 @@
                                         <div class="form-floating mb-3">
                                             <input type="text" class="form-control" name="phone" placeholder="Phone">
                                             <label>@lang('personnel.phone')</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" name="url_profile" placeholder="Profile">
+                                            <label>@lang('personnel.url_profile')</label>
                                         </div>
                                     </div>
                                 </div>

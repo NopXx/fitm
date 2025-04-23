@@ -54,7 +54,7 @@
 
                         <div class="row mb-4">
                             <div class="col-md-6">
-                                <label class="form-label">@lang('symbol.type')</label>
+                                <label class="form-label">@lang('symbol.type') <span class="text-danger">*</span></label>
                                 <select class="form-control @error('type') is-invalid @enderror" name="type" required>
                                     <option value="university_emblem" {{ $symbol->type == 'university_emblem' ? 'selected' : '' }}>
                                         @lang('symbol.university_emblem')
@@ -77,7 +77,7 @@
 
                         <div class="row mb-4">
                             <div class="col-md-6">
-                                <label class="form-label">@lang('symbol.name_th')</label>
+                                <label class="form-label">@lang('symbol.name_th') <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('name_th') is-invalid @enderror"
                                        name="name_th" value="{{ old('name_th', $symbol->name_th) }}" required>
                                 @error('name_th')
@@ -96,7 +96,7 @@
 
                         <div class="row mb-4">
                             <div class="col-12">
-                                <label class="form-label">@lang('symbol.description_th')</label>
+                                <label class="form-label">@lang('symbol.description_th') <span class="text-danger">*</span></label>
                                 <textarea id="description_th" name="description_th"
                                           class="form-control @error('description_th') is-invalid @enderror">{{ old('description_th', $symbol->description_th) }}</textarea>
                                 @error('description_th')
@@ -118,7 +118,7 @@
 
                         <div class="row mb-4">
                             <div class="col-12">
-                                <label class="form-label">@lang('symbol.image')</label>
+                                <label class="form-label">@lang('symbol.image') <span class="text-danger">*</span></label>
                                 <input type="file" class="form-control @error('image') is-invalid @enderror"
                                        name="image" accept="image/*" id="imageInput">
                                 @error('image')

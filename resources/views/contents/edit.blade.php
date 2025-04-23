@@ -87,7 +87,7 @@
                             <div class="col-md-12">
                                 <label class="form-label">@lang('content.code')</label>
                                 <input type="text" class="form-control" name="code" value="{{ $content->code }}"
-                                    required>
+                                    required readonly>
                                 <small class="text-muted">@lang('content.code_help')</small>
                             </div>
                         </div>
@@ -136,7 +136,7 @@
                                     <div class="col-md-12">
                                         <label class="form-label">@lang('content.title_en')</label>
                                         <input type="text" class="form-control" name="title_en"
-                                            value="{{ $content->title_en }}" required>
+                                            value="{{ $content->title_en }}">
                                     </div>
                                 </div>
 

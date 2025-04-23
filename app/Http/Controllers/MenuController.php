@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Content;
 use App\Models\Departments;
 use App\Models\MenuCategory;
 use App\Models\MenuDisplaySetting;
@@ -181,7 +182,10 @@ class MenuController extends Controller
         $mainMenus = MenuCategory::whereNull('parent_id')
             ->with('translations')
             ->get();
-        return view('menus.form', compact('mainMenus'));
+
+        $contents = Content::all();
+        $url = MenuTranslation::select(['url'])->get();
+        return view('menus.form', compact('mainMenus', 'contents'));
     }
 
     public function store(Request $request)
@@ -256,7 +260,9 @@ class MenuController extends Controller
             ->where('id', '!=', $id)
             ->with('translations')
             ->get();
-        return view('menus.form', compact('menu', 'mainMenus'));
+        $contents = Content::all();
+        $url = MenuTranslation::select(['url'])->get();
+        return view('menus.form', compact('menu', 'mainMenus', 'contents'));
     }
 
     public function update(Request $request, $id)

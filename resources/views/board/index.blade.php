@@ -7,6 +7,36 @@
 
     <!-- Data Table css-->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatable/jquery.dataTables.min.css') }}">
+
+    <!-- Draggable CSS -->
+    <style>
+        #boardTable tbody tr {
+            cursor: move;
+            cursor: -webkit-grabbing;
+            transition: background-color 0.2s ease;
+        }
+
+        #boardTable tbody tr.bg-light-primary {
+            background-color: rgba(var(--bs-primary-rgb), 0.1) !important;
+        }
+
+        .sorting_disabled.sorting_asc:after,
+        .sorting_disabled.sorting_desc:after {
+            display: none !important;
+        }
+
+        /* Make sure action buttons don't interfere with dragging */
+        .action-buttons {
+            pointer-events: auto;
+            z-index: 10;
+            position: relative;
+        }
+
+        /* Add a subtle visual indicator that rows are draggable */
+        #boardTable tbody tr:hover {
+            background-color: rgba(var(--bs-primary-rgb), 0.05) !important;
+        }
+    </style>
 @endsection
 @section('main-content')
     <div class="container-fluid">
@@ -39,9 +69,16 @@
                                 </div>
                             </a>
                         </div>
-                        <div class="col-xl-8"></div>
                     </div>
                     <div class="row">
+                        <div class="col-xl-auto">
+                            <div class="alert alert-light-info " role="alert">
+                                <i class="ti ti-info-circle me-2"></i>
+                                <span>@lang('boards.drag_instruction', ['default' => 'Click and drag any row to reorder items'])</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
                         <div class="col-xl-12">
                             <div class="app-datatable-default overflow-auto">
                                 <table id="boardTable" class="display app-data-table default-data-table">
@@ -49,16 +86,18 @@
                                         <tr>
                                             <th>@lang('boards.board_name_th')</th>
                                             <th>@lang('boards.board_name_en')</th>
-                                            <th>@lang('boards.display_order')</th>
+                                            <th class="d-none">@lang('boards.display_order')</th>
                                             <th>@lang('boards.status')</th>
                                             <th>@lang('translation.action')</th>
                                         </tr>
                                     </thead>
+                                    <tbody class="draggable-content">
+                                        <!-- Table content will be loaded dynamically -->
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -69,6 +108,8 @@
     <!-- sweetalert js-->
     <script src="{{ asset('assets/vendor/sweetalert/sweetalert.js') }}"></script>
     <script src="{{ asset('assets/vendor/moment/moment.min.js') }}"></script>
+    <!-- Sortable.js for drag and drop functionality -->
+    <script src="{{ asset('assets/vendor/sortable/Sortable.min.js') }}"></script>
 
     <script>
         var lang = {
@@ -83,6 +124,9 @@
             'no': '@lang('translation.no')',
             'active': '@lang('boards.active')',
             'inactive': '@lang('boards.inactive')',
+            'success': '@lang('translation.success', ['default' => 'Success'])',
+            'order_updated': '@lang('boards.order_updated', ['default' => 'Display order updated successfully'])',
+            'update_error': '@lang('boards.update_error', ['default' => 'Failed to update display order'])'
         };
     </script>
 

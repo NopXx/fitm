@@ -1,4 +1,24 @@
 $(function () {
+
+    // Add moment.js sorting plugin for DataTables
+    $.fn.dataTable.moment = function (format, locale) {
+        var types = $.fn.dataTable.ext.type;
+
+        // Add type detection
+        types.detect.unshift(function (d) {
+            return moment(d, format, locale, true).isValid() ?
+                'moment-' + format :
+                null;
+        });
+
+        // Add sorting methods
+        types.order['moment-' + format + '-pre'] = function (d) {
+            return moment(d, format, locale, true).unix();
+        };
+    };
+
+    $.fn.dataTable.moment('DD/MM/yyyy');
+
     // Initialize DataTable first
     const table = $('#example').DataTable({
         ajax: {
@@ -17,7 +37,7 @@ $(function () {
                 data: 'issue_name'
             },
             {
-                data: 'title'
+                data: 'title_th'
             },
             {
                 data: null,
@@ -26,7 +46,7 @@ $(function () {
                 }
             },
             {
-                data: 'description',
+                data: 'description_th',
                 render: function(data) {
                     // Truncate description if too long
                     return data != null ? data.length > 50 ? data.substring(0, 50) + '...' : data : '';
@@ -43,6 +63,9 @@ $(function () {
                             </button>`;
                 }
             }
+        ],
+        order: [
+            [2, 'desc']
         ]
     });
 

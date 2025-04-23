@@ -54,6 +54,20 @@
         .remove-image-btn:hover {
             background: rgba(255, 255, 255, 1);
         }
+
+        .lang-tabs {
+            margin-bottom: 20px;
+        }
+
+        .lang-tabs .nav-link {
+            border-radius: 0;
+            padding: 10px 20px;
+        }
+
+        .lang-tabs .nav-link.active {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #0d6efd;
+        }
     </style>
 @endsection
 @section('main-content')
@@ -111,30 +125,65 @@
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control" name="issue_name" placeholder="Issue Name"
                                         required>
-                                    <label>@lang('fitmnews.issue_name')</label>
+                                    <label>@lang('fitmnews.issue_name') <span class="text-danger">*</span></label>
                                 </div>
 
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" name="title" placeholder="Title"
-                                        required>
-                                    <label>@lang('translation.title')</label>
-                                </div>
+                                <!-- Language tabs -->
+                                <ul class="nav nav-tabs lang-tabs" id="langTabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="thai-tab" data-bs-toggle="tab" data-bs-target="#thai-content"
+                                                type="button" role="tab" aria-controls="thai-content" aria-selected="true">
+                                            Thai
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="english-tab" data-bs-toggle="tab" data-bs-target="#english-content"
+                                                type="button" role="tab" aria-controls="english-content" aria-selected="false">
+                                            English
+                                        </button>
+                                    </li>
+                                </ul>
 
-                                <div class="form-floating mb-3">
-                                    <textarea class="form-control" name="description" placeholder="Description"></textarea>
-                                    <label>@lang('translation.description')</label>
+                                <!-- Tab content -->
+                                <div class="tab-content" id="langTabContent">
+                                    <!-- Thai content -->
+                                    <div class="tab-pane fade show active" id="thai-content" role="tabpanel" aria-labelledby="thai-tab">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" name="title_th" placeholder="Title (Thai)"
+                                                required>
+                                            <label>@lang('translation.title') (Thai) <span class="text-danger">*</span></label>
+                                        </div>
+
+                                        <div class="form-floating mb-3">
+                                            <textarea class="form-control" name="description_th" placeholder="Description (Thai)"></textarea>
+                                            <label>@lang('translation.description') (Thai)</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- English content -->
+                                    <div class="tab-pane fade" id="english-content" role="tabpanel" aria-labelledby="english-tab">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" name="title_en" placeholder="Title (English)">
+                                            <label>@lang('translation.title') (English)</label>
+                                        </div>
+
+                                        <div class="form-floating mb-3">
+                                            <textarea class="form-control" name="description_en" placeholder="Description (English)"></textarea>
+                                            <label>@lang('translation.description') (English)</label>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control basic-date" name="published_date"
                                         placeholder="YYYY-MM-DD" required>
-                                    <label>@lang('fitmnews.published_date')</label>
+                                    <label>@lang('fitmnews.published_date') <span class="text-danger">*</span></label>
                                 </div>
 
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control" name="url"
                                         placeholder="External URL (Optional)">
-                                    <label>@lang('translation.external_link')</label>
+                                    <label>@lang('translation.external_link') <span class="text-danger">*</span></label>
                                 </div>
                             </div>
                             {{-- upload cover --}}

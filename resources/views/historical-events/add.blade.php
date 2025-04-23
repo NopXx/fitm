@@ -30,7 +30,7 @@
                         @csrf
                         <div class="row mb-4">
                             <div class="col-md-6">
-                                <label class="form-label">@lang('historical_event.year')</label>
+                                <label class="form-label">@lang('historical_event.year') <span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" name="year" required min="2500" max="2999" value="{{ old('year') }}">
                             </div>
                         </div>
@@ -43,14 +43,14 @@
                             <div class="card-body">
                                 <div class="row mb-4">
                                     <div class="col-md-12">
-                                        <label class="form-label">@lang('historical_event.title_th')</label>
+                                        <label class="form-label">@lang('historical_event.title_th') <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" name="title_th" required value="{{ old('title_th') }}">
                                     </div>
                                 </div>
 
                                 <div class="row mb-4">
                                     <div class="col-12">
-                                        <label class="form-label">@lang('historical_event.description_th')</label>
+                                        <label class="form-label">@lang('historical_event.description_th') <span class="text-danger">*</span></label>
                                         <textarea id="description_th" name="description_th" class="form-control" rows="5" required>{{ old('description_th') }}</textarea>
                                     </div>
                                 </div>

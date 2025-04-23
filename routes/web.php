@@ -89,6 +89,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('online-services/{onlineService}/edit', [OnlineServiceController::class, 'edit'])->name('online-services.edit');
         Route::put('online-services/{onlineService}', [OnlineServiceController::class, 'update'])->name('online-services.update');
         Route::delete('online-services/delete/{id}', [OnlineServiceController::class, 'destroy'])->name('online-services.delete');
+        Route::post('/online-services/update-order', [OnlineServiceController::class, 'updateOrder'])->name('online-services.update-order');
 
         // List all news (DataTable AJAX endpoint)
         Route::get('/fitmnews', [App\Http\Controllers\FitmNewsController::class, 'index'])->name('fitmnews.index');
@@ -121,6 +122,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/', [VisitorController::class, 'dashboard'])->name('dashboard.index');
         Route::get('/api/visitors/stats', [VisitorController::class, 'apiStats']);
         Route::get('/api/visitors/daily-stats', [VisitorController::class, 'apiDailyStats']);
+        Route::get('/api/visitors/region-stats', [VisitorController::class, 'apiRegionStats'])->name('api.visitors.region-stats');
 
         Route::get('/boards', [BoardController::class, 'index'])->name('boards.index');
         Route::get('/boards/add', [BoardController::class, 'add'])->name('boards.add');
@@ -128,6 +130,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/boards/edit/{id}', [BoardController::class, 'edit'])->name('boards.edit');
         Route::put('/boards/update/{id}', [BoardController::class, 'update'])->name('boards.update');
         Route::delete('/boards/destroy/{id}', [BoardController::class, 'destroy'])->name('boards.destroy');
+        Route::post('/boards/update-order', [BoardController::class, 'updateOrder'])->name('boards.updateOrder');
 
         Route::get('/personnel', [PersonnelAdminController::class, 'index'])->name('personnel.admin.index');
         Route::get('/personnel/add', [PersonnelAdminController::class, 'add'])->name('personnel.admin.add');
@@ -139,59 +142,74 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 Route::get('/', function () {
-    $news_show = News::where('display_type', 2)->where('status', 1)->get();
+    $currentLang = app()->getLocale();
+    $langField = $currentLang == 'en' ? 'title_en' : 'title_th';
+    $now = now(); // Get current date/time
 
-    // Get all news types that have at least one active news item
+    // ข่าวที่แสดงในส่วน display_type 2 - ต้องมีข้อมูลในภาษาปัจจุบันและต้องถึงวันที่มีผล
+    $news_show = News::where('display_type', 2)
+        ->where('status', 1)
+        ->whereNotNull($langField)
+        ->where($langField, '!=', '')
+        ->where('effective_date', '<=', $now) // เพิ่มเงื่อนไขตรวจสอบวันที่
+        ->orderBy('effective_date', 'desc')
+        ->get();
+
+    // ดึงข่าวสำคัญทั้งหมดสำหรับ section ใหม่
+    $important_news = News::where('display_type', 1)
+        ->where('status', 1)
+        ->where('is_important', true)
+        ->whereNotNull($langField)
+        ->where($langField, '!=', '')
+        ->where('effective_date', '<=', $now)
+        ->orderBy('effective_date', 'desc')
+        ->get();
+
+    // เก็บ ID ของข่าวสำคัญเพื่อใช้ในการยกเว้นจากส่วนอื่น
+    $important_news_ids = $important_news->pluck('id')->toArray();
+
+    // ดึงประเภทข่าวที่มีข่าวอย่างน้อย 1 รายการที่มีสถานะเป็น active และมีข้อมูลในภาษาปัจจุบัน
     $newsTypes = News::where('display_type', 1)
         ->where('status', 1)
-        ->distinct()
+        ->whereNotNull($langField)
+        ->where($langField, '!=', '')
+        ->where('effective_date', '<=', $now) // เพิ่มเงื่อนไขตรวจสอบวันที่
+        ->select('new_type')
+        ->groupBy('new_type')
         ->pluck('new_type');
 
     $news = collect();
 
-    // For each news type, get news items prioritizing important ones
+    // สำหรับแต่ละประเภทข่าว
     foreach ($newsTypes as $type) {
-        // First get all important news for this type
-        $importantNews = News::where('display_type', 1)
+        // ดึงข่าวทั้งหมดของประเภทนี้ โดยไม่รวมข่าวสำคัญที่จะแสดงในส่วน is_important
+        $typeNews = News::where('display_type', 1)
             ->where('status', 1)
             ->where('new_type', $type)
-            ->where('is_important', true)
+            ->whereNotNull($langField)
+            ->where($langField, '!=', '')
+            ->where('effective_date', '<=', $now)
+            ->whereNotIn('id', $important_news_ids) // ไม่รวมข่าวที่อยู่ในส่วน is_important
             ->orderBy('effective_date', 'desc')
+            ->limit(8) // จำกัดจำนวนข่าวต่อประเภทให้ไม่เกิน 8 รายการ
             ->get();
-
-        // If we have more than 8 important news, use all of them
-        if ($importantNews->count() > 8) {
-            $typeNews = $importantNews;
-        } else {
-            // Otherwise, get important news + regular news up to 8 total
-            $regularNewsCount = 8 - $importantNews->count();
-
-            if ($regularNewsCount > 0) {
-                $regularNews = News::where('display_type', 1)
-                    ->where('status', 1)
-                    ->where('new_type', $type)
-                    ->where('is_important', false)
-                    ->orderBy('effective_date', 'desc')
-                    ->limit($regularNewsCount)
-                    ->get();
-
-                $typeNews = $importantNews->concat($regularNews);
-            } else {
-                $typeNews = $importantNews;
-            }
-        }
 
         $news = $news->concat($typeNews);
     }
 
+    // ดึงข้อมูลบริการออนไลน์ที่เปิดใช้งาน
     $services = OnlineService::where('active', true)
         ->orderBy('order')
         ->get();
+
+    // ดึงข้อมูลข่าว FITM โดยเรียงตาม issue_name
     $fitmnews = FitmNews::orderBy('issue_name', 'desc')->get();
 
+    // ดึงข้อมูลวิดีโอ โดยเรียงตามวันที่สร้าง
     $videos = FitmVideo::orderBy('created_at', 'desc')->get();
 
-    return view('index', compact('news_show', 'news', 'services', 'fitmnews', 'videos'));
+    // ส่งข้อมูลไปยัง view
+    return view('index', compact('news_show', 'news', 'important_news', 'services', 'fitmnews', 'videos'));
 });
 
 Route::get('/news/fitmnews', [App\Http\Controllers\FitmNewsController::class, 'index']);

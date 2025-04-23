@@ -3,6 +3,14 @@
 return [
     // General News Terms
     'news' => 'ข่าวสาร',
+    'academic_news' => 'ข่าววิชาการ',
+    'research_funding_news' => 'ข่าวทุนวิจัย',
+    'procurement_news' => 'ข่าวจัดซื้อจัดจ้าง',
+    'important_news' => 'ข่าวสำคัญ',
+    'calendar' => 'ปฏิทิน',
+    'online_services' => 'เมนูบริการออนไลน์',
+    'view_all' => 'ดูทั้งหมด',
+    'all_video' => 'วิดีโอทั้งหมด',
     'fitm_news' => 'ข่าว FITM',
     'latest_news' => 'ข่าวล่าสุด',
     'latest_updates' => 'อัพเดทข่าวล่าสุด',

@@ -52,6 +52,7 @@ class PersonnelAdminController extends Controller
             'order_title_en' => 'nullable|string|max:255',
             'email' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:255',
+            'url_profile' => 'nullable|string',
             'is_active' => 'required|in:0,1',
         ]);
 
@@ -77,6 +78,7 @@ class PersonnelAdminController extends Controller
             $personnel->order_title_en = $request->order_title_en;
             $personnel->email = $request->email;
             $personnel->phone = $request->phone;
+            $personnel->url_profile = $request->url_profile;
             $personnel->is_active = $request->is_active;
 
             // Handle image upload if provided
@@ -129,6 +131,7 @@ class PersonnelAdminController extends Controller
             'order_title_en' => 'nullable|string|max:255',
             'email' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:255',
+            'url_profile' => 'nullable|string',
             'is_active' => 'required|in:0,1',
         ]);
 
@@ -154,6 +157,7 @@ class PersonnelAdminController extends Controller
             $personnel->order_title_en = $request->order_title_en;
             $personnel->email = $request->email;
             $personnel->phone = $request->phone;
+            $personnel->url_profile = $request->url_profile;
             $personnel->is_active = $request->is_active;
 
             // Handle image upload if provided

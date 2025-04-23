@@ -3,6 +3,14 @@
 return [
     // General News Terms
     'news' => 'News',
+    'academic_news' => 'Academic News',
+    'research_funding_news' => 'Research funding News',
+    'procurement_news' => 'Procurement news',
+    'calendar' => 'Calendar',
+    'important_news' => 'Important News',
+    'online_services' => 'Online Services',
+    'view_all' => 'View All',
+    'all_video' => 'All videos',
     'fitm_news' => 'FITM News',
     'latest_news' => 'Latest News',
     'latest_updates' => 'Latest News Updates',

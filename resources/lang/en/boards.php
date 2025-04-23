@@ -20,4 +20,8 @@ return [
     'add_success' => 'Department added successfully',
     'update_success' => 'Department updated successfully',
     'delete_failed_has_personnel' => 'Cannot delete department because it has personnel assigned to it',
+    'drag_instruction' => 'Click and drag any row to reorder items',
+    'order_updated' => 'Board order updated successfully',
+    'update_error' => 'Failed to update board order',
+    'no_orders_provided' => 'No order data provided',
 ];

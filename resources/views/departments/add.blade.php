@@ -103,15 +103,15 @@
                                 <hr>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">@lang('department.code')</label>
+                                <label class="form-label">@lang('department.code') <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="department_code" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">@lang('department.name_th')</label>
+                                <label class="form-label">@lang('department.name_th') <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="department_name_th" required>
                             </div>
                             <div class="col-md-6 mt-3">
-                                <label class="form-label">@lang('department.name_en')</label>
+                                <label class="form-label">@lang('department.name_en') <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="department_name_en">
                             </div>
                         </div>
@@ -131,7 +131,7 @@
                                             <button class="nav-link active" id="overview-th-tab" data-bs-toggle="tab"
                                                 data-bs-target="#overview-th-content" type="button" role="tab"
                                                 aria-controls="overview-th-content" aria-selected="true">
-                                                @lang('translation.thai_information')
+                                                @lang('translation.thai_information') <span class="text-danger">*</span>
                                             </button>
                                         </li>
                                         <li class="nav-item" role="presentation">

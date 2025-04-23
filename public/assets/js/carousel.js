@@ -5,7 +5,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Wait for DOM to fully load
     setTimeout(function () {
-        console.log("Initializing Embla carousels");
         initAllEmblaCarousels();
     }, 200);
 });
@@ -69,7 +68,8 @@ function initFitmNewsCarousel() {
  * Initialize news section carousels
  */
 function initNewsCarousels() {
-    [11, 12, 13, 14].forEach(typeId => {
+    // เพิ่ม 'important' เข้าไปในรายการ typeId ที่ต้องการสร้าง carousel
+    ['important', 11, 12, 13, 14].forEach(typeId => {
         // News carousel for desktop
         setupEmblaCarousel(`news-desktop-carousel-${typeId}`, {
             prevBtnSelector: '.embla__button--prev',
@@ -169,17 +169,13 @@ function initFitmVideosCarousel() {
  * @param {Object} config - Configuration for the carousel
  */
 function setupEmblaCarousel(carouselId, config) {
-    console.log(`Setting up Embla carousel: ${carouselId}`);
-
     const emblaNode = document.getElementById(carouselId);
     if (!emblaNode) {
-        console.warn(`Carousel #${carouselId} not found`);
         return;
     }
 
     const viewportNode = emblaNode.querySelector('.embla__viewport');
     if (!viewportNode) {
-        console.warn(`Viewport for carousel #${carouselId} not found`);
         return;
     }
 
@@ -300,8 +296,6 @@ function setupEmblaCarousel(carouselId, config) {
             if (nextBtnNode) nextBtnNode.removeEventListener('focus', stopAutoplay);
         }
     });
-
-    console.log(`Embla carousel ${carouselId} initialized successfully with autoplay: ${config.autoplay}, loop: ${config.options && config.options.loop}, slideCount: ${slideCount}`);
 
     return emblaApi;
 }

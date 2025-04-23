@@ -19,13 +19,16 @@ class NewsFrontendController extends Controller
      */
     public function index(Request $request)
     {
+        // Get current locale
+        $lang = app()->getLocale();
+
         // Get the structure of both tables to ensure we're only selecting columns that exist
         $fitmNewsColumns = $this->getTableColumns('fitm_news');
         $newsColumns = $this->getTableColumns('news');
 
         // Build queries based on existing columns
-        $fitmNewsQuery = $this->buildFitmNewsQuery($fitmNewsColumns);
-        $regularNewsQuery = $this->buildRegularNewsQuery($newsColumns);
+        $fitmNewsQuery = $this->buildFitmNewsQuery($fitmNewsColumns, $lang);
+        $regularNewsQuery = $this->buildRegularNewsQuery($newsColumns, $lang);
 
         // Get important news for the hero carousel
         $importantNewsQuery = clone $regularNewsQuery;
@@ -61,7 +64,8 @@ class NewsFrontendController extends Controller
             'newsTypes',
             'issues',
             'featuredNews',
-            'importantNews'
+            'importantNews',
+            'lang'
         ));
     }
 
@@ -74,6 +78,9 @@ class NewsFrontendController extends Controller
      */
     public function show(Request $request, $id)
     {
+        // Get current locale
+        $lang = app()->getLocale();
+
         // Only for regular news, as FITM news will open URL directly
         $news = News::with('new_type')->find($id);
 
@@ -90,7 +97,7 @@ class NewsFrontendController extends Controller
             ->limit(3)
             ->get();
 
-        return view('news.detail', compact('news', 'source', 'relatedNews'));
+        return view('news.detail', compact('news', 'source', 'relatedNews', 'lang'));
     }
 
     /**
@@ -108,49 +115,87 @@ class NewsFrontendController extends Controller
      * Build query for FitmNews with only existing columns
      *
      * @param array $columns
+     * @param string $lang Current locale (en/th)
      * @return \Illuminate\Database\Query\Builder
      */
-    private function buildFitmNewsQuery($columns)
+    private function buildFitmNewsQuery($columns, $lang = 'th')
     {
-        $query = FitmNews::select('id', 'title');
+        $query = FitmNews::query();
 
-        // Add optional columns if they exist
+        // Filter out news items that don't have content in current language
+        if (in_array('title_' . $lang, $columns)) {
+            $query->whereNotNull('title_' . $lang);
+            $query->where('title_' . $lang, '!=', '');
+        }
+
+        // Select ID
+        $query->addSelect('id');
+
+        // Select the appropriate title based on locale
+        if (in_array('title_' . $lang, $columns)) {
+            $query->addSelect('title_' . $lang . ' as title');
+        } elseif (in_array('title', $columns)) {
+            // Only use generic title if it exists
+            $query->addSelect('title');
+        } else {
+            // No fallback to other language, just set NULL
+            $query->addSelect(DB::raw('NULL as title'));
+        }
+
+        // Handle published date
         if (in_array('published_date', $columns)) {
             // We'll select it as a string to avoid DateTime conversion issues
             $query->addSelect(DB::raw('DATE_FORMAT(published_date, "%Y-%m-%d") as published_date'));
         } else {
             if (in_array('effective_date', $columns)) {
-                // We'll select it as a string to avoid DateTime conversion issues
                 $query->addSelect(DB::raw('DATE_FORMAT(effective_date, "%Y-%m-%d") as published_date'));
             } else {
                 $query->addSelect(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as published_date'));
             }
         }
 
+        // Handle cover image
         if (in_array('cover_image', $columns)) {
             $query->addSelect('cover_image');
         } else {
             $query->addSelect(DB::raw('NULL as cover_image'));
         }
 
-        if (in_array('description', $columns)) {
+        // Handle description based on locale
+        if (in_array('description_' . $lang, $columns)) {
+            $query->addSelect('description_' . $lang . ' as description');
+        } elseif (in_array('detail_' . $lang, $columns)) {
+            $query->addSelect('detail_' . $lang . ' as description');
+        } elseif (in_array('description', $columns)) {
+            // Only use generic description if it exists
             $query->addSelect('description');
-        } else if (in_array('detail', $columns)) {
+        } elseif (in_array('detail', $columns)) {
+            // Only use generic detail if it exists
             $query->addSelect('detail as description');
         } else {
+            // No fallback to other language, just set NULL
             $query->addSelect(DB::raw('NULL as description'));
         }
 
+        // Handle issue name
         if (in_array('issue_name', $columns)) {
             $query->addSelect('issue_name');
         } else {
             $query->addSelect(DB::raw('NULL as issue_name'));
         }
 
+        // Handle URL
         if (in_array('url', $columns)) {
-            $query->addSelect('url as url');
+            $query->addSelect('url');
         } else {
             $query->addSelect(DB::raw('NULL as url'));
+        }
+
+        // Add is_featured if it exists
+        if (in_array('is_featured', $columns)) {
+            $query->addSelect('is_featured');
+        } else {
+            $query->addSelect(DB::raw('false as is_featured'));
         }
 
         $query->addSelect(DB::raw('NULL as new_type'));
@@ -163,46 +208,81 @@ class NewsFrontendController extends Controller
      * Build query for News with only existing columns
      *
      * @param array $columns
+     * @param string $lang Current locale (en/th)
      * @return \Illuminate\Database\Query\Builder
      */
-    private function buildRegularNewsQuery($columns)
+    private function buildRegularNewsQuery($columns, $lang = 'th')
     {
-        $query = News::select('id', 'title_th');
+        $query = News::query();
 
-        // Add optional columns if they exist
+        // Filter out news items that don't have content in current language
+        if (in_array('title_' . $lang, $columns)) {
+            $query->whereNotNull('title_' . $lang);
+            $query->where('title_' . $lang, '!=', '');
+        }
+
+        // Select ID
+        $query->addSelect('id');
+
+        // Select the appropriate title based on locale
+        if (in_array('title_' . $lang, $columns)) {
+            $query->addSelect('title_' . $lang . ' as title');
+        } elseif (in_array('title', $columns)) {
+            // Only use generic title if it exists
+            $query->addSelect('title');
+        } else {
+            // No fallback to other language, just set NULL
+            $query->addSelect(DB::raw('NULL as title'));
+        }
+
+        // Handle published date
         $query->addSelect(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as published_date'));
 
+        // Handle cover image
         if (in_array('cover', $columns)) {
             $query->addSelect('cover as cover_image');
         } else {
             $query->addSelect(DB::raw('NULL as cover_image'));
         }
 
-        // Add optional columns if they exist
-        if (in_array('detail', $columns)) {
+        // Handle description based on locale
+        if (in_array('detail_' . $lang, $columns)) {
+            $query->addSelect('detail_' . $lang . ' as description');
+        } elseif (in_array('description_' . $lang, $columns)) {
+            $query->addSelect('description_' . $lang . ' as description');
+        } elseif (in_array('detail', $columns)) {
+            // Only use generic detail if it exists
             $query->addSelect('detail as description');
-        } else if (in_array('description', $columns)) {
+        } elseif (in_array('description', $columns)) {
+            // Only use generic description if it exists
             $query->addSelect('description');
         } else {
+            // No fallback to other language, just set NULL
             $query->addSelect(DB::raw('NULL as description'));
         }
 
+        // Handle news type
         if (in_array('new_type', $columns)) {
             $query->addSelect('new_type');
         } else {
             $query->addSelect(DB::raw('NULL as new_type'));
         }
 
-        if (in_array('content', $columns)) {
+        // Handle content based on locale
+        if (in_array('content_' . $lang, $columns)) {
+            $query->addSelect('content_' . $lang . ' as content');
+        } elseif (in_array('content', $columns)) {
+            // Only use generic content if it exists
             $query->addSelect('content');
         } else {
+            // No fallback to other language, just set NULL
             $query->addSelect(DB::raw('NULL as content'));
         }
 
-        // Add URL field if it exists
+        // Handle URL field
         if (in_array('url', $columns)) {
             $query->addSelect('url');
-        } else if (in_array('link', $columns)) {
+        } elseif (in_array('link', $columns)) {
             $query->addSelect('link as url');
         } else {
             $query->addSelect(DB::raw('NULL as url'));
@@ -218,7 +298,10 @@ class NewsFrontendController extends Controller
         $query->addSelect(DB::raw('NULL as issue_name'));
         $query->addSelect(DB::raw("'regular' as source"));
 
-        $query->where('display_type', 1);
+        // Filter by display_type if it exists
+        if (in_array('display_type', $columns)) {
+            $query->where('display_type', 1);
+        }
 
         return $query->orderBy('created_at', 'desc');
     }

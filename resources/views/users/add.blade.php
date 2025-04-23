@@ -78,27 +78,27 @@
                             <div class="col-md-6">
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control" name="f_name" placeholder="First Name" required>
-                                    <label>@lang('users.f_name')</label>
+                                    <label>@lang('users.f_name') <span class="text-danger">*</span></label>
                                 </div>
 
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control" name="l_name" placeholder="Last Name" required>
-                                    <label>@lang('users.l_name')</label>
+                                    <label>@lang('users.l_name') <span class="text-danger">*</span></label>
                                 </div>
 
                                 <div class="form-floating mb-3">
                                     <input type="email" class="form-control" name="email" placeholder="Email" required>
-                                    <label>@lang('users.email')</label>
+                                    <label>@lang('users.email') <span class="text-danger">*</span></label>
                                 </div>
 
                                 <div class="form-floating mb-3">
                                     <input type="password" class="form-control" name="password" placeholder="Password" required>
-                                    <label>@lang('users.password')</label>
+                                    <label>@lang('users.password') <span class="text-danger">*</span></label>
                                 </div>
 
                                 <div class="form-floating mb-3">
                                     <input type="tel" class="form-control" name="tel" placeholder="Telephone">
-                                    <label>@lang('users.tel')</label>
+                                    <label>@lang('users.tel') <span class="text-danger">*</span></label>
                                 </div>
                             </div>
 

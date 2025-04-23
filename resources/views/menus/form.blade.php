@@ -19,7 +19,7 @@
 
                             <div class="row mb-3">
                                 <div class="col-md-12">
-                                    <label class="form-label">@lang('menu.parent_menu')</label>
+                                    <label class="form-label">@lang('menu.parent_menu') <span class="text-danger">*</span></label>
                                     <select name="parent_id" class="form-select">
                                         <option value="">@lang('menu.no_parent')</option>
                                         @foreach ($mainMenus as $mainMenu)
@@ -34,7 +34,7 @@
 
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label class="form-label">@lang('menu.name_th')</label>
+                                    <label class="form-label">@lang('menu.name_th') <span class="text-danger">*</span></label>
                                     <input type="text" name="name_th"
                                         class="form-control @error('name_th') is-invalid @enderror"
                                         value="{{ old('name_th', isset($menu) ? $menu->translations->where('language_code', 'th')->first()->name : '') }}">
@@ -43,7 +43,7 @@
                                     @enderror
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">@lang('menu.name_en')</label>
+                                    <label class="form-label">@lang('menu.name_en') <span class="text-danger">*</span></label>
                                     <input type="text" name="name_en"
                                         class="form-control @error('name_en') is-invalid @enderror"
                                         value="{{ old('name_en', isset($menu) ? $menu->translations->where('language_code', 'en')->first()->name : '') }}">
@@ -54,14 +54,25 @@
                             </div>
 
                             <div class="row mb-3">
-                                <div class="col-md-12">
-                                    <label class="form-label">@lang('menu.url')</label>
+                                <div class="col-md-6">
+                                    <label class="form-label">@lang('menu.url') <span class="text-danger">*</span></label>
                                     <input type="text" name="url"
                                         class="form-control @error('url') is-invalid @enderror"
                                         value="{{ old('url', isset($menu) ? $menu->translations->where('language_code', 'th')->first()->url : '') }}">
                                     @error('url')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">@lang('menu.content_url')</label>
+                                    <select name="content_id" class="form-select">
+                                        <option value="">@lang('menu.select_content')</option>
+                                        @foreach ($contents as $content)
+                                            <option value="{{ $content->code }}">
+                                                {{ $content->title_th }} ({{ $content->code }})
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
 
@@ -122,16 +133,47 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const parentSelect = document.querySelector('select[name="parent_id"]');
+            const contentSelect = document.querySelector('select[name="content_id"]');
+            const urlInput = document.querySelector('input[name="url"]');
             const showDropdownToggle = document.querySelector('.show-dropdown-toggle');
 
             if (parentSelect && showDropdownToggle) {
-                // ตรวจสอบตอนโหลดหน้า
+                // Check on page load
                 toggleShowDropdown(parentSelect.value);
 
-                // ตรวจสอบเมื่อมีการเปลี่ยนแปลง parent_id
+                // Check when parent_id changes
                 parentSelect.addEventListener('change', function() {
                     toggleShowDropdown(this.value);
                 });
+            }
+
+            if (contentSelect && urlInput) {
+                // Function to update content selection based on URL
+                function updateContentSelection() {
+                    const currentUrl = urlInput.value;
+                    if (currentUrl && currentUrl.startsWith('/contents/')) {
+                        const contentCode = currentUrl.replace('/contents/', '');
+
+                        // Find and select the matching option
+                        for (let i = 0; i < contentSelect.options.length; i++) {
+                            if (contentSelect.options[i].value === contentCode) {
+                                contentSelect.selectedIndex = i;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // Run on page load
+                updateContentSelection();
+
+                // Update URL when content selection changes
+                contentSelect.addEventListener('change', function() {
+                    urlInput.value = `/contents/${this.value}`;
+                });
+
+                // Listen for URL input changes to update content selection
+                urlInput.addEventListener('input', updateContentSelection);
             }
 
             function toggleShowDropdown(parentId) {
@@ -139,8 +181,11 @@
                     showDropdownToggle.style.display = 'block';
                 } else {
                     showDropdownToggle.style.display = 'none';
-                    // ยกเลิกการเลือก show_dropdown เมื่อเป็นเมนูย่อย
-                    document.getElementById('show_dropdown').checked = false;
+                    // Uncheck show_dropdown when it's a sub-menu
+                    const showDropdownCheckbox = document.getElementById('show_dropdown');
+                    if (showDropdownCheckbox) {
+                        showDropdownCheckbox.checked = false;
+                    }
                 }
             }
         });

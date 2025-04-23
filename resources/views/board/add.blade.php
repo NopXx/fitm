@@ -78,17 +78,12 @@
                             <div class="col-md-6">
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control" name="board_name_th" placeholder="Board Name (TH)" required>
-                                    <label>@lang('boards.board_name_th')</label>
+                                    <label>@lang('boards.board_name_th') <span class="text-danger">*</span></label>
                                 </div>
 
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control" name="board_name_en" placeholder="Board Name (EN)">
                                     <label>@lang('boards.board_name_en')</label>
-                                </div>
-
-                                <div class="form-floating mb-3">
-                                    <input type="number" class="form-control" name="display_order" placeholder="Display Order" value="0">
-                                    <label>@lang('boards.display_order')</label>
                                 </div>
 
                                 <div class="form-group mb-3">

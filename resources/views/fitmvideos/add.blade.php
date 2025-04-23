@@ -78,12 +78,12 @@
                             <div class="col-md-6">
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control" name="name" placeholder="Name" required>
-                                    <label>@lang('fitmvideos.name')</label>
+                                    <label>@lang('fitmvideos.name') <span class="text-danger">*</span></label>
                                 </div>
 
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control" name="url" placeholder="URL" required>
-                                    <label>@lang('fitmvideos.url')</label>
+                                    <label>@lang('fitmvideos.url') <span class="text-danger">*</span></label>
                                 </div>
 
                                 <div class="mb-3">

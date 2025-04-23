@@ -87,5 +87,7 @@ return [
     'sync_departments' => 'ซิงค์เมนูภาควิชา',
     'departments_synced' => 'ซิงค์เมนูภาควิชาเรียบร้อยแล้ว',
     'sync_failed' => 'ไม่สามารถซิงค์เมนูภาควิชาได้',
-    'show_dropdown' => 'แสดง DropDown'
+    'show_dropdown' => 'แสดง DropDown',
+    'content_url' => 'เลือกเนื้อหาเพื่อสร้างลิงค์',
+    'select_content' => 'เลือกเนื้อหา',
 ];

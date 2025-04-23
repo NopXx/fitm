@@ -74,7 +74,7 @@
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control" name="board_name_th"
                                         value="{{ old('board_name_th', $board->board_name_th) }}" required>
-                                    <label>@lang('boards.board_name_th')</label>
+                                    <label>@lang('boards.board_name_th') <span class="text-danger">*</span></label>
                                 </div>
 
                                 <div class="form-floating mb-3">
@@ -83,11 +83,8 @@
                                     <label>@lang('boards.board_name_en')</label>
                                 </div>
 
-                                <div class="form-floating mb-3">
-                                    <input type="number" class="form-control" name="display_order"
-                                        value="{{ old('display_order', $board->display_order) }}">
-                                    <label>@lang('boards.display_order')</label>
-                                </div>
+                                <input type="hidden" class="form-control" name="display_order"
+                                    value="{{ old('display_order', $board->display_order) }}">
 
                                 <div class="form-group mb-3">
                                     <label class="d-block mb-2">@lang('boards.status')</label>

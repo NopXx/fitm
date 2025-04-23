@@ -52,7 +52,7 @@
                                             <th>@lang('personnel.fullname_th')</th>
                                             <th>@lang('personnel.position_th')</th>
                                             <th>@lang('personnel.board')</th>
-                                            <th>@lang('personnel.display_order')</th>
+                                            <th style="display: none;">@lang('personnel.display_order')</th>
                                             <th>@lang('personnel.status')</th>
                                             <th>@lang('translation.action')</th>
                                         </tr>

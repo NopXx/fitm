@@ -58,7 +58,7 @@
 
         <div class="mt-6">
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                @if ($locale == 'en' && isset($department->department_name_en) && !empty($department->department_name_en))
+                @if ($locale == 'en')
                     {{ $department->department_name_en }}
                 @else
                     {{ $department->department_name_th }}
@@ -68,10 +68,10 @@
 
         <div class="bg-white dark:bg-gray-800 p-6 mt-4">
             <div class="department-content">
-                @if ($locale == 'en' && isset($department->overview_en) && !empty($department->overview_en))
+                @if ($locale == 'en')
                     {!! $department->overview_en !!}
                 @else
-                    {!! $department->overview_th ?? '' !!}
+                    {!! $department->overview_th !!}
                 @endif
             </div>
         </div>

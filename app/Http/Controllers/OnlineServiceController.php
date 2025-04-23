@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\OnlineService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -46,7 +47,8 @@ class OnlineServiceController extends Controller
             'link' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10048',
             'active' => 'boolean',
-            'order' => 'integer',
+            // Make order optional since we'll auto-set it
+            'order' => 'nullable|integer',
         ]);
 
         if ($validator->fails()) {
@@ -57,6 +59,12 @@ class OnlineServiceController extends Controller
         }
 
         $data = $request->except('image');
+
+        // Auto-set order if not provided
+        if (!isset($data['order'])) {
+            $maxOrder = OnlineService::max('order');
+            $data['order'] = $maxOrder ? $maxOrder + 1 : 1;
+        }
 
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('services', 'public');
@@ -75,6 +83,53 @@ class OnlineServiceController extends Controller
 
         return redirect()->route('online-services.index')
             ->with('success', __('online_services.create_success'));
+    }
+
+    /**
+     * Update the order of online services.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateOrder(Request $request)
+    {
+        try {
+            $orders = $request->input('orders', []);
+
+            if (empty($orders)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('online_services.no_orders_provided', ['default' => 'No order data provided'])
+                ]);
+            }
+
+            // Start a database transaction
+            DB::beginTransaction();
+
+            foreach ($orders as $order) {
+                if (isset($order['id']) && isset($order['order'])) {
+                    OnlineService::where('id', $order['id'])
+                        ->update(['order' => $order['order']]);
+                }
+            }
+
+            // Commit the transaction
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => __('online_services.order_updated', ['default' => 'Service order updated successfully'])
+            ]);
+        } catch (\Exception $e) {
+            // Rollback the transaction on error
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => __('online_services.update_error', ['default' => 'Failed to update service order']),
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 
     /**

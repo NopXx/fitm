@@ -137,10 +137,22 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <div class="form-floating mb-3">
-                                            <input type="number" class="form-control" name="display_order"
-                                                value="{{ old('display_order', $personnel->display_order) }}">
-                                            <label>@lang('personnel.display_order')</label>
+                                        <div class="form-group mb-3">
+                                            <select name="display_order" id="display_order" class="form-select" required>
+                                                <option value="">@lang('personnel.display_order') *</option>
+                                                <option value="0"
+                                                    {{ old('display_order', $personnel->display_order) == '0' ? 'selected' : '' }}>
+                                                    @lang('personnel.order_no_0')</option>
+                                                <option value="1"
+                                                    {{ old('display_order', $personnel->display_order) == '1' ? 'selected' : '' }}>
+                                                    @lang('personnel.order_no_1')</option>
+                                                <option value="2"
+                                                    {{ old('display_order', $personnel->display_order) == '2' ? 'selected' : '' }}>
+                                                    @lang('personnel.order_no_2')</option>
+                                                <option value="3"
+                                                    {{ old('display_order', $personnel->display_order) == '3' ? 'selected' : '' }}>
+                                                    @lang('personnel.order_no_3')</option>
+                                            </select>
                                         </div>
 
                                         <div class="form-floating mb-3">
@@ -159,6 +171,12 @@
                                             <input type="text" class="form-control" name="phone" placeholder="Phone"
                                                 value="{{ old('phone', $personnel->phone) }}">
                                             <label>@lang('personnel.phone')</label>
+                                        </div>
+
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" name="url_profile" placeholder="Profile"
+                                                value="{{ old('url_profile', $personnel->url_profile) }}">
+                                            <label>@lang('personnel.url_profile')</label>
                                         </div>
                                     </div>
                                 </div>

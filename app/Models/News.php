@@ -44,19 +44,19 @@ class News extends Model
     public function getTitleAttribute()
     {
         $lang = app()->getLocale();
-        return $lang == 'en' && $this->title_en ? $this->title_en : $this->title_th;
+        return $lang == 'en' ? ($this->title_en ?: null) : ($this->title_th ?: null);
     }
 
     public function getDetailAttribute()
     {
         $lang = app()->getLocale();
-        return $lang == 'en' && $this->detail_en ? $this->detail_en : $this->detail_th;
+        return $lang == 'en' ? ($this->detail_en ?: null) : ($this->detail_th ?: null);
     }
 
     public function getContentAttribute()
     {
         $lang = app()->getLocale();
-        return $lang == 'en' && $this->content_en ? $this->content_en : $this->content_th;
+        return $lang == 'en' ? ($this->content_en ?: null) : ($this->content_th ?: null);
     }
 
     public function new_type()

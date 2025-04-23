@@ -31,4 +31,8 @@ return [
         ],
     ],
 
+    'ipinfo' => [
+        'token' => env('IPINFO_TOKEN'),
+    ],
+
 ];

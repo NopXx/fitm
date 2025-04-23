@@ -78,10 +78,6 @@
                                     <option value="0">@lang('translation.no')</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
-                                <label class="form-label">@lang('online_services.order')</label>
-                                <input type="number" class="form-control" name="order" value="0" min="0">
-                            </div>
                         </div>
 
                         <div class="row mb-4">

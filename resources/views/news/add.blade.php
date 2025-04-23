@@ -98,7 +98,7 @@
                         <input type="hidden" name="content_th">
                         <input type="hidden" name="content_en">
                         @csrf
-                        <h5>@lang('translation.display_new')</h5>
+                        <h5>@lang('translation.display_new') <span class="text-danger">*</span></h5>
                         <div class="row">
                             <!-- Style 1 -->
                             <div class="col-md-4 col-sm-12">
@@ -190,13 +190,13 @@
                                     <div class="tab-pane fade show active" id="thai-info" role="tabpanel"
                                         aria-labelledby="thai-info-tab">
                                         <div class="mb-3">
-                                            <label for="title_th" class="form-label">@lang('translation.title_th')</label>
+                                            <label for="title_th" class="form-label">@lang('translation.title_th') <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" id="title_th" name="title_th"
                                                 required>
                                         </div>
 
                                         <div class="mb-3">
-                                            <label for="detail_th" class="form-label">@lang('translation.description_th')</label>
+                                            <label for="detail_th" class="form-label">@lang('translation.description_th') <span class="text-danger">*</span></label>
                                             <textarea class="form-control" id="detail_th" name="detail_th" rows="5" required></textarea>
                                         </div>
                                     </div>
@@ -222,7 +222,7 @@
                         <div class="row mt-4">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="new_type" class="form-label">@lang('translation.display_date')</label>
+                                    <label for="new_type" class="form-label">@lang('translation.display_date') <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control basic-date" name="effective_date" required>
                                 </div>
                             </div>
@@ -237,7 +237,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="new_type" class="form-label">@lang('translation.type')</label>
+                                    <label for="new_type" class="form-label">@lang('translation.type') <span class="text-danger">*</span></label>
                                     <select class="form-select" name="new_type" required>
                                         <option value="">@lang('translation.select_type')</option>
                                         @foreach ($newtypes as $newtype)
@@ -248,7 +248,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="status" class="form-label">@lang('translation.status')</label>
+                                    <label for="status" class="form-label">@lang('translation.status') <span class="text-danger">*</span></label>
                                     <select class="form-select" name="status" required>
                                         <option value="1">@lang('translation.active')</option>
                                         <option value="0">@lang('translation.inactive')</option>

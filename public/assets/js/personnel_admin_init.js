@@ -94,7 +94,8 @@ $(function () {
                 data: 'board.board_name_th'
             },
             {
-                data: 'display_order'
+                data: 'display_order',
+                visible: false // Hide the display_order column
             },
             {
                 data: 'is_active',

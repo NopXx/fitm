@@ -53,6 +53,20 @@
         .remove-image-btn:hover {
             background: rgba(255, 255, 255, 1);
         }
+
+        .lang-tabs {
+            margin-bottom: 20px;
+        }
+
+        .lang-tabs .nav-link {
+            border-radius: 0;
+            padding: 10px 20px;
+        }
+
+        .lang-tabs .nav-link.active {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #0d6efd;
+        }
     </style>
 @endsection
 
@@ -105,31 +119,67 @@
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control" name="issue_name"
                                         value="{{ old('issue_name', $news->issue_name) }}" required>
-                                    <label>@lang('fitmnews.issue_name')</label>
+                                    <label>@lang('fitmnews.issue_name') <span class="text-danger">*</span></label>
                                 </div>
 
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" name="title"
-                                        value="{{ old('title', $news->title) }}" required>
-                                    <label>@lang('translation.title')</label>
-                                </div>
+                                <!-- Language tabs -->
+                                <ul class="nav nav-tabs lang-tabs" id="langTabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="thai-tab" data-bs-toggle="tab" data-bs-target="#thai-content"
+                                                type="button" role="tab" aria-controls="thai-content" aria-selected="true">
+                                            Thai
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="english-tab" data-bs-toggle="tab" data-bs-target="#english-content"
+                                                type="button" role="tab" aria-controls="english-content" aria-selected="false">
+                                            English
+                                        </button>
+                                    </li>
+                                </ul>
 
-                                <div class="form-floating mb-3">
-                                    <textarea class="form-control" name="description">{{ old('description', $news->description) }}</textarea>
-                                    <label>@lang('translation.description')</label>
+                                <!-- Tab content -->
+                                <div class="tab-content" id="langTabContent">
+                                    <!-- Thai content -->
+                                    <div class="tab-pane fade show active" id="thai-content" role="tabpanel" aria-labelledby="thai-tab">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" name="title_th"
+                                                value="{{ old('title_th', $news->title_th) }}" required>
+                                            <label>@lang('translation.title') (Thai) <span class="text-danger">*</span></label>
+                                        </div>
+
+                                        <div class="form-floating mb-3">
+                                            <textarea class="form-control" name="description_th">{{ old('description_th', $news->description_th) }}</textarea>
+                                            <label>@lang('translation.description') (Thai)</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- English content -->
+                                    <div class="tab-pane fade" id="english-content" role="tabpanel" aria-labelledby="english-tab">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" name="title_en"
+                                                value="{{ old('title_en', $news->title_en) }}">
+                                            <label>@lang('translation.title') (English)</label>
+                                        </div>
+
+                                        <div class="form-floating mb-3">
+                                            <textarea class="form-control" name="description_en">{{ old('description_en', $news->description_en) }}</textarea>
+                                            <label>@lang('translation.description') (English)</label>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control basic-date" name="published_date"
                                         value="{{ old('published_date', $news->published_date ? \Carbon\Carbon::parse($news->published_date)->format('Y-m-d H:i') : '') }}"
                                         required>
-                                    <label>@lang('fitmnews.published_date')</label>
+                                    <label>@lang('fitmnews.published_date') <span class="text-danger">*</span></label>
                                 </div>
 
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control" name="url"
                                         value="{{ old('url', $news->url) }}">
-                                    <label>@lang('translation.external_link')</label>
+                                    <label>@lang('translation.external_link') <span class="text-danger">*</span></label>
                                 </div>
                             </div>
 

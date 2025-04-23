@@ -36,7 +36,8 @@ class VisitorController extends Controller
             'totalVisitors' => $this->visitorService->getTotalVisitors(true),
             'totalPageViews' => $this->visitorService->getTotalPageViews(true),
             'todayVisitors' => $this->visitorService->getTodayVisitors(true),
-            'mostVisitedPages' => $this->visitorService->getMostVisitedPages(10, true)
+            'mostVisitedPages' => $this->visitorService->getMostVisitedPages(10, true),
+            'topRegions' => $this->visitorService->getTopRegions(10, true) // เพิ่มข้อมูลจังหวัด
         ];
 
         return view('dashboard.index', $data);
@@ -50,6 +51,15 @@ class VisitorController extends Controller
             'totalVisitors' => $this->visitorService->getTotalVisitors(true),
             'totalPageViews' => $this->visitorService->getTotalPageViews(true),
             'todayVisitors' => $this->visitorService->getTodayVisitors(true)
+        ];
+
+        return response()->json($data);
+    }
+
+    public function apiRegionStats()
+    {
+        $data = [
+            'topRegions' => $this->visitorService->getTopRegions(10, true)
         ];
 
         return response()->json($data);

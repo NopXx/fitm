@@ -44,7 +44,7 @@
                         <!-- Year -->
                         <div class="row mb-4">
                             <div class="col-md-6">
-                                <label class="form-label">@lang('historical_event.year')</label>
+                                <label class="form-label">@lang('historical_event.year') <span class="text-danger">*</span></label>
                                 <input type="number" class="form-control @error('year') is-invalid @enderror"
                                     name="year" value="{{ old('year', $historicalEvent->year) }}" required min="2500"
                                     max="2999">
@@ -62,7 +62,7 @@
                             <div class="card-body">
                                 <div class="row mb-4">
                                     <div class="col-md-12">
-                                        <label class="form-label">@lang('historical_event.title_th')</label>
+                                        <label class="form-label">@lang('historical_event.title_th') <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control @error('title_th') is-invalid @enderror"
                                             name="title_th" value="{{ old('title_th', $historicalEvent->title_th ?? $historicalEvent->title) }}" required>
                                         @error('title_th')
@@ -73,7 +73,7 @@
 
                                 <div class="row mb-4">
                                     <div class="col-12">
-                                        <label class="form-label">@lang('historical_event.description_th')</label>
+                                        <label class="form-label">@lang('historical_event.description_th') <span class="text-danger">*</span></label>
                                         <textarea name="description_th" class="form-control @error('description_th') is-invalid @enderror"
                                             rows="5" required>{{ old('description_th', $historicalEvent->description_th ?? $historicalEvent->description) }}</textarea>
                                         @error('description_th')

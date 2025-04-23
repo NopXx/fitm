@@ -32,4 +32,10 @@ return [
 
     'thai_content' => 'Thai Content',
     'english_content' => 'English Content',
+
+    'drag_instruction' => 'Click and drag any row to reorder services',
+    'order_updated' => 'Service order updated successfully',
+    'update_error' => 'Failed to update service order',
+    'no_orders_provided' => 'No order data provided',
+    'order' => 'Order',
 ];

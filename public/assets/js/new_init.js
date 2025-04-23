@@ -1,6 +1,25 @@
 $(function () {
     // Language variables from Laravel localization
     // Initialize DataTable first
+    // Add moment.js sorting plugin for DataTables
+    $.fn.dataTable.moment = function (format, locale) {
+        var types = $.fn.dataTable.ext.type;
+
+        // Add type detection
+        types.detect.unshift(function (d) {
+            return moment(d, format, locale, true).isValid() ?
+                'moment-' + format :
+                null;
+        });
+
+        // Add sorting methods
+        types.order['moment-' + format + '-pre'] = function (d) {
+            return moment(d, format, locale, true).unix();
+        };
+    };
+
+    $.fn.dataTable.moment('DD/MM/yyyy');
+
     const table = $('#example').DataTable({
         ajax: {
             type: 'GET',
@@ -61,7 +80,7 @@ $(function () {
             {
                 data: null,
                 render: function (data, type, row) {
-                    return moment(data.effective_date).format('DD/MM/yyyy HH:mm:ss');
+                    return moment(data.effective_date).format('DD/MM/yyyy');
                 }
             },
             {
@@ -94,6 +113,9 @@ $(function () {
                             </button>`;
                 }
             }
+        ],
+        order: [
+            [1, 'desc']
         ]
     });
 

@@ -24,11 +24,13 @@ class FitmNews extends Model
      */
     protected $fillable = [
         'issue_name',
-        'title',
+        'title_th',
+        'title_en',
         'url',
         'published_date',
         'cover_image',
-        'description',
+        'description_th',
+        'description_en',
     ];
 
     /**
@@ -40,6 +42,18 @@ class FitmNews extends Model
         'published_date' => 'date',
         'is_featured' => 'boolean',
     ];
+
+    public function getTitleAttribute()
+    {
+        $lang = app()->getLocale();
+        return $lang == 'en' ? ($this->title_en ?: null) : ($this->title_th ?: null);
+    }
+
+    public function getDescriptionAttribute()
+    {
+        $lang = app()->getLocale();
+        return $lang == 'en' ? ($this->description_en ?: null) : ($this->description_th ?: null);
+    }
 
     /**
      * Scope a query to only include news from a specific issue.

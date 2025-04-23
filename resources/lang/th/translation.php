@@ -6,6 +6,7 @@ return [
     'edit' => 'แก้ไข',
     'delete' => 'ลบ',
     'deleted' => 'ลบแล้ว',
+    'success' => 'สำเร็จ',
     'error' => 'ผิดพลาด',
     'view' => 'ดู',
     'details' => 'รายละเอียด',
@@ -121,4 +122,8 @@ return [
     // Preview elements
     'last_updated' => 'อัปเดตล่าสุด',
     'just_now' => 'เมื่อสักครู่',
+
+    'visitor_regions' => 'จังหวัดที่มีผู้เข้าชม',
+    'region' => 'จังหวัด',
+    'no_region_data' => 'ไม่มีข้อมูลจังหวัดในขณะนี้',
 ];

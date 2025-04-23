@@ -90,10 +90,7 @@
                                     <option value="0" {{ !$service->active ? 'selected' : '' }}>@lang('translation.no')</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
-                                <label class="form-label">@lang('online_services.order')</label>
-                                <input type="number" class="form-control" name="order" value="{{ $service->order }}" min="0">
-                            </div>
+                            <input type="hidden" class="form-control" name="order" value="{{ $service->order }}" min="0">
                         </div>
 
                         <div class="row mb-4">

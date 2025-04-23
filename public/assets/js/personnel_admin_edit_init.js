@@ -62,4 +62,47 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     }
+    // Initialize order title autocomplete
+    initOrderTitleAutocomplete();
 });
+
+function initOrderTitleAutocomplete() {
+    const displayOrderSelect = document.getElementById('display_order');
+    const orderTitleThInput = document.querySelector('input[name="order_title_th"]');
+    const orderTitleEnInput = document.querySelector('input[name="order_title_en"]');
+
+    if (displayOrderSelect && orderTitleThInput && orderTitleEnInput) {
+        // Define order titles mapping
+        const orderTitles = {
+            '0': {
+                th: 'คณบดี,หัวหน้าภาควิชา,หัวหน้าสำนักงาน',
+                en: 'Dean, Department Head, Office Head'
+            },
+            '1': {
+                th: 'รองคณบดี,ผู้ช่วยหัวหน้าภาควิชา,สายสนับสนุนวิชาการ',
+                en: 'Associate Dean, Assistant Department Head, Academic Support Staff'
+            },
+            '2': {
+                th: 'ผู้ช่วยคณบดี,อาจารย์ประจำภาควิชา',
+                en: 'Assistant Dean, Department Faculty/Professor'
+            },
+            '3': {
+                th: 'สายสนับสนุนวิชาการ',
+                en: 'Academic Support Staff'
+            }
+        };
+
+        // Add change event listener to display order select
+        displayOrderSelect.addEventListener('change', function () {
+            const selectedOrder = this.value;
+
+            if (selectedOrder && orderTitles[selectedOrder]) {
+                orderTitleThInput.value = orderTitles[selectedOrder].th;
+                orderTitleEnInput.value = orderTitles[selectedOrder].en;
+            } else {
+                orderTitleThInput.value = '';
+                orderTitleEnInput.value = '';
+            }
+        });
+    }
+}

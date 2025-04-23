@@ -79,15 +79,6 @@
                 <div class="card-body">
                     <form action="{{ route('contents.store') }}" id="createForm" method="POST">
                         @csrf
-                        <!-- Common Fields -->
-                        <div class="row mb-4">
-                            <div class="col-md-12">
-                                <label class="form-label">@lang('content.code')</label>
-                                <input type="text" class="form-control" name="code" placeholder="unique-content-code"
-                                    required>
-                                <small class="text-muted">@lang('content.code_help')</small>
-                            </div>
-                        </div>
 
                         <!-- Language Tabs -->
                         <ul class="nav nav-tabs mb-3" id="languageTabs" role="tablist">
@@ -113,14 +104,14 @@
                                 aria-labelledby="thai-tab">
                                 <div class="row mb-4">
                                     <div class="col-md-12">
-                                        <label class="form-label">@lang('content.title_th')</label>
+                                        <label class="form-label">@lang('content.title_th') <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" name="title_th" required>
                                     </div>
                                 </div>
 
                                 <div class="row mb-4">
                                     <div class="col-12">
-                                        <label class="form-label">@lang('content.detail_th')</label>
+                                        <label class="form-label">@lang('content.detail_th') <span class="text-danger">*</span></label>
                                         <textarea id="detail_th" name="detail_th"></textarea>
                                     </div>
                                 </div>
@@ -131,7 +122,7 @@
                                 <div class="row mb-4">
                                     <div class="col-md-12">
                                         <label class="form-label">@lang('content.title_en')</label>
-                                        <input type="text" class="form-control" name="title_en" required>
+                                        <input type="text" class="form-control" name="title_en">
                                     </div>
                                 </div>
 
@@ -449,7 +440,6 @@
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            code: this.code.value,
                             title_th: this.title_th.value,
                             title_en: this.title_en.value,
                             detail_th: tinymce.get('detail_th').getContent(),

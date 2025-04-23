@@ -6,6 +6,7 @@ return [
     'edit' => 'Edit',
     'delete' => 'Delete',
     'deleted' => 'Deleted',
+    'success' => 'Success',
     'error' => 'Error',
     'view' => 'View',
     'details' => 'Details',
@@ -121,5 +122,9 @@ return [
     // Preview elements
     'last_updated' => 'Last updated',
     'just_now' => 'just now',
+
+    'visitor_regions' => 'Visitor Regions',
+    'region' => 'Region',
+    'no_region_data' => 'No region data available at this time',
 
 ];

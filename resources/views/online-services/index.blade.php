@@ -4,6 +4,35 @@
 @section('css')
     <link rel="stylesheet" href="{{ asset('assets/vendor/fontawesome/css/all.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatable/jquery.dataTables.min.css') }}">
+    <!-- Draggable CSS -->
+    <style>
+        #servicesTable tbody tr {
+            cursor: move;
+            cursor: -webkit-grabbing;
+            transition: background-color 0.2s ease;
+        }
+
+        #servicesTable tbody tr.bg-light-primary {
+            background-color: rgba(var(--bs-primary-rgb), 0.1) !important;
+        }
+
+        .sorting_disabled.sorting_asc:after,
+        .sorting_disabled.sorting_desc:after {
+            display: none !important;
+        }
+
+        /* Make sure action buttons don't interfere with dragging */
+        .action-buttons {
+            pointer-events: auto;
+            z-index: 10;
+            position: relative;
+        }
+
+        /* Add a subtle visual indicator that rows are draggable */
+        #servicesTable tbody tr:hover {
+            background-color: rgba(var(--bs-primary-rgb), 0.05) !important;
+        }
+    </style>
 @endsection
 
 @section('main-content')
@@ -34,6 +63,14 @@
                             </a>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-xl-auto">
+                            <div class="alert alert-light-info " role="alert">
+                                <i class="ti ti-info-circle me-2"></i>
+                                <span>@lang('online_services.drag_instruction', ['default' => 'Click and drag any row to reorder services'])</span>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row mt-3">
                         <div class="col-xl-12">
                             <div class="app-datatable-default overflow-auto">
@@ -43,9 +80,13 @@
                                             <th>@lang('online_services.title_th')</th>
                                             <th>@lang('online_services.title_en')</th>
                                             <th>@lang('online_services.image')</th>
+                                            <th class="d-none">@lang('online_services.order')</th>
                                             <th>@lang('translation.action')</th>
                                         </tr>
                                     </thead>
+                                    <tbody class="draggable-content">
+                                        <!-- Table content will be loaded dynamically -->
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -59,6 +100,9 @@
 @section('script')
     <script src="{{ asset('assets/vendor/sweetalert/sweetalert.js') }}"></script>
     <script src="{{ asset('assets/vendor/datatable/jquery.dataTables.min.js') }}"></script>
+    <!-- Sortable.js for drag and drop functionality -->
+    <script src="{{ asset('assets/vendor/sortable/Sortable.min.js') }}"></script>
+
     <script>
         $(document).ready(function() {
             var base_image_url = '{{ asset('storage/') }}'
@@ -68,9 +112,13 @@
                 ordering: true,
                 processing: true,
                 responsive: true,
+                rowId: 'id', // Use the id field as the row identifier
+                order: [
+                    [3, 'asc']
+                ], // Order by order column (index 3)
                 ajax: {
                     type: 'GET',
-                    url: '{{ route("online-services.get-services") }}',
+                    url: '{{ route('online-services.get-services') }}',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
@@ -78,9 +126,12 @@
                         return response;
                     },
                 },
-                columns: [
-                    { data: 'title_th' },
-                    { data: 'title_en' },
+                columns: [{
+                        data: 'title_th'
+                    },
+                    {
+                        data: 'title_en'
+                    },
                     {
                         data: 'image',
                         render: function(data) {
@@ -91,33 +142,117 @@
                         }
                     },
                     {
+                        data: 'order',
+                        visible: false // Hide the order column
+                    },
+                    {
                         data: null,
                         render: function(data, type, row) {
-                            return `
-                            <a href="/admin/online-services/${data.id}/edit" class="btn btn-light-primary icon-btn b-r-4">
-                                <i class="ti ti-edit text-primary"></i>
-                            </a>
-                            <button type="button" class="btn btn-light-danger icon-btn b-r-4 delete-btn">
-                                <i class="ti ti-trash"></i>
-                            </button>`;
+                            return `<div class="action-buttons">
+                                <a href="/admin/online-services/${data.id}/edit" class="btn btn-light-primary icon-btn b-r-4 me-1">
+                                    <i class="ti ti-edit text-primary"></i>
+                                </a>
+                                <button type="button" class="btn btn-light-danger icon-btn b-r-4 delete-btn">
+                                    <i class="ti ti-trash"></i>
+                                </button>
+                            </div>`;
                         }
                     }
-                ]
+                ],
+                createdRow: function(row, data, index) {
+                    // Add data attributes to each row for sorting
+                    $(row).attr('data-id', data.id);
+                    $(row).attr('data-order', data.order);
+                }
             });
 
+            // Initialize Sortable.js for table body after DataTable is fully rendered
+            services_table.on('draw', function() {
+                const tbody = document.querySelector('#servicesTable tbody');
+                if (tbody && !tbody._sortable) {
+                    tbody._sortable = new Sortable(tbody, {
+                        animation: 150,
+                        ghostClass: 'bg-light-primary',
+                        draggable: 'tr',
+                        onEnd: function(evt) {
+                            updateDisplayOrder();
+                        }
+                    });
+                }
+            });
+
+            // Function to update display order after dragging
+            function updateDisplayOrder() {
+                const rows = $('#servicesTable tbody tr');
+                const orderData = [];
+
+                // Collect data for all visible rows
+                rows.each(function(index) {
+                    const id = $(this).attr('data-id');
+                    orderData.push({
+                        id: id,
+                        order: index + 1
+                    });
+                });
+
+                // Send the updated order to the server
+                if (orderData.length > 0) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ route('online-services.update-order') }}',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: {
+                            orders: orderData
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                // Show success notification
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '@lang('translation.success', ['default' => 'Success'])',
+                                    text: '@lang('online_services.order_updated', ['default' => 'Service order updated successfully'])',
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
+
+                                // Refresh the table to show updated order
+                                services_table.ajax.reload(null, false);
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: '@lang('translation.error', ['default' => 'Error'])',
+                                    text: response.message || '@lang('online_services.update_error', ['default' => 'Failed to update service order'])'
+                                });
+                            }
+                        },
+                        error: function(error) {
+                            console.error('Error updating order:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: '@lang('translation.error', ['default' => 'Error'])',
+                                text: '@lang('online_services.update_error', ['default' => 'Failed to update service order'])'
+                            });
+                        }
+                    });
+                }
+            }
+
+            // Delete button handler
             $('.app-data-table').on('click', '.delete-btn', function() {
                 const row = services_table.row($(this).closest('tr'));
                 const data = row.data();
 
                 Swal.fire({
-                    title: '@lang('online_services.delete_confirm')',
-                    text: `@lang('online_services.delete_message')`,
+                    title: '@lang('online_services.delete_confirm', ['default' => 'Are you sure?'])',
+                    text: '@lang('online_services.delete_message', ['default' => "You won\'t be able to revert this!"])',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: '@lang('translation.confirm')',
-                    cancelButtonText: '@lang('translation.cancel')'
+                    confirmButtonText: '@lang('translation.confirm', ['default' => 'Yes, delete it!'])',
+                    cancelButtonText: '@lang('translation.cancel', ['default' => 'Cancel'])'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
@@ -128,16 +263,16 @@
                             },
                             success: function(response) {
                                 Swal.fire(
-                                    '@lang('translation.deleted')',
-                                    '@lang('online_services.deleted_success')',
+                                    '@lang('translation.deleted', ['default' => 'Deleted!'])',
+                                    '@lang('online_services.deleted_success', ['default' => 'Service has been deleted.'])',
                                     'success'
                                 );
                                 services_table.ajax.reload();
                             },
                             error: function(xhr) {
                                 Swal.fire(
-                                    '@lang('translation.error')',
-                                    '@lang('online_services.delete_error')',
+                                    '@lang('translation.error', ['default' => 'Error!'])',
+                                    '@lang('online_services.delete_error', ['default' => 'Failed to delete service.'])',
                                     'error'
                                 );
                             }

@@ -111,6 +111,11 @@
                                 {{ $person->phone }}
                             </a>
                         </p>
+                        <p class="text-gray-600 dark:text-gray-300 mt-3">
+                            <a href="{{ $person->url_profile ?? '#' }}" class="text-blue-600 dark:text-blue-400 hover:underline">
+                                {{ __('personnel.url_profile') }}
+                            </a>
+                        </p>
                     </div>
                 </div>
             </div>

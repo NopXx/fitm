@@ -74,19 +74,19 @@
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control" name="f_name"
                                         value="{{ old('f_name', $user->f_name) }}" required>
-                                    <label>@lang('users.f_name')</label>
+                                    <label>@lang('users.f_name') <span class="text-danger">*</span></label>
                                 </div>
 
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control" name="l_name"
                                         value="{{ old('l_name', $user->l_name) }}" required>
-                                    <label>@lang('users.l_name')</label>
+                                    <label>@lang('users.l_name') <span class="text-danger">*</span></label>
                                 </div>
 
                                 <div class="form-floating mb-3">
                                     <input type="email" class="form-control" name="email"
                                         value="{{ old('email', $user->email) }}" required>
-                                    <label>@lang('users.email')</label>
+                                    <label>@lang('users.email') <span class="text-danger">*</span></label>
                                 </div>
 
                                 <div class="form-floating mb-3">
@@ -97,7 +97,7 @@
                                 <div class="form-floating mb-3">
                                     <input type="tel" class="form-control" name="tel"
                                         value="{{ old('tel', $user->tel) }}">
-                                    <label>@lang('users.tel')</label>
+                                    <label>@lang('users.tel') <span class="text-danger">*</span></label>
                                 </div>
                             </div>
 

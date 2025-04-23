@@ -53,5 +53,7 @@ return [
     'sync_departments' => 'Sync Department Menus',
     'departments_synced' => 'Department menus synchronized successfully',
     'sync_failed' => 'Failed to sync department menus',
-    'show_dropdown' => 'Show dropdown'
+    'show_dropdown' => 'Show dropdown',
+    'content_url' => 'Select content to create link.',
+    'select_content' => 'Select content',
 ];

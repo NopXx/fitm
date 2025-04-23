@@ -27,6 +27,7 @@ return [
     'image' => 'Image',
     'email' => 'Email',
     'phone' => 'Phone',
+    'url_profile' => 'Profile',
     'contact_info' => 'Contact Info',
     'display_order' => 'Display Order',
     'order_title_th' => 'Order Title (Thai)',
@@ -46,4 +47,9 @@ return [
     'last_updated' => 'Last Updated',
     'filter_by_board' => 'Filter by Board',
     'all_boards' => 'All Boards',
+    'order_no_0' => 'Dean, Department Head, Office Head',
+    'order_no_1' => 'Associate Dean, Assistant Department Head, Academic Support Staff',
+    'order_no_2' => 'Assistant Dean, Department Faculty/Professor',
+    'order_no_3' => 'Academic Support Staff',
+
 ];

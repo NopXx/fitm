@@ -44,8 +44,10 @@ class FitmNewsController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'issue_name' => 'required|string|max:255',
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'title_th' => 'required|string|max:255',
+            'title_en' => 'nullable|string|max:255',
+            'description_th' => 'nullable|string',
+            'description_en' => 'nullable|string',
             'published_date' => 'required|date',
             'url' => 'nullable|string|max:255',
             'cover_image' => 'nullable|image|max:2048',
@@ -59,7 +61,7 @@ class FitmNewsController extends Controller
 
         $data = $request->except('cover_image');
 
-        // Handle file upload - No change needed here as we're still using the same input name
+        // Handle file upload
         if ($request->hasFile('cover_image')) {
             $path = $request->file('cover_image')->store('fitmnews', 'public');
             $data['cover_image'] = $path;
@@ -94,8 +96,10 @@ class FitmNewsController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'issue_name' => 'required|string|max:255',
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'title_th' => 'required|string|max:255',
+            'title_en' => 'nullable|string|max:255',
+            'description_th' => 'nullable|string',
+            'description_en' => 'nullable|string',
             'published_date' => 'required|date',
             'url' => 'nullable|string|max:255',
             'cover_image' => 'nullable|image|max:4048',

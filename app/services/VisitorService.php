@@ -46,6 +46,57 @@ class VisitorService
         ]);
     }
 
+    public function getTopRegions($limit = 10, $excludeAdmin = false)
+    {
+        // ดึงข้อมูล IP ทั้งหมดที่ไม่ซ้ำกัน
+        $query = VisitorLog::select('ip_address')
+            ->distinct();
+
+        if ($excludeAdmin) {
+            $query->where(function ($q) {
+                $q->where(function ($innerQ) {
+                    $innerQ->where('page', '!=', 'admin')
+                        ->where('page', '!=', 'login')
+                        ->where('page', 'not like', 'admin/%')
+                        ->where('page', 'not like', 'api/%')
+                        ->where('page', 'not like', 'lang/%');
+                })->orWhereNull('page');
+            });
+        }
+
+        $ips = $query->pluck('ip_address')->toArray();
+
+        // รวบรวมข้อมูลจังหวัด
+        $regions = [];
+        $ipInfoService = app(IpInfoService::class);
+
+        foreach ($ips as $ip) {
+            $locationData = $ipInfoService->getLocationData($ip);
+            $region = $locationData['region'] ?? 'Unknown';
+
+            if (!isset($regions[$region])) {
+                $regions[$region] = 0;
+            }
+
+            $regions[$region]++;
+        }
+
+        // เรียงลำดับและจำกัดจำนวน
+        arsort($regions);
+        $regions = array_slice($regions, 0, $limit, true);
+
+        // แปลงเป็นรูปแบบที่ต้องการ
+        $result = [];
+        foreach ($regions as $region => $count) {
+            $result[] = [
+                'region' => $region,
+                'count' => $count
+            ];
+        }
+
+        return $result;
+    }
+
     public function getActiveVisitors(int $minutes = 15, bool $excludeAdmin = false): int
     {
         // นับจำนวนผู้เข้าชมที่กำลังใช้งานในช่วง x นาทีที่ผ่านมา
