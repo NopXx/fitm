@@ -94,6 +94,9 @@
             const images = document.querySelectorAll('.department-content img:not(.img-fluid)');
             images.forEach(img => {
                 img.classList.add('img-fluid');
+                if (img.src.includes('/old/path/')) {
+                    img.src = img.src.replace('/old/path/', '/storage/uploads/department/');
+                }
             });
         });
     </script>

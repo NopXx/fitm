@@ -3,7 +3,7 @@ $(function () {
     const table = $('#example').DataTable({
         ajax: {
             type: 'GET',
-            url: '/admin/users',
+            url: baseURL + '/admin/users',
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -27,7 +27,7 @@ $(function () {
             {
                 data: null,
                 render: function (data, type, row) {
-                    return `<a href="/admin/users/edit/${data.id}" type="button" class="btn btn-light-primary icon-btn b-r-4">
+                    return `<a href="${baseURL}/admin/users/edit/${data.id}" type="button" class="btn btn-light-primary icon-btn b-r-4">
                                 <i class="ti ti-edit text-primary"></i>
                             </a>
                             <button type="button" class="btn btn-light-danger icon-btn b-r-4 delete-btn">
@@ -55,7 +55,7 @@ $(function () {
             if (result.isConfirmed) {
                 $.ajax({
                     type: 'DELETE',
-                    url: '/admin/users/destroy/' + data.id,
+                    url: baseURL + '/admin/users/destroy/' + data.id,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },

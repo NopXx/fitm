@@ -1,6 +1,6 @@
 @extends('layout.app')
 @section('title')
-{{ app()->getLocale() == 'th' ? $content->title_th ?? __('content.content') : $content->title_en ?? __('content.content') }}
+    {{ app()->getLocale() == 'th' ? $content->title_th ?? __('content.content') : $content->title_en ?? __('content.content') }}
 @endsection
 
 @section('css')
@@ -159,6 +159,9 @@
             });
         }
 
+        // Define base URL from Laravel
+        const baseURL = '{{ url('/') }}';
+
         document.addEventListener('DOMContentLoaded', function() {
             // Fix for list styling in department-content
             const contentDiv = document.querySelector('.department-content');
@@ -203,7 +206,7 @@
                 const codeBlocks = contentDiv.querySelectorAll('code, pre');
                 codeBlocks.forEach(block => {
                     if (!block.hasAttribute('style') || !block.getAttribute('style').includes(
-                            'background')) {
+                        'background')) {
                         block.style.backgroundColor = '#f3f4f6';
                         block.style.padding = block.tagName === 'PRE' ? '1rem' : '0.2em 0.4em';
                         block.style.borderRadius = block.tagName === 'PRE' ? '5px' : '3px';
@@ -225,9 +228,48 @@
             });
 
             // Add img-fluid class to images if not already added from editor
+            // AND update image paths to use the storage URL
             const images = document.querySelectorAll('.department-content img:not(.img-fluid)');
             images.forEach(img => {
+                // Add fluid class
                 img.classList.add('img-fluid');
+
+                // Update image paths to use the storage URL if needed
+                const currentSrc = img.getAttribute('src');
+
+                // Check if the image path should be updated
+                // Option 1: If it contains a specific pattern that needs replacement
+                // For example, if old path contains "/fitm/" but not "/storage/"
+                if (currentSrc && currentSrc.includes('/fitm/') && !currentSrc.includes('/storage/')) {
+                    // Extract the filename or unique part from the current path
+                    const pathParts = currentSrc.split('/');
+                    const filename = pathParts[pathParts.length - 1];
+
+                    // Update to new path structure using baseURL
+                    img.src = baseURL + '/storage/uploads/department/' + filename;
+                }
+
+                // Option 2: If you want to update ALL image paths to point to a specific image
+                // Uncomment this if you want to make all images use the same file
+                /*
+                if (currentSrc) {
+                    img.src = baseURL + '/storage/uploads/department/aDYIF3dOT1W8VGjFzvqftlXztbHyEOR1Cy7Vli5Z.jpg';
+                }
+                */
+
+                // Option 3: Convert relative paths to absolute storage paths
+                // If the image has a relative path that starts with '/' but not with 'http'
+                if (currentSrc && currentSrc.startsWith('/') && !currentSrc.startsWith('http')) {
+                    // Check if it's already a storage path
+                    if (!currentSrc.includes('/storage/uploads/department/')) {
+                        // Extract filename from path
+                        const pathParts = currentSrc.split('/');
+                        const filename = pathParts[pathParts.length - 1];
+
+                        // Update to storage path using baseURL
+                        img.src = baseURL + '/storage/uploads/department/' + filename;
+                    }
+                }
             });
         });
     </script>

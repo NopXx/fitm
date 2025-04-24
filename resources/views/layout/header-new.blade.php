@@ -59,7 +59,7 @@
                     <li class="header-profile">
                         <a href="#" class="d-block head-icon" role="button" data-bs-toggle="offcanvas"
                             data-bs-target="#profilecanvasRight" aria-controls="profilecanvasRight">
-                            <img src="{{ asset('../assets/images/avtar/woman.jpg') }}" alt="avtar"
+                            <img src="{{ asset('assets/images/avtar/woman.jpg') }}" alt="avtar"
                                 class="b-r-10 h-35 w-35">
                         </a>
 
@@ -70,7 +70,7 @@
                                     <li>
                                         <div class="d-flex-center">
                                             <span class="h-45 w-45 d-flex-center b-r-10 position-relative">
-                                                <img src="{{ asset('../assets/images/avtar/woman.jpg') }}"
+                                                <img src="{{ asset('assets/images/avtar/woman.jpg') }}"
                                                     alt="" class="img-fluid b-r-10">
                                             </span>
                                         </div>

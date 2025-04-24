@@ -84,6 +84,9 @@
         };
     </script>
 
+    <script>
+        var baseURL = '{{ url("/") }}'
+    </script>
     {{-- init page users js --}}
     <script src="{{ asset('assets/js/users_init.js') }}"></script>
 @endsection
