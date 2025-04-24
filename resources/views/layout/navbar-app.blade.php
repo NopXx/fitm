@@ -17,11 +17,20 @@
                         $hasChildren = $menu->children->isNotEmpty();
                         $showDropdown = optional($menu->displaySetting)->show_dropdown;
                         $isVisible = optional($menu->displaySetting)->is_visible;
+                        // Ensure URL has the correct prefix if it's a relative URL
+                        $menuUrl = $translation?->url ?? '#';
+                        if ($menuUrl && $menuUrl !== '#' && !str_starts_with($menuUrl, 'http')) {
+                            // If URL doesn't start with a slash, add one
+                            if (!str_starts_with($menuUrl, '/')) {
+                                $menuUrl = '/' . $menuUrl;
+                            }
+                            $menuUrl = url($menuUrl);
+                        }
                     @endphp
 
                     @if ($isVisible)
                         <li class="relative group">
-                            <a href="{{ $translation?->url ?? '#' }}"
+                            <a href="{{ $menuUrl }}"
                                 @mouseenter="activeDropdown = '{{ $menu->id }}'"
                                 class="text-white hover:text-gray-100 dark:text-gray-200 dark:hover:text-white flex items-center {{ $menu->displaySetting?->css_class }}">
                                 {{ $translation?->name }}
@@ -51,8 +60,17 @@
                                                 'language_code',
                                                 App::getLocale(),
                                             );
+                                            // Ensure child URL has the correct prefix if it's a relative URL
+                                            $childUrl = $childTranslation?->url ?? '#';
+                                            if ($childUrl && $childUrl !== '#' && !str_starts_with($childUrl, 'http')) {
+                                                // If URL doesn't start with a slash, add one
+                                                if (!str_starts_with($childUrl, '/')) {
+                                                    $childUrl = '/' . $childUrl;
+                                                }
+                                                $childUrl = url($childUrl);
+                                            }
                                         @endphp
-                                        <a href="{{ $childTranslation?->url ?? '#' }}"
+                                        <a href="{{ $childUrl }}"
                                             class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 {{ $child->displaySetting?->css_class }}">
                                             {{ $childTranslation?->name }}
                                         </a>
@@ -170,12 +188,21 @@
                         $translation = $menu->translations->where('language_code', App::getLocale())->first();
                         $hasChildren = $menu->children->isNotEmpty();
                         $isVisible = optional($menu->displaySetting)->is_visible;
+                        // Ensure URL has the correct prefix if it's a relative URL
+                        $mobileMenuUrl = $translation?->url ?? '#';
+                        if ($mobileMenuUrl && $mobileMenuUrl !== '#' && !str_starts_with($mobileMenuUrl, 'http')) {
+                            // If URL doesn't start with a slash, add one
+                            if (!str_starts_with($mobileMenuUrl, '/')) {
+                                $mobileMenuUrl = '/' . $mobileMenuUrl;
+                            }
+                            $mobileMenuUrl = url($mobileMenuUrl);
+                        }
                     @endphp
 
                     @if ($isVisible)
                         <div x-data="{ open: false }">
                             <div class="flex w-full">
-                                <a href="{{ $translation?->url ?? '#' }}" class="grow text-white dark:text-gray-200 py-3 text-xl">
+                                <a href="{{ $mobileMenuUrl }}" class="grow text-white dark:text-gray-200 py-3 text-xl">
                                     {{ $translation?->name }}
                                 </a>
                                 @if ($hasChildren)
@@ -202,8 +229,17 @@
                                                 $childTranslation = $child->translations
                                                     ->where('language_code', App::getLocale())
                                                     ->first();
+                                                // Ensure child URL has the correct prefix if it's a relative URL
+                                                $mobileChildUrl = $childTranslation?->url ?? '#';
+                                                if ($mobileChildUrl && $mobileChildUrl !== '#' && !str_starts_with($mobileChildUrl, 'http')) {
+                                                    // If URL doesn't start with a slash, add one
+                                                    if (!str_starts_with($mobileChildUrl, '/')) {
+                                                        $mobileChildUrl = '/' . $mobileChildUrl;
+                                                    }
+                                                    $mobileChildUrl = url($mobileChildUrl);
+                                                }
                                             @endphp
-                                            <a href="{{ $childTranslation?->url ?? '#' }}"
+                                            <a href="{{ $mobileChildUrl }}"
                                                 @click="mobileMenuOpen = false" class="block text-white dark:text-gray-200 py-2 text-lg">
                                                 {{ $childTranslation?->name }}
                                             </a>
