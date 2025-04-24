@@ -178,7 +178,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // ดึงข้อมูลจำนวนผู้เข้าชม
-        fetch('/admin/api/visitors/stats')
+        fetch('{{ url("/admin/api/visitors/stats") }}')
             .then(response => response.json())
             .then(data => {
                 // อัปเดตข้อมูลในหน้าเว็บ
