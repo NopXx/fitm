@@ -69,7 +69,7 @@
                 responsive: true,
                 ajax: {
                     type: 'GET',
-                    url: '/admin/contents/get-contents',
+                    url: '{{ url("/admin/contents/get-contents") }}',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
@@ -90,7 +90,7 @@
                         data: null,
                         render: function(data, type, row) {
                             return `
-                            <a href="/admin/contents/${data.id}/edit" class="btn btn-light-primary icon-btn b-r-4">
+                            <a href="{{ url('/admin/contents') }}/${data.id}/edit" class="btn btn-light-primary icon-btn b-r-4">
                                 <i class="ti ti-edit text-primary"></i>
                             </a>
                             <button type="button" class="btn btn-light-danger icon-btn b-r-4 delete-btn">
@@ -117,7 +117,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: `/admin/contents/${data.id}`,
+                            url: `{{ url('/admin/contents') }}/${data.id}`,
                             type: 'DELETE',
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
