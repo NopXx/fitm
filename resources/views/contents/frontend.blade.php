@@ -159,8 +159,8 @@
             });
         }
 
-        // Define base URL from Laravel
-        const baseURL = '{{ url('/') }}';
+        // Define the fixed domain path
+        const fixedDomainPath = '{{ url("/") }}';
 
         document.addEventListener('DOMContentLoaded', function() {
             // Fix for list styling in department-content
@@ -227,48 +227,33 @@
                 }
             });
 
-            // Add img-fluid class to images if not already added from editor
-            // AND update image paths to use the storage URL
-            const images = document.querySelectorAll('.department-content img:not(.img-fluid)');
+            // Fix ALL image paths to use the specific domain path
+            const images = document.querySelectorAll('.department-content img');
             images.forEach(img => {
-                // Add fluid class
-                img.classList.add('img-fluid');
+                // Always add fluid class if missing
+                if (!img.classList.contains('img-fluid')) {
+                    img.classList.add('img-fluid');
+                }
 
-                // Update image paths to use the storage URL if needed
+                // Get current src
                 const currentSrc = img.getAttribute('src');
 
-                // Check if the image path should be updated
-                // Option 1: If it contains a specific pattern that needs replacement
-                // For example, if old path contains "/fitm/" but not "/storage/"
-                if (currentSrc && currentSrc.includes('/fitm/') && !currentSrc.includes('/storage/')) {
-                    // Extract the filename or unique part from the current path
-                    const pathParts = currentSrc.split('/');
-                    const filename = pathParts[pathParts.length - 1];
-
-                    // Update to new path structure using baseURL
-                    img.src = baseURL + '/storage/uploads/department/' + filename;
-                }
-
-                // Option 2: If you want to update ALL image paths to point to a specific image
-                // Uncomment this if you want to make all images use the same file
-                /*
                 if (currentSrc) {
-                    img.src = baseURL + '/storage/uploads/department/aDYIF3dOT1W8VGjFzvqftlXztbHyEOR1Cy7Vli5Z.jpg';
-                }
-                */
+                    // Extract only the filename from the path
+                    let filename = currentSrc.split('/').pop();
 
-                // Option 3: Convert relative paths to absolute storage paths
-                // If the image has a relative path that starts with '/' but not with 'http'
-                if (currentSrc && currentSrc.startsWith('/') && !currentSrc.startsWith('http')) {
-                    // Check if it's already a storage path
-                    if (!currentSrc.includes('/storage/uploads/department/')) {
-                        // Extract filename from path
-                        const pathParts = currentSrc.split('/');
-                        const filename = pathParts[pathParts.length - 1];
-
-                        // Update to storage path using baseURL
-                        img.src = baseURL + '/storage/uploads/department/' + filename;
+                    // Remove any query parameters if they exist
+                    if (filename.includes('?')) {
+                        filename = filename.split('?')[0];
                     }
+
+                    // Force update all image sources to use the fixed domain path
+                    img.src = fixedDomainPath + '/storage/uploads/department/' + filename;
+
+                    // Force set the image path to avoid any issues with browser caching
+                    setTimeout(() => {
+                        img.setAttribute('src', fixedDomainPath + '/storage/uploads/department/' + filename);
+                    }, 0);
                 }
             });
         });

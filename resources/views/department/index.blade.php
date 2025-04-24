@@ -90,13 +90,20 @@
                 wrapper.appendChild(table);
             });
 
-            // Add img-fluid class to images if not already added from editor
-            const images = document.querySelectorAll('.department-content img:not(.img-fluid)');
+            // Fix all image paths with absolute URL
+            const images = document.querySelectorAll('.department-content img');
             images.forEach(img => {
-                img.classList.add('img-fluid');
-                if (img.src.includes('/old/path/')) {
-                    img.src = img.src.replace('/old/path/', '/storage/uploads/department/');
+                // Add img-fluid class if not already present
+                if (!img.classList.contains('img-fluid')) {
+                    img.classList.add('img-fluid');
                 }
+
+                // Get the filename from the src
+                const srcParts = img.src.split('/');
+                const filename = srcParts[srcParts.length - 1];
+                var baseURL = '{{ url("/") }}'
+                // Replace with the absolute URL
+                img.src = baseURL + '/storage/uploads/department/' + filename;
             });
         });
     </script>
