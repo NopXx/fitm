@@ -85,5 +85,8 @@
     </script>
 
     {{-- init page newjs --}}
+    <script>
+        var baseURL = '{{ url("/") }}'
+    </script>
     <script src="{{ asset('assets/js/new_init.js') }}"></script>
 @endsection

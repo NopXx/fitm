@@ -749,7 +749,7 @@
 
             try {
                 // Send a single request to update all department fields
-                const response = await fetch(`/admin/department/update/${departmentId}`, {
+                const response = await fetch(`{{ url('/admin/department/update') }}/${departmentId}`, {
                     method: 'PUT',
                     headers: {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,

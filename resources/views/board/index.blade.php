@@ -131,5 +131,8 @@
     </script>
 
     {{-- init page boards js --}}
+    <script>
+        var baseUrl = '{{ url("/") }}';
+    </script>
     <script src="{{ asset('assets/js/boards_init.js') }}"></script>
 @endsection

@@ -109,7 +109,7 @@
                                             class="ms-2 form-check-input" required>
                                     </div>
                                     <div class="card">
-                                        <img id="previewStyle1Cover" src="{{ asset('../assets/images/size/600x400.png') }}"
+                                        <img id="previewStyle1Cover" src="{{ asset('assets/images/size/600x400.png') }}"
                                             class="card-img-top" alt="Cover Preview">
                                         <div class="card-body">
                                             <h5 class="card-title" id="previewTitle1">@lang('translation.title')</h5>
@@ -133,15 +133,15 @@
                                         <div class="fade-a app-arrow">
                                             <div class="item">
                                                 <img id="previewStyle2Cover"
-                                                    src="{{ asset('../assets/images/size/1200x600.png') }}"
+                                                    src="{{ asset('assets/images/size/1200x600.png') }}"
                                                     class="img-fluid" alt="Cover Preview">
                                             </div>
                                             <div class="item">
-                                                <img src="{{ asset('../assets/images/size/1200x600.png') }}"
+                                                <img src="{{ asset('assets/images/size/1200x600.png') }}"
                                                     class="img-fluid" alt="Cover Preview">
                                             </div>
                                             <div class="item">
-                                                <img src="{{ asset('../assets/images/size/1200x600.png') }}"
+                                                <img src="{{ asset('assets/images/size/1200x600.png') }}"
                                                     class="img-fluid" alt="Cover Preview">
                                             </div>
                                         </div>
@@ -350,8 +350,8 @@
     <script>
         var locale = '{{ $lang }}';
         var csrf = '{{ csrf_token() }}';
-        const DEFAULT_IMAGE = "{{ asset('../assets/images/size/600x400.png') }}";
-        const DEFAULT_IMAGE_STYLE2 = "{{ asset('../assets/images/size/1200x600.png') }}";
+        const DEFAULT_IMAGE = "{{ asset('assets/images/size/600x400.png') }}";
+        const DEFAULT_IMAGE_STYLE2 = "{{ asset('assets/images/size/1200x600.png') }}";
 
         // Browse link for filepond
         document.addEventListener('DOMContentLoaded', function() {

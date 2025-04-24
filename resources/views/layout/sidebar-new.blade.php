@@ -2,7 +2,7 @@
 <nav>
     <div class="app-logo">
         <a class="logo d-inline-block" href="{{ route('dashboard.index') }}">
-            <img src="{{ asset('../assets/images/fitm-logo.png') }}" alt="#">
+            <img src="{{ asset('assets/images/fitm-logo.png') }}" alt="#">
         </a>
 
         <span class="bg-light-primary toggle-semi-nav">

@@ -83,5 +83,8 @@
     </script>
 
     {{-- init page fitmnews js --}}
+    <script>
+        var baseUrl = '{{ url('/') }}';
+    </script>
     <script src="{{ asset('assets/js/fitmnews_init.js') }}"></script>
 @endsection

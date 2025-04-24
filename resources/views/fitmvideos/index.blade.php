@@ -82,7 +82,9 @@
             'no': '@lang('translation.no')',
         };
     </script>
-
+    <script>
+        var baseUrl = '{{ url('/') }}';
+    </script>
     {{-- init page fitmvideos js --}}
     <script src="{{ asset('assets/js/fitmvideos_init.js') }}"></script>
 @endsection

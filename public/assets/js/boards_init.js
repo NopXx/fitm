@@ -3,7 +3,7 @@ $(function () {
     const table = $('#boardTable').DataTable({
         ajax: {
             type: 'GET',
-            url: '/admin/boards',
+            url: baseUrl + '/admin/boards',
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -41,7 +41,7 @@ $(function () {
                 data: null,
                 render: function (data, type, row) {
                     return `<div class="action-buttons">
-                                <a href="/admin/boards/edit/${data.id}" type="button" class="btn btn-light-primary icon-btn b-r-4 me-1">
+                                <a href="${baseUrl}/admin/boards/edit/${data.id}" type="button" class="btn btn-light-primary icon-btn b-r-4 me-1">
                                     <i class="ti ti-edit text-primary"></i>
                                 </a>
                                 <button type="button" class="btn btn-light-danger icon-btn b-r-4 delete-btn">
@@ -94,7 +94,7 @@ $(function () {
         if (orderData.length > 0) {
             $.ajax({
                 type: 'POST',
-                url: '/admin/boards/update-order',
+                url: baseUrl + '/admin/boards/update-order',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
@@ -151,7 +151,7 @@ $(function () {
             if (result.isConfirmed) {
                 $.ajax({
                     type: 'DELETE',
-                    url: '/admin/boards/destroy/' + data.id,
+                    url: baseUrl + '/admin/boards/destroy/' + data.id,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },

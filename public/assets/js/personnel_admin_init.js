@@ -3,7 +3,7 @@ $(function () {
     const table = $('#personnelTable').DataTable({
         ajax: {
             type: 'GET',
-            url: '/admin/personnel',
+            url: baseURL + '/admin/personnel',
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -73,7 +73,7 @@ $(function () {
                 data: 'image',
                 render: function (data) {
                     if (data) {
-                        return `<img src="/storage/${data}" alt="Personnel Image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">`;
+                        return `<img src="${baseURL}/storage/${data}" alt="Personnel Image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">`;
                     } else {
                         return `<div style="width: 50px; height: 50px; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
                                   <i class="ti ti-user text-muted"></i>
@@ -110,7 +110,7 @@ $(function () {
             {
                 data: null,
                 render: function (data, type, row) {
-                    return `<a href="/admin/personnel/edit/${data.id}" type="button" class="btn btn-light-primary icon-btn b-r-4">
+                    return `<a href="${baseURL}/admin/personnel/edit/${data.id}" type="button" class="btn btn-light-primary icon-btn b-r-4">
                                 <i class="ti ti-edit text-primary"></i>
                             </a>
                             <button type="button" class="btn btn-light-danger icon-btn b-r-4 delete-btn">
@@ -138,7 +138,7 @@ $(function () {
             if (result.isConfirmed) {
                 $.ajax({
                     type: 'DELETE',
-                    url: '/admin/personnel/destroy/' + data.id,
+                    url: baseURL + '/admin/personnel/destroy/' + data.id,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },

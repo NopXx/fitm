@@ -105,7 +105,7 @@
                     responsive: true,
                     ajax: {
                         type: 'GET',
-                        url: '/admin/departments',
+                        url: '{{ url("/admin/departments")}}',
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
@@ -135,7 +135,7 @@
                                 return `
                                 ${contentEditBtn}
                                 ${contentPreviewBtn}
-                                <a href="/admin/department/edit/${data.id}" type="button" class="btn btn-light-primary icon-btn b-r-4 me-1" title="@lang('department.edit')">
+                                <a href="{{ url("/admin/department/edit") }}/${data.id}" type="button" class="btn btn-light-primary icon-btn b-r-4 me-1" title="@lang('department.edit')">
                                     <i class="ti ti-edit text-primary"></i>
                                 </a>
                                 <button type="button" class="btn btn-light-danger icon-btn b-r-4 delete-btn" title="@lang('department.delete')">
@@ -160,7 +160,7 @@
                 let deleteUrl = '';
                 const tableId = $(this).closest('table').attr('id');
                 if (tableId === 'departmentsTable') {
-                    deleteUrl = `/admin/department/delete/${data.id}`;
+                    deleteUrl = '{{ url("/admin/department/delete") }}/' + data.id;
                 }
 
                 // Confirm deletion using SweetAlert.

@@ -90,7 +90,9 @@
             'all_boards': '@lang('personnel.all_boards')'
         };
     </script>
-
+    <script>
+        var baseURL = '{{ url("/") }}'
+    </script>
     <!-- init page js -->
     <script src="{{ asset('assets/js/personnel_admin_init.js') }}"></script>
 @endsection

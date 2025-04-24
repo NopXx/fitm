@@ -336,7 +336,7 @@
                     }).then((result) => {
                         if (result.isConfirmed) {
                             const menuId = this.dataset.id;
-                            fetch(`/admin/menus/${menuId}`, {
+                            fetch('{{ url("/admin/menus") }}/' + menuId, {
                                     method: 'DELETE',
                                     headers: {
                                         'X-CSRF-TOKEN': document.querySelector(
@@ -379,7 +379,7 @@
                     .filter(el => el.dataset.id)
                     .map(el => el.dataset.id);
 
-                fetch('/admin/menus/update-order', {
+                fetch('{{ url("/admin/menus/update-order") }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

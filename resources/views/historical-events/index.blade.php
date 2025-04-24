@@ -152,7 +152,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: `/admin/historical-events/delete/${id}`,
+                            url: '{{ url("/admin/historical-events/delete") }}/' + id,
                             type: 'DELETE',
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

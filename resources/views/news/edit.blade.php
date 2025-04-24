@@ -137,11 +137,11 @@
                                                     class="img-fluid" alt="Cover Preview">
                                             </div>
                                             <div class="item">
-                                                <img src="{{ asset('../assets/images/size/1200x600.png') }}"
+                                                <img src="{{ asset('assets/images/size/1200x600.png') }}"
                                                     class="img-fluid" alt="Cover Preview">
                                             </div>
                                             <div class="item">
-                                                <img src="{{ asset('../assets/images/size/1200x600.png') }}"
+                                                <img src="{{ asset('assets/images/size/1200x600.png') }}"
                                                     class="img-fluid" alt="Cover Preview">
                                             </div>
                                         </div>
@@ -355,8 +355,8 @@
     <script>
         var locale = '{{ $lang }}';
         var csrf = '{{ csrf_token() }}';
-        const DEFAULT_IMAGE = "{{ asset('../assets/images/size/600x400.png') }}";
-        const DEFAULT_IMAGE_STYLE2 = "{{ asset('../assets/images/size/1200x600.png') }}";
+        const DEFAULT_IMAGE = "{{ asset('assets/images/size/600x400.png') }}";
+        const DEFAULT_IMAGE_STYLE2 = "{{ asset('assets/images/size/1200x600.png') }}";
         var existingFile = '{{ $new->cover ? asset('storage/' . $new->cover) : '' }}';
 
         // Browse link for filepond

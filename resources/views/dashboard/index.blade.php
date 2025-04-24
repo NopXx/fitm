@@ -228,6 +228,7 @@
 @section('script')
     <!-- apexcharts-->
     <script src="{{ asset('assets/vendor/apexcharts/apexcharts.min.js') }}"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Set the current app language
@@ -251,7 +252,7 @@
             }
 
             // Fetch visitor data for the last 30 days
-            fetch('/admin/api/visitors/daily-stats')
+            fetch('{{ url("/admin/api/visitors/daily-stats") }}')
                 .then(response => response.json())
                 .then(data => {
                     if (data.visitors && data.visitors.length > 0) {
@@ -388,7 +389,7 @@
 
             // Update active visitors count every 30 seconds
             setInterval(function() {
-                fetch('/admin/api/visitors/stats')
+                fetch('{{ url("/admin/api/visitors/stats") }}')
                     .then(response => response.json())
                     .then(data => {
                         document.getElementById('active-visitors').textContent = data.activeVisitors;
