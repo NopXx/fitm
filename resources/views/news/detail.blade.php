@@ -417,12 +417,44 @@
                 const codeBlocks = contentDiv.querySelectorAll('code, pre');
                 codeBlocks.forEach(block => {
                     if (!block.hasAttribute('style') || !block.getAttribute('style').includes(
-                        'background')) {
+                            'background')) {
                         block.style.backgroundColor = '#f3f4f6';
                         block.style.padding = block.tagName === 'PRE' ? '1rem' : '0.2em 0.4em';
                         block.style.borderRadius = block.tagName === 'PRE' ? '5px' : '3px';
                         block.style.fontFamily =
                             'SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace';
+                    }
+                });
+
+                const fixedDomainPath = '{{ url('/') }}';
+
+                const images = document.querySelectorAll('.department-content img');
+                images.forEach(img => {
+                    // Always add fluid class if missing
+                    if (!img.classList.contains('img-fluid')) {
+                        img.classList.add('img-fluid');
+                    }
+
+                    // Get current src
+                    const currentSrc = img.getAttribute('src');
+
+                    if (currentSrc) {
+                        // Extract only the filename from the path
+                        let filename = currentSrc.split('/').pop();
+
+                        // Remove any query parameters if they exist
+                        if (filename.includes('?')) {
+                            filename = filename.split('?')[0];
+                        }
+
+                        // Force update all image sources to use the fixed domain path
+                        img.src = fixedDomainPath + '/storage/uploads/news/' + filename;
+
+                        // Force set the image path to avoid any issues with browser caching
+                        setTimeout(() => {
+                            img.setAttribute('src', fixedDomainPath +
+                                '/storage/uploads/news/' + filename);
+                        }, 0);
                     }
                 });
             }
