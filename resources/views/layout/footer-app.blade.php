@@ -83,7 +83,7 @@
 
         <!-- Copyright section at bottom -->
         <div class="mt-6 text-center">
-            <p class="text-sm text-white">{{ __('messages.copyright') }}</p>
+            <p class="text-sm text-white">{{ __('messages.copyright', ['year' => date('Y')]) }}</p>
         </div>
     </div>
 
