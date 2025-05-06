@@ -106,6 +106,7 @@
     <script>
         $(document).ready(function() {
             var base_image_url = '{{ asset('storage/') }}'
+            var baseURL = '{{ url("/") }}'
             var services_table = $('#servicesTable').DataTable({
                 destroy: true,
                 search: true,
@@ -149,7 +150,7 @@
                         data: null,
                         render: function(data, type, row) {
                             return `<div class="action-buttons">
-                                <a href="/admin/online-services/${data.id}/edit" class="btn btn-light-primary icon-btn b-r-4 me-1">
+                                <a href="${baseURL}/admin/online-services/${data.id}/edit" class="btn btn-light-primary icon-btn b-r-4 me-1">
                                     <i class="ti ti-edit text-primary"></i>
                                 </a>
                                 <button type="button" class="btn btn-light-danger icon-btn b-r-4 delete-btn">
