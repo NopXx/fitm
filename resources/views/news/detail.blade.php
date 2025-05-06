@@ -281,7 +281,7 @@
             </div> --}}
 
             <!-- Related News -->
-            @if (count($relatedNews) > 0)
+            {{-- @if (count($relatedNews) > 0)
                 <div class="mt-12 border-t border-gray-200 dark:border-gray-700 pt-8 transition-colors duration-200">
                     <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 transition-colors duration-200">
                         {{ __('news.related_news') }}</h2>
@@ -313,8 +313,8 @@
                                                         {{ $related->effective_date }}
                                                     @else
                                                         {{ $related->effective_date->format('Y-m-d') }} @endif
-@else
-{{ now()->format('Y-m-d') }}
+                                                    @else
+                                                    {{ now()->format('Y-m-d') }}
                                                   @endif">
                                         <!-- Date will be filled by Moment.js -->
                                     </div>
@@ -333,7 +333,7 @@
                         @endforeach
                     </div>
                 </div>
-            @endif
+            @endif --}}
         </div>
     </div>
 @endsection
