@@ -49,8 +49,10 @@ class SearchController extends Controller
 
         // Search in FitmNews model
         $fitmNewsResults = FitmNews::where(function($q) use ($query) {
-            $q->where('title', 'LIKE', "%{$query}%")
-              ->orWhere('description', 'LIKE', "%{$query}%")
+            $q->where('title_th', 'LIKE', "%{$query}%")
+              ->orWhere('title_en', 'LIKE', "%{$query}%")
+              ->orWhere('description_th', 'LIKE', "%{$query}%")
+              ->orWhere('description_en', 'LIKE', "%{$query}%")
               ->orWhere('issue_name', 'LIKE', "%{$query}%");
         })->get();
 

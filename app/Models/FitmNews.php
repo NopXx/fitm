@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
 
 class FitmNews extends Model
 {
@@ -43,16 +44,32 @@ class FitmNews extends Model
         'is_featured' => 'boolean',
     ];
 
+    /**
+     * Get the title attribute with fallback to issue_name.
+     *
+     * @return string|null
+     */
     public function getTitleAttribute()
     {
         $lang = app()->getLocale();
-        return $lang == 'en' ? ($this->title_en ?: null) : ($this->title_th ?: null);
+        $title = $lang === 'en' ? $this->title_en : $this->title_th;
+
+        Log::debug("Language: {$lang}, Title_th: {$this->title_th}, Title_en: {$this->title_en}");
+
+        return $title ?: null;
     }
 
+    /**
+     * Get the description attribute.
+     *
+     * @return string|null
+     */
     public function getDescriptionAttribute()
     {
         $lang = app()->getLocale();
-        return $lang == 'en' ? ($this->description_en ?: null) : ($this->description_th ?: null);
+        $description = $lang === 'en' ? $this->description_en : $this->description_th;
+
+        return $description ?: null;
     }
 
     /**

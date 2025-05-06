@@ -7,6 +7,7 @@ use App\Models\News;
 use App\Models\NewType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class NewsFrontendController extends Controller
@@ -48,10 +49,10 @@ class NewsFrontendController extends Controller
 
         // Get the news type and issue data for filters
         $newsTypes = NewType::all();
-        $issues = FitmNews::distinct()->pluck('issue_name')->filter()->values();
+        $issues = $fitmNewsQuery->pluck('issue_name')->filter()->values();
 
         // Get featured news (most recent fitm news by issue_name)
-        $featuredNews = FitmNews::orderBy('issue_name', 'DESC')->first();
+        $featuredNews = $fitmNewsQuery->first();
 
         // Add source information to featured news if needed
         if ($featuredNews) {
@@ -125,7 +126,6 @@ class NewsFrontendController extends Controller
         // Filter out news items that don't have content in current language
         if (in_array('title_' . $lang, $columns)) {
             $query->whereNotNull('title_' . $lang);
-            $query->where('title_' . $lang, '!=', '');
         }
 
         // Select ID
@@ -133,13 +133,7 @@ class NewsFrontendController extends Controller
 
         // Select the appropriate title based on locale
         if (in_array('title_' . $lang, $columns)) {
-            $query->addSelect('title_' . $lang . ' as title');
-        } elseif (in_array('title', $columns)) {
-            // Only use generic title if it exists
-            $query->addSelect('title');
-        } else {
-            // No fallback to other language, just set NULL
-            $query->addSelect(DB::raw('NULL as title'));
+            $query->addSelect('title_' . $lang);
         }
 
         // Handle published date
@@ -163,15 +157,7 @@ class NewsFrontendController extends Controller
 
         // Handle description based on locale
         if (in_array('description_' . $lang, $columns)) {
-            $query->addSelect('description_' . $lang . ' as description');
-        } elseif (in_array('detail_' . $lang, $columns)) {
-            $query->addSelect('detail_' . $lang . ' as description');
-        } elseif (in_array('description', $columns)) {
-            // Only use generic description if it exists
-            $query->addSelect('description');
-        } elseif (in_array('detail', $columns)) {
-            // Only use generic detail if it exists
-            $query->addSelect('detail as description');
+            $query->addSelect('description_' . $lang);
         } else {
             // No fallback to other language, just set NULL
             $query->addSelect(DB::raw('NULL as description'));

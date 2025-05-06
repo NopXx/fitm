@@ -74,7 +74,7 @@
         <div class="mb-10">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-xl font-bold dark:text-white">{{ __('news.important_news') }}</h2>
-                <a href="/news"
+                <a href="{{ url('/news')}}"
                     class="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
                     @lang('news.view_all')
                     <svg class="w-4 h-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
@@ -155,11 +155,11 @@
             </section>
         </div>
         <!-- News Sections using the component -->
-        <x-news-section title="{{ __('news.news') }}" :news="$news" :type-id="11" link="/news" />
-        <x-news-section title="{{ __('news.academic_news') }}" :news="$news" :type-id="14" link="/news" />
+        <x-news-section title="{{ __('news.news') }}" :news="$news" :type-id="11" link="{{ url('/news')}}" />
+        <x-news-section title="{{ __('news.academic_news') }}" :news="$news" :type-id="14" link="{{ url('/news')}}" />
         <x-news-section title="{{ __('news.research_funding_news') }}" :news="$news" :type-id="12"
             link="/news" />
-        <x-news-section title="{{ __('news.procurement_news') }}" :news="$news" :type-id="13" link="news" />
+        <x-news-section title="{{ __('news.procurement_news') }}" :news="$news" :type-id="13" link="{{ url('/news')}}" />
     </div>
     <!-- End of News section -->
 

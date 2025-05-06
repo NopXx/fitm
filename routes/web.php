@@ -146,6 +146,7 @@ Route::get('/', function () {
     $langField = $currentLang == 'en' ? 'title_en' : 'title_th';
     $now = now(); // Get current date/time
 
+
     // ข่าวที่แสดงในส่วน display_type 2 - ต้องมีข้อมูลในภาษาปัจจุบันและต้องถึงวันที่มีผล
     $news_show = News::where('display_type', 2)
         ->where('status', 1)
@@ -203,7 +204,11 @@ Route::get('/', function () {
         ->get();
 
     // ดึงข้อมูลข่าว FITM โดยเรียงตาม issue_name
-    $fitmnews = FitmNews::orderBy('issue_name', 'desc')->get();
+    $fitmnews = FitmNews::orderBy('issue_name', 'desc')
+        ->whereNotNull('title_' . $currentLang)
+        ->get();
+
+    Log::debug($fitmnews);
 
     // ดึงข้อมูลวิดีโอ โดยเรียงตามวันที่สร้าง
     $videos = FitmVideo::orderBy('created_at', 'desc')->get();
@@ -211,6 +216,8 @@ Route::get('/', function () {
     // ส่งข้อมูลไปยัง view
     return view('index', compact('news_show', 'news', 'important_news', 'services', 'fitmnews', 'videos'));
 });
+
+Route::get('/api/visitors/stats', [VisitorController::class, 'apiStats']);
 
 Route::get('/news/fitmnews', [App\Http\Controllers\FitmNewsController::class, 'index']);
 
