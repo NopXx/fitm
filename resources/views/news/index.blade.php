@@ -80,7 +80,11 @@
             'delete_error': '@lang('new.delete_error')',
             'filter_by_type': '@lang('new.filter_by_type')',
             'all_types': '@lang('new.all_types')',
-            'style': '@lang('translation.style')'
+            'style': '@lang('translation.style')',
+            'news_11': '@lang('news.news_11')',
+            'news_12': '@lang('news.news_12')',
+            'news_13': '@lang('news.news_13')',
+            'news_14': '@lang('news.news_14')',
         };
     </script>
 

@@ -247,7 +247,7 @@
                                         @foreach ($newtypes as $newtype)
                                             <option value="{{ $newtype->id }}"
                                                 {{ $new->new_type == $newtype->id ? 'selected' : '' }}>
-                                                {{ $newtype->new_type_name }}
+                                                @lang('news.news_' . $newtype->id)
                                             </option>
                                         @endforeach
                                     </select>

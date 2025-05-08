@@ -90,7 +90,26 @@ $(function () {
                 }
             },
             {
-                data: 'new_type.new_type_name'
+                data: null,
+                render: function (data) {
+                    if (!data || !data.id) {
+                        return null; // Or some default fallback message
+                    }
+
+                    switch (data.new_type.id) {
+                        case 11:
+                            return lang.news_11;
+                        case 12:
+                            return lang.news_12;
+                        case 13:
+                            return lang.news_13;
+                        case 14:
+                            return lang.news_14;
+                        default:
+                            return null; // Or a default message like "News not found"
+                    }
+
+                }
             },
             {
                 data: 'is_important',

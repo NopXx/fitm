@@ -241,7 +241,7 @@
                                     <select class="form-select" name="new_type" required>
                                         <option value="">@lang('translation.select_type')</option>
                                         @foreach ($newtypes as $newtype)
-                                            <option value="{{ $newtype->id }}">{{ $newtype->new_type_name }}</option>
+                                            <option value="{{ $newtype->id }}">@lang('news.news_' . $newtype->id)</option>
                                         @endforeach
                                     </select>
                                 </div>
