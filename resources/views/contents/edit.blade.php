@@ -185,7 +185,7 @@
         var media_url = '{{ route('media.upload') }}';
         // For edit page, set the content ID if available
         var contentId = {{ $content->id ?? 'undefined' }};
-        var baseURL = '{{ url('/') }}'
+        var baseURL = '{{ url("/") }}'
     </script>
     <script src="{{ asset('assets/js/content_tinymce_init.js') }}"></script>
 @endsection

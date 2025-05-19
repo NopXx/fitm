@@ -14,7 +14,7 @@
                     <div class="col-12 p-0">
                         <div class="login-form-container">
                             <div class="mb-4">
-                                <a class="logo d-inline-block" href="{{route('index')}}">
+                                <a class="logo d-inline-block" href="{{ url('/') }}">
                                     <img src="{{asset('assets/images/fitm-logo.png')}}" width="250" alt="#">
                                 </a>
                             </div>
