@@ -393,7 +393,7 @@ $(document).ready(function () {
                 const result = await response.json();
 
                 if (result.success) {
-                    window.location.href = result.redirect || baseURL + '/admin/contents';
+                    window.location.href = baseURL + '/admin/contents';
                 } else {
                     Swal.fire(
                         'Error',
@@ -448,7 +448,7 @@ $(document).ready(function () {
                         showConfirmButton: false,
                         timer: 1500
                     }).then(() => {
-                        window.location.href = result.redirect || '/admin/contents';
+                        window.location.href = baseURL + '/admin/contents';
                     });
                 } else {
                     Swal.fire(
