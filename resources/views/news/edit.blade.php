@@ -19,7 +19,7 @@
     <style>
         /* TinyMCE Editor Styles */
         .tox-tinymce {
-            min-height: 600px !important;
+            min-height: 400px !important;
             height: auto !important;
             display: flex !important;
             flex-direction: column !important;
@@ -35,7 +35,7 @@
 
         .tox-edit-area,
         .tox-edit-area__iframe {
-            min-height: 350px !important;
+            min-height: 650px !important;
             height: 100% !important;
             flex: 1 1 auto !important;
             overflow: visible !important;

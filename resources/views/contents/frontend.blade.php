@@ -160,7 +160,7 @@
         }
 
         // Define the fixed domain path
-        const fixedDomainPath = '{{ url("/") }}';
+        const fixedDomainPath = '{{ url('/') }}';
 
         document.addEventListener('DOMContentLoaded', function() {
             // Fix for list styling in department-content
@@ -206,7 +206,7 @@
                 const codeBlocks = contentDiv.querySelectorAll('code, pre');
                 codeBlocks.forEach(block => {
                     if (!block.hasAttribute('style') || !block.getAttribute('style').includes(
-                        'background')) {
+                            'background')) {
                         block.style.backgroundColor = '#f3f4f6';
                         block.style.padding = block.tagName === 'PRE' ? '1rem' : '0.2em 0.4em';
                         block.style.borderRadius = block.tagName === 'PRE' ? '5px' : '3px';
@@ -239,21 +239,24 @@
                 const currentSrc = img.getAttribute('src');
 
                 if (currentSrc) {
-                    // Extract only the filename from the path
-                    let filename = currentSrc.split('/').pop();
+                    // Only process URLs that do NOT start with http:// or https://
+                    if (!currentSrc.startsWith('http://') && !currentSrc.startsWith('https://')) {
+                        let filename = currentSrc.split('/').pop();
 
-                    // Remove any query parameters if they exist
-                    if (filename.includes('?')) {
-                        filename = filename.split('?')[0];
+                        // Remove any query parameters if they exist
+                        if (filename.includes('?')) {
+                            filename = filename.split('?')[0];
+                        }
+
+                        // Force update all image sources to use the fixed domain path
+                        img.src = fixedDomainPath + '/storage/uploads/department/' + filename;
+
+                        // Force set the image path to avoid any issues with browser caching
+                        setTimeout(() => {
+                            img.setAttribute('src', fixedDomainPath +
+                                '/storage/uploads/department/' + filename);
+                        }, 0);
                     }
-
-                    // Force update all image sources to use the fixed domain path
-                    img.src = fixedDomainPath + '/storage/uploads/department/' + filename;
-
-                    // Force set the image path to avoid any issues with browser caching
-                    setTimeout(() => {
-                        img.setAttribute('src', fixedDomainPath + '/storage/uploads/department/' + filename);
-                    }, 0);
                 }
             });
         });

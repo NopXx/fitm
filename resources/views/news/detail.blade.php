@@ -439,22 +439,24 @@
                     const currentSrc = img.getAttribute('src');
 
                     if (currentSrc) {
-                        // Extract only the filename from the path
-                        let filename = currentSrc.split('/').pop();
+                        if (!currentSrc.startsWith('http://') && !currentSrc.startsWith('https://')) {
+                            // Extract only the filename from the path
+                            let filename = currentSrc.split('/').pop();
 
-                        // Remove any query parameters if they exist
-                        if (filename.includes('?')) {
-                            filename = filename.split('?')[0];
+                            // Remove any query parameters if they exist
+                            if (filename.includes('?')) {
+                                filename = filename.split('?')[0];
+                            }
+
+                            // Force update all image sources to use the fixed domain path
+                            img.src = fixedDomainPath + '/storage/uploads/news/' + filename;
+
+                            // Force set the image path to avoid any issues with browser caching
+                            setTimeout(() => {
+                                img.setAttribute('src', fixedDomainPath +
+                                    '/storage/uploads/news/' + filename);
+                            }, 0);
                         }
-
-                        // Force update all image sources to use the fixed domain path
-                        img.src = fixedDomainPath + '/storage/uploads/news/' + filename;
-
-                        // Force set the image path to avoid any issues with browser caching
-                        setTimeout(() => {
-                            img.setAttribute('src', fixedDomainPath +
-                                '/storage/uploads/news/' + filename);
-                        }, 0);
                     }
                 });
             }

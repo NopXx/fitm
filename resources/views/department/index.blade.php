@@ -98,12 +98,35 @@
                     img.classList.add('img-fluid');
                 }
 
-                // Get the filename from the src
-                const srcParts = img.src.split('/');
-                const filename = srcParts[srcParts.length - 1];
-                var baseURL = '{{ url("/") }}'
-                // Replace with the absolute URL
-                img.src = baseURL + '/storage/uploads/department/' + filename;
+                // Get current image source
+                const currentSrc = img.getAttribute('src');
+
+                if (currentSrc) {
+                    // Only update images that don't already have http:// or https:// URLs
+                    if (!currentSrc.startsWith('http://') && !currentSrc.startsWith('https://')) {
+                        // Extract the filename regardless of source path structure
+                        let filename = currentSrc.split('/').pop();
+
+                        // Remove any query parameters if they exist
+                        if (filename.includes('?')) {
+                            filename = filename.split('?')[0];
+                        }
+
+                        var baseURL = '{{ url('/') }}';
+
+                        // Ensure baseURL doesn't have trailing slash while adding path
+                        const formattedBaseURL = baseURL.endsWith('/') ? baseURL.slice(0, -1) : baseURL;
+
+                        // Replace with the absolute URL
+                        img.src = formattedBaseURL + '/storage/uploads/department/' + filename;
+
+                        // Force update to ensure browser doesn't use cached version
+                        setTimeout(() => {
+                            img.setAttribute('src', formattedBaseURL +
+                                '/storage/uploads/department/' + filename);
+                        }, 0);
+                    }
+                }
             });
         });
     </script>

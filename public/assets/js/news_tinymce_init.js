@@ -19,7 +19,7 @@ $(document).ready(function () {
 
             // Height settings
             height: "auto",
-            min_height: 400,
+            min_height: 600,
             max_height: 2000,
             resize: true,
             autoresize_on_init: true,
