@@ -44,7 +44,7 @@ class NewController extends Controller
                 'content_th' => 'nullable|string',
                 'content_en' => 'nullable|string',
                 'cover' => 'nullable|string', // Allow string paths
-                'effective_date' => 'required|date_format:Y-m-d H:i',
+                'effective_date' => 'required|date_format:Y-m-d',
                 'link' => 'nullable|url',
                 'status' => 'required|integer|in:0,1', // 0 = inactive, 1 = active
                 'is_important' => 'nullable|boolean',
@@ -160,7 +160,7 @@ class NewController extends Controller
             'content_th' => 'nullable|string',
             'content_en' => 'nullable|string',
             'cover' => 'nullable|string',
-            'effective_date' => 'required|date_format:Y-m-d H:i',
+            'effective_date' => 'required|date_format:Y-m-d',
             'link' => 'nullable|url',
             'status' => 'required|integer|in:0,1',
             'is_important' => 'nullable|boolean',

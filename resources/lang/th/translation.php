@@ -87,6 +87,7 @@ return [
     'visited_page' => 'เข้าชมหน้า :page',
 
     // Form fields
+    'filter' => 'ค้นหา',
     'browse' => 'เลือกไฟล์',
     'drag_drop_or' => 'ลากและวางไฟล์ หรือ',
     'display_new' => 'แสดงข่าว',

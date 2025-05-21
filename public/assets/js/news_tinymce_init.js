@@ -405,9 +405,9 @@ $(document).ready(function () {
 
     // Initialize datepicker
     const config = {
-        enableTime: true,
+        enableTime: false,
         locale: locale,
-        dateFormat: "Y-m-d H:i",
+        dateFormat: "Y-m-d",
     };
     flatpickr(".basic-date", config);
 

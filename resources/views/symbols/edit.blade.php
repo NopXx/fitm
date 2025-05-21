@@ -2,24 +2,29 @@
 @section('title', __('symbol.edit_title'))
 
 @section('css')
+    <!-- TinyMCE -->
+    <script src="{{ asset('assets/vendor/tinymce/tinymce.min.js') }}" referrerpolicy="origin"></script>
     <link rel="stylesheet" href="{{ asset('assets/vendor/fontawesome/css/all.css') }}">
-    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/44.1.0/ckeditor5.css">
     <style>
-        .ck-editor__editable {
+        .tox-tinymce {
             min-height: 300px;
         }
+
         .preview-image {
             max-width: 200px;
             height: auto;
             margin-top: 10px;
             border-radius: 5px;
         }
+
         .lang-switch {
             margin-bottom: 20px;
         }
+
         .lang-switch .btn {
             margin-right: 10px;
         }
+
         .lang-switch .btn.active {
             background-color: #435ebe;
             color: white;
@@ -56,13 +61,16 @@
                             <div class="col-md-6">
                                 <label class="form-label">@lang('symbol.type') <span class="text-danger">*</span></label>
                                 <select class="form-control @error('type') is-invalid @enderror" name="type" required>
-                                    <option value="university_emblem" {{ $symbol->type == 'university_emblem' ? 'selected' : '' }}>
+                                    <option value="university_emblem"
+                                        {{ $symbol->type == 'university_emblem' ? 'selected' : '' }}>
                                         @lang('symbol.university_emblem')
                                     </option>
-                                    <option value="university_color" {{ $symbol->type == 'university_color' ? 'selected' : '' }}>
+                                    <option value="university_color"
+                                        {{ $symbol->type == 'university_color' ? 'selected' : '' }}>
                                         @lang('symbol.university_color')
                                     </option>
-                                    <option value="university_tree" {{ $symbol->type == 'university_tree' ? 'selected' : '' }}>
+                                    <option value="university_tree"
+                                        {{ $symbol->type == 'university_tree' ? 'selected' : '' }}>
                                         @lang('symbol.university_tree')
                                     </option>
                                     <option value="faculty_logo" {{ $symbol->type == 'faculty_logo' ? 'selected' : '' }}>
@@ -79,7 +87,7 @@
                             <div class="col-md-6">
                                 <label class="form-label">@lang('symbol.name_th') <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('name_th') is-invalid @enderror"
-                                       name="name_th" value="{{ old('name_th', $symbol->name_th) }}" required>
+                                    name="name_th" value="{{ old('name_th', $symbol->name_th) }}" required>
                                 @error('name_th')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -87,7 +95,7 @@
                             <div class="col-md-6">
                                 <label class="form-label">@lang('symbol.name_en')</label>
                                 <input type="text" class="form-control @error('name_en') is-invalid @enderror"
-                                       name="name_en" value="{{ old('name_en', $symbol->name_en) }}">
+                                    name="name_en" value="{{ old('name_en', $symbol->name_en) }}">
                                 @error('name_en')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -97,8 +105,7 @@
                         <div class="row mb-4">
                             <div class="col-12">
                                 <label class="form-label">@lang('symbol.description_th') <span class="text-danger">*</span></label>
-                                <textarea id="description_th" name="description_th"
-                                          class="form-control @error('description_th') is-invalid @enderror">{{ old('description_th', $symbol->description_th) }}</textarea>
+                                <textarea id="description_th" name="description_th" class="form-control @error('description_th') is-invalid @enderror">{{ old('description_th', $symbol->description_th) }}</textarea>
                                 @error('description_th')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -108,8 +115,7 @@
                         <div class="row mb-4">
                             <div class="col-12">
                                 <label class="form-label">@lang('symbol.description_en')</label>
-                                <textarea id="description_en" name="description_en"
-                                          class="form-control @error('description_en') is-invalid @enderror">{{ old('description_en', $symbol->description_en) }}</textarea>
+                                <textarea id="description_en" name="description_en" class="form-control @error('description_en') is-invalid @enderror">{{ old('description_en', $symbol->description_en) }}</textarea>
                                 @error('description_en')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -120,15 +126,15 @@
                             <div class="col-12">
                                 <label class="form-label">@lang('symbol.image') <span class="text-danger">*</span></label>
                                 <input type="file" class="form-control @error('image') is-invalid @enderror"
-                                       name="image" accept="image/*" id="imageInput">
+                                    name="image" accept="image/*" id="imageInput">
                                 @error('image')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
 
                                 @if ($symbol->image_path)
                                     <div class="mt-2" id="currentImageContainer">
-                                        <img src="{{ asset('storage/' . $symbol->image_path) }}"
-                                             alt="Current Image" class="preview-image">
+                                        <img src="{{ asset('storage/' . $symbol->image_path) }}" alt="Current Image"
+                                            class="preview-image">
                                         <div class="mt-2">
                                             <button type="button" class="btn btn-sm btn-danger" id="removeImageBtn">
                                                 <i class="ti ti-trash"></i> @lang('symbol.remove_image')
@@ -147,7 +153,7 @@
                             <div class="col-md-6">
                                 <label class="form-label">@lang('symbol.rgb_code')</label>
                                 <input type="text" class="form-control @error('rgb_code') is-invalid @enderror"
-                                       name="rgb_code" placeholder="#AC3520" value="{{ old('rgb_code', $symbol->rgb_code) }}">
+                                    name="rgb_code" placeholder="#AC3520" value="{{ old('rgb_code', $symbol->rgb_code) }}">
                                 @error('rgb_code')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -155,7 +161,8 @@
                             <div class="col-md-6">
                                 <label class="form-label">@lang('symbol.cmyk_code')</label>
                                 <input type="text" class="form-control @error('cmyk_code') is-invalid @enderror"
-                                       name="cmyk_code" placeholder="5%, 85%, 85%, 30%" value="{{ old('cmyk_code', $symbol->cmyk_code) }}">
+                                    name="cmyk_code" placeholder="5%, 85%, 85%, 30%"
+                                    value="{{ old('cmyk_code', $symbol->cmyk_code) }}">
                                 @error('cmyk_code')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -166,7 +173,7 @@
                             <div class="col-12">
                                 <label class="form-label">@lang('symbol.download_link')</label>
                                 <input type="text" class="form-control @error('download_link') is-invalid @enderror"
-                                       name="download_link" value="{{ old('download_link', $symbol->download_link) }}">
+                                    name="download_link" value="{{ old('download_link', $symbol->download_link) }}">
                                 @error('download_link')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -189,97 +196,32 @@
 @endsection
 
 @section('script')
-    <script src="https://cdn.ckeditor.com/ckeditor5/44.1.0/ckeditor5.umd.js"></script>
     <script>
-        const {
-            ClassicEditor,
-            Essentials,
-            Paragraph,
-            Bold,
-            Italic,
-            Heading,
-            Link,
-            List,
-            Table,
-            BlockQuote,
-            MediaEmbed
-        } = CKEDITOR;
+        // Initialize TinyMCE for Thai description
+        tinymce.init({
+            selector: '#description_th',
+            height: 300,
+            plugins: 'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons',
+            menubar: 'file edit view insert format tools table help',
+            toolbar: 'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen preview save print | insertfile image media template link anchor codesample | ltr rtl',
+            toolbar_sticky: true,
+            language: 'th',
+            promotion: false,
+            branding: false
+        });
 
-        // Initialize CKEditor for Thai description
-        ClassicEditor
-            .create(document.querySelector('#description_th'), {
-                extraPlugins: [
-                    Essentials,
-                    Paragraph,
-                    Bold,
-                    Italic,
-                    Heading,
-                    Link,
-                    List,
-                    Table,
-                    BlockQuote,
-                    MediaEmbed
-                ],
-                licenseKey: '{{ env('CKEDITOR_KEY') }}',
-                toolbar: {
-                    items: [
-                        'heading',
-                        '|',
-                        'bold',
-                        'italic',
-                        '|',
-                        'bulletedList',
-                        'numberedList',
-                        '|',
-                        'link',
-                        'blockQuote',
-                        '|',
-                        'undo',
-                        'redo'
-                    ]
-                }
-            })
-            .catch(error => {
-                console.error('CKEditor TH initialization error:', error);
-            });
-
-        // Initialize CKEditor for English description
-        ClassicEditor
-            .create(document.querySelector('#description_en'), {
-                extraPlugins: [
-                    Essentials,
-                    Paragraph,
-                    Bold,
-                    Italic,
-                    Heading,
-                    Link,
-                    List,
-                    Table,
-                    BlockQuote,
-                    MediaEmbed
-                ],
-                licenseKey: '{{ env('CKEDITOR_KEY') }}',
-                toolbar: {
-                    items: [
-                        'heading',
-                        '|',
-                        'bold',
-                        'italic',
-                        '|',
-                        'bulletedList',
-                        'numberedList',
-                        '|',
-                        'link',
-                        'blockQuote',
-                        '|',
-                        'undo',
-                        'redo'
-                    ]
-                }
-            })
-            .catch(error => {
-                console.error('CKEditor EN initialization error:', error);
-            });
+        // Initialize TinyMCE for English description
+        tinymce.init({
+            selector: '#description_en',
+            height: 300,
+            plugins: 'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons',
+            menubar: 'file edit view insert format tools table help',
+            toolbar: 'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen preview save print | insertfile image media template link anchor codesample | ltr rtl',
+            toolbar_sticky: true,
+            language: 'en',
+            promotion: false,
+            branding: false
+        });
 
         // Image Preview and Remove Image Handlers
         document.addEventListener('DOMContentLoaded', function() {

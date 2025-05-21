@@ -221,6 +221,8 @@
 @endsection
 
 @section('script')
+    <!-- sweetalert js-->
+    <script src="{{ asset('assets/vendor/sweetalert/sweetalert.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize TinyMCE for Thai content
@@ -230,7 +232,37 @@
             initTinyMCE('#overview_en');
 
             // Handle form submission
-            document.querySelector('#editForm').addEventListener('submit', submitForm);
+            const departmentForm = document.querySelector('#editForm');
+
+            // Listen for form submit
+            departmentForm.addEventListener('submit', submitForm);
+
+            // Clear validation errors when user edits a field
+            const formInputs = departmentForm.querySelectorAll('input, textarea, select');
+            formInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    this.classList.remove('is-invalid');
+                    const errorDiv = this.nextElementSibling;
+                    if (errorDiv && errorDiv.classList.contains('invalid-feedback')) {
+                        errorDiv.remove();
+                    }
+                });
+            });
+
+            // Clear TinyMCE validation errors
+            if (tinymce.editors) {
+                tinymce.editors.forEach(editor => {
+                    editor.on('KeyUp', function() {
+                        const editorContainer = this.getContainer();
+                        editorContainer.classList.remove('is-invalid');
+
+                        const errorDiv = editorContainer.nextElementSibling;
+                        if (errorDiv && errorDiv.classList.contains('invalid-feedback')) {
+                            errorDiv.remove();
+                        }
+                    });
+                });
+            }
 
             // Setup preview button
             document.querySelector('#previewBtn').addEventListener('click', function() {
@@ -747,6 +779,20 @@
                 formDataObj[key] = value;
             }
 
+            // Clear previous validation errors
+            document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+            document.querySelectorAll('.invalid-feedback').forEach(el => el.remove());
+
+            // Show loading indicator
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we update the department.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
             try {
                 // Send a single request to update all department fields
                 const response = await fetch(`{{ url('/admin/department/update') }}/${departmentId}`, {
@@ -769,19 +815,77 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    window.location.href = '{{ route('department.index') }}';
+                    // Show success message and redirect
+                    Swal.fire({
+                        title: 'Success!',
+                        text: result.message || 'Department updated successfully.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.href = '{{ route('department.index') }}';
+                    });
                 } else {
                     console.error('Failed to update department:', result.message);
 
+                    // Handle validation errors
                     if (result.errors) {
-                        // Display validation errors
-                        const errorMessages = Object.values(result.errors).flat();
-                        alert('Error: ' + errorMessages.join('\n'));
+                        let errorMessages = '';
+
+                        // Display validation errors and highlight fields
+                        Object.entries(result.errors).forEach(([field, messages]) => {
+                            errorMessages += `• ${messages[0]}<br>`;
+
+                            // Find the input element and add error class
+                            const inputField = document.querySelector(`[name="${field}"]`);
+                            if (inputField) {
+                                inputField.classList.add('is-invalid');
+
+                                // Add error message below the field
+                                const errorDiv = document.createElement('div');
+                                errorDiv.className = 'invalid-feedback';
+                                errorDiv.textContent = messages[0];
+                                inputField.parentNode.insertBefore(errorDiv, inputField.nextSibling);
+                            }
+
+                            // Special handling for TinyMCE editors
+                            if (field === 'overview_th' || field === 'overview_en') {
+                                const editorContainer = tinymce.get(field).getContainer();
+                                editorContainer.classList.add('is-invalid');
+
+                                const errorDiv = document.createElement('div');
+                                errorDiv.className = 'invalid-feedback d-block';
+                                errorDiv.textContent = messages[0];
+                                editorContainer.parentNode.insertBefore(errorDiv, editorContainer.nextSibling);
+                            }
+                        });
+
+                        // Show all errors in a SweetAlert
+                        Swal.fire({
+                            title: 'Validation Error',
+                            html: errorMessages,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    } else {
+                        // General error message
+                        Swal.fire({
+                            title: 'Error!',
+                            text: result.message || 'An error occurred while updating the department.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
                     }
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('An error occurred while saving. Please try again.');
+
+                // Network or unexpected error
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'An unexpected error occurred. Please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
             }
         }
     </script>

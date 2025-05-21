@@ -224,6 +224,8 @@
 @endsection
 
 @section('script')
+    <!-- sweetalert js-->
+    <script src="{{ asset('assets/vendor/sweetalert/sweetalert.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize TinyMCE for Thai content
@@ -232,10 +234,141 @@
             // Initialize TinyMCE for English content
             initTinyMCE('#overview_en');
 
+            const departmentForm = document.querySelector('#departmentForm');
+
             // Handle form submission
-            document.querySelector('#departmentForm').addEventListener('submit', function(e) {
-                // Ensure content is updated before form submission
+            departmentForm.addEventListener('submit', function(e) {
+                e.preventDefault(); // Prevent default form submission
+
+                // Ensure TinyMCE content is updated before form submission
                 tinymce.triggerSave();
+
+                // Create FormData object
+                const formData = new FormData(this);
+
+                // Show loading indicator
+                Swal.fire({
+                    title: 'Processing...',
+                    text: 'Please wait while we process your request.',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                // Submit form using fetch API
+                fetch(departmentForm.getAttribute('action'), {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(errorData => {
+                                throw errorData;
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(result => {
+                        if (result.success) {
+                            // Success message
+                            Swal.fire({
+                                title: 'Success!',
+                                text: result.message,
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                // Redirect to index page after confirmation
+                                window.location.href = '{{ route('department.index') }}';
+                            });
+                        } else {
+                            // Error message
+                            Swal.fire({
+                                title: 'Error!',
+                                text: result.message,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+
+                        // Handle validation errors
+                        if (error.errors) {
+                            const validationErrors = error.errors;
+                            let errorMessages = '';
+
+                            // Format validation errors for display
+                            Object.keys(validationErrors).forEach(field => {
+                                errorMessages += `• ${validationErrors[field][0]}<br>`;
+
+                                // Highlight the errored field
+                                const inputField = document.querySelector(`[name="${field}"]`);
+                                if (inputField) {
+                                    inputField.classList.add('is-invalid');
+
+                                    // Add error message below the field
+                                    let errorDiv = inputField.nextElementSibling;
+                                    if (!errorDiv || !errorDiv.classList.contains(
+                                            'invalid-feedback')) {
+                                        errorDiv = document.createElement('div');
+                                        errorDiv.className = 'invalid-feedback';
+                                        inputField.parentNode.insertBefore(errorDiv, inputField
+                                            .nextSibling);
+                                    }
+                                    errorDiv.textContent = validationErrors[field][0];
+                                }
+                            });
+
+                            Swal.fire({
+                                title: 'Validation Error',
+                                html: errorMessages,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        } else {
+                            // General error message
+                            Swal.fire({
+                                title: 'Error!',
+                                text: error.message ||
+                                    'An unexpected error occurred. Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+            });
+
+            // Clear validation errors when user edits a field
+            const formInputs = departmentForm.querySelectorAll('input, textarea, select');
+            formInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    this.classList.remove('is-invalid');
+                    const errorDiv = this.nextElementSibling;
+                    if (errorDiv && errorDiv.classList.contains('invalid-feedback')) {
+                        errorDiv.textContent = '';
+                    }
+                });
+            });
+
+            // Clear TinyMCE validation errors
+            tinymce.editors.forEach(editor => {
+                editor.on('KeyUp', function() {
+                    const textareaId = editor.id;
+                    const textarea = document.getElementById(textareaId);
+                    if (textarea) {
+                        textarea.classList.remove('is-invalid');
+                        const errorDiv = textarea.nextElementSibling;
+                        if (errorDiv && errorDiv.classList.contains('invalid-feedback')) {
+                            errorDiv.textContent = '';
+                        }
+                    }
+                });
             });
 
             // Setup preview button

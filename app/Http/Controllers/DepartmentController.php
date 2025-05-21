@@ -39,11 +39,13 @@ class DepartmentController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'department_code' => 'required',
+            'department_code' => 'required|unique:departments,department_code',
             'department_name_th' => 'required',
             'department_name_en' => 'nullable',
             'overview_th' => 'required',
             'overview_en' => 'nullable',
+        ], [
+            'department_code.unique' => __('department.code_unique'),
         ]);
 
         if ($validator->fails()) {
@@ -104,6 +106,8 @@ class DepartmentController extends Controller
             'department_name_en' => 'nullable',
             'overview_th' => 'required',
             'overview_en' => 'nullable',
+        ], [
+            'department_code.unique' => __('department.code_unique'),
         ]);
 
         if ($validator->fails()) {

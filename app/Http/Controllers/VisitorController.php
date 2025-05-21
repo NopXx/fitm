@@ -73,9 +73,22 @@ class VisitorController extends Controller
         // Set Carbon locale based on application locale
         Carbon::setLocale($locale);
 
-        // Get dates for the last 30 days (including today)
-        $endDate = Carbon::today();
-        $startDate = Carbon::today()->subDays(29);
+        // Get dates from request or default to last 30 days
+        $endDate = $request->has('end_date')
+            ? Carbon::parse($request->input('end_date'))
+            : Carbon::today();
+
+        $startDate = $request->has('start_date')
+            ? Carbon::parse($request->input('start_date'))
+            : Carbon::today()->subDays(29);
+
+        // Validate date range (maximum 90 days to prevent performance issues)
+        $daysDiff = $startDate->diffInDays($endDate);
+        if ($daysDiff > 90) {
+            return response()->json([
+                'error' => $locale === 'th' ? 'ช่วงวันที่สูงสุดคือ 90 วัน' : 'Maximum date range is 90 days'
+            ], 400);
+        }
 
         // Find the first record date
         $firstRecord = VisitorLog::where(function ($query) {

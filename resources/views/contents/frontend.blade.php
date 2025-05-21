@@ -228,6 +228,7 @@
             });
 
             // Fix ALL image paths to use the specific domain path
+            // Fix ALL image paths to use the specific domain path
             const images = document.querySelectorAll('.department-content img');
             images.forEach(img => {
                 // Always add fluid class if missing
@@ -250,6 +251,14 @@
 
                         // Force update all image sources to use the fixed domain path
                         img.src = fixedDomainPath + '/storage/uploads/department/' + filename;
+
+                        // Add error handler to try alternate path if the image fails to load
+                        img.onerror = function() {
+                            this.src = fixedDomainPath + '/storage/uploads/contents/' + filename;
+
+                            // Remove the error handler to prevent potential loops
+                            this.onerror = null;
+                        };
 
                         // Force set the image path to avoid any issues with browser caching
                         setTimeout(() => {

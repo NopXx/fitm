@@ -87,6 +87,7 @@ return [
     'visited_page' => 'Visited page :page',
 
     // Form fields
+    'filter' => 'Filter',
     'browse' => 'Browse',
     'drag_drop_or' => 'Drag & Drop your files or',
     'display_new' => 'Display News',
