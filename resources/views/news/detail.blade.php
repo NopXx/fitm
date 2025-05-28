@@ -173,7 +173,7 @@
                 @endphp
 
                 <!-- Title -->
-                <h1 class="news-title">{{ $title }}</h1>
+                <h1 class="news-title dark:text-white">{{ $title }}</h1>
             </div>
 
             <!-- News Content -->
@@ -204,7 +204,7 @@
 
                 @if (!empty($detail))
                     <div class="mb-6">
-                        <p>{{ $detail }}</p>
+                        <p class="dark:text-gray-400 transition-colors duration-200">{{ $detail }}</p>
                     </div>
                 @endif
 
