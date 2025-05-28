@@ -426,7 +426,7 @@ $(document).ready(function () {
             acceptedFileTypes: ['image/*'],
             server: {
                 process: {
-                    url: '/admin/new/upload',
+                    url: baseURL + '/admin/new/upload',
                     headers: {
                         'X-CSRF-TOKEN': csrf
                     },
@@ -436,7 +436,7 @@ $(document).ready(function () {
                     }
                 },
                 revert: {
-                    url: '/admin/new/revert',
+                    url: baseURL + '/admin/new/revert',
                     headers: {
                         'X-CSRF-TOKEN': csrf
                     },

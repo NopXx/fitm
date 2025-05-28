@@ -373,6 +373,7 @@
         // For add page, no specific news ID yet
         var editNewsId = undefined;
         var media_url = '{{ route('media.upload') }}'
+        var baseURL = '{{ url("/") }}'
     </script>
     <script src="{{ asset('assets/js/news_tinymce_init.js') }}"></script>
 

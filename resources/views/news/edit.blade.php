@@ -379,6 +379,7 @@
         // For edit page, set the news ID for image uploads
         var editNewsId = {{ $new->id }};
         var media_url = '{{ route('media.upload') }}'
+        var baseURL = '{{ url("/") }}'
     </script>
     <script src="{{ asset('assets/js/news_tinymce_init.js') }}"></script>
 
