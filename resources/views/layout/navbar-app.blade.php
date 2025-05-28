@@ -201,7 +201,7 @@
 
                     @if ($isVisible)
                         <div x-data="{ open: false }">
-                            <div class="flex w-full">
+                            <div class="flex w-full" @click="open = !open">
                                 <a href="{{ $mobileMenuUrl }}" class="grow text-white dark:text-gray-200 py-3 text-xl">
                                     {{ $translation?->name }}
                                 </a>
