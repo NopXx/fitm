@@ -237,7 +237,7 @@ Route::post('admin/clear-menu-cache', [MenuController::class, 'clearMenuCache'])
 // News routes
 Route::get('/news', [NewsFrontendController::class, 'index'])->name('news.index');
 Route::get('/news/{id}', [NewsFrontendController::class, 'show'])->name('news.show');
-Route::get('/api/news/filter', [NewsFrontendController::class, 'filter'])->name('news.filter');
+Route::post('/news/filter', [NewsFrontendController::class, 'filter'])->name('news.filter');
 
 Route::get('/personnel', [PersonnelController::class, 'index'])->name('personnel.index');
 Route::get('/personnel/board/{board_id}', [PersonnelController::class, 'showByBoard'])->name('personnel.board');
