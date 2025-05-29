@@ -31,8 +31,11 @@ class NewsFrontendController extends Controller
         $fitmNewsQuery = $this->buildFitmNewsQuery($fitmNewsColumns, $lang);
         $regularNewsQuery = $this->buildRegularNewsQuery($newsColumns, $lang);
 
-        // Get important news for the hero carousel
-        $importantNewsQuery = clone $regularNewsQuery;
+        // Apply filters from request
+        $this->applyFilters($request, $fitmNewsQuery, $regularNewsQuery, $fitmNewsColumns, $newsColumns);
+
+        // Get important news for the hero carousel (without filters)
+        $importantNewsQuery = $this->buildRegularNewsQuery($newsColumns, $lang);
         $importantNews = [];
 
         // Check if is_important column exists in the news table
@@ -49,15 +52,61 @@ class NewsFrontendController extends Controller
 
         // Get the news type and issue data for filters
         $newsTypes = NewType::all();
-        $issues = $fitmNewsQuery->pluck('issue_name')->filter()->values();
+        $issues = FitmNews::query()
+            ->whereNotNull('issue_name')
+            ->where('issue_name', '!=', '')
+            ->distinct()
+            ->pluck('issue_name')
+            ->filter()
+            ->sort()
+            ->values();
 
-        // Get featured news (most recent fitm news by issue_name)
-        $featuredNews = $fitmNewsQuery->first();
+        // Get featured news (most recent fitm news by issue_name) - without filters
+        $featuredNewsQuery = $this->buildFitmNewsQuery($fitmNewsColumns, $lang);
+        $featuredNews = $featuredNewsQuery->first();
 
         // Add source information to featured news if needed
         if ($featuredNews) {
             $featuredNews->source = 'fitm';
         }
+
+        // For AJAX requests, return JSON response
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'regularNews' => [
+                        'data' => $regularNews->items(),
+                        'pagination' => [
+                            'current_page' => $regularNews->currentPage(),
+                            'last_page' => $regularNews->lastPage(),
+                            'per_page' => $regularNews->perPage(),
+                            'total' => $regularNews->total(),
+                            'has_more_pages' => $regularNews->hasMorePages(),
+                            'links' => $regularNews->links()->render()
+                        ]
+                    ],
+                    'fitmNews' => [
+                        'data' => $fitmNews->items(),
+                        'pagination' => [
+                            'current_page' => $fitmNews->currentPage(),
+                            'last_page' => $fitmNews->lastPage(),
+                            'per_page' => $fitmNews->perPage(),
+                            'total' => $fitmNews->total(),
+                            'has_more_pages' => $fitmNews->hasMorePages(),
+                            'links' => $fitmNews->links()->render()
+                        ]
+                    ]
+                ]
+            ]);
+        }
+
+        // Store current filters in session or pass to view
+        $currentFilters = [
+            'news_type' => $request->get('news_type'),
+            'issue' => $request->get('issue'),
+            'search' => $request->get('search')
+        ];
 
         return view('news.frontend', compact(
             'fitmNews',
@@ -66,8 +115,77 @@ class NewsFrontendController extends Controller
             'issues',
             'featuredNews',
             'importantNews',
-            'lang'
+            'lang',
+            'currentFilters'
         ));
+    }
+
+    /**
+     * Apply filters to the queries based on request parameters
+     *
+     * @param Request $request
+     * @param \Illuminate\Database\Query\Builder $fitmNewsQuery
+     * @param \Illuminate\Database\Query\Builder $regularNewsQuery
+     * @param array $fitmNewsColumns
+     * @param array $newsColumns
+     */
+    private function applyFilters(Request $request, &$fitmNewsQuery, &$regularNewsQuery, $fitmNewsColumns, $newsColumns)
+    {
+        // Apply news type filter to regular news
+        if ($request->filled('news_type')) {
+            $newsType = $request->get('news_type');
+            if (in_array('new_type', $newsColumns)) {
+                $regularNewsQuery->where('new_type', $newsType);
+            }
+        }
+
+        // Apply issue filter to FITM news
+        if ($request->filled('issue')) {
+            $issue = $request->get('issue');
+            if (in_array('issue_name', $fitmNewsColumns)) {
+                $fitmNewsQuery->where('issue_name', $issue);
+            }
+        }
+
+        // Apply search filter to both news types
+        if ($request->filled('search')) {
+            $searchTerm = $request->get('search');
+            $lang = app()->getLocale();
+
+            // Search in regular news
+            $regularNewsQuery->where(function ($query) use ($searchTerm, $lang, $newsColumns) {
+                // Search in title
+                if (in_array('title_' . $lang, $newsColumns)) {
+                    $query->where('title_' . $lang, 'LIKE', '%' . $searchTerm . '%');
+                } elseif (in_array('title', $newsColumns)) {
+                    $query->where('title', 'LIKE', '%' . $searchTerm . '%');
+                }
+
+                // Search in description/detail
+                if (in_array('detail_' . $lang, $newsColumns)) {
+                    $query->orWhere('detail_' . $lang, 'LIKE', '%' . $searchTerm . '%');
+                } elseif (in_array('description_' . $lang, $newsColumns)) {
+                    $query->orWhere('description_' . $lang, 'LIKE', '%' . $searchTerm . '%');
+                } elseif (in_array('detail', $newsColumns)) {
+                    $query->orWhere('detail', 'LIKE', '%' . $searchTerm . '%');
+                } elseif (in_array('description', $newsColumns)) {
+                    $query->orWhere('description', 'LIKE', '%' . $searchTerm . '%');
+                }
+            });
+
+            // Search in FITM news
+            $fitmNewsQuery->where(function ($query) use ($searchTerm, $lang, $fitmNewsColumns) {
+                // Search in title
+                if (in_array('title_' . $lang, $fitmNewsColumns)) {
+                    $query->where('title_' . $lang, 'LIKE', '%' . $searchTerm . '%');
+                }
+
+                // Search in description
+                if (in_array('description_' . $lang, $fitmNewsColumns)) {
+                    $query->orWhere('description_' . $lang, 'LIKE', '%' . $searchTerm . '%');
+                }
+            });
+        }
     }
 
     /**
@@ -102,6 +220,74 @@ class NewsFrontendController extends Controller
     }
 
     /**
+     * API endpoint for filtering news
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function filter(Request $request)
+    {
+        // Validate request
+        $request->validate([
+            'news_type' => 'nullable|integer|exists:new_types,id',
+            'issue' => 'nullable|string|max:255',
+            'search' => 'nullable|string|max:255',
+            'page' => 'nullable|integer|min:1',
+            'type' => 'nullable|in:regular,fitm'
+        ]);
+
+        $lang = app()->getLocale();
+        $type = $request->get('type', 'both'); // regular, fitm, or both
+
+        $result = [];
+
+        // Get table columns
+        $fitmNewsColumns = $this->getTableColumns('fitm_news');
+        $newsColumns = $this->getTableColumns('news');
+
+        if ($type === 'regular' || $type === 'both') {
+            $regularNewsQuery = $this->buildRegularNewsQuery($newsColumns, $lang);
+            $this->applyFilters($request, $regularNewsQuery, $regularNewsQuery, $fitmNewsColumns, $newsColumns);
+            $regularNews = $regularNewsQuery->paginate(8, ['*'], 'regular_page');
+
+            $result['regularNews'] = [
+                'data' => $regularNews->items(),
+                'pagination' => [
+                    'current_page' => $regularNews->currentPage(),
+                    'last_page' => $regularNews->lastPage(),
+                    'per_page' => $regularNews->perPage(),
+                    'total' => $regularNews->total(),
+                    'has_more_pages' => $regularNews->hasMorePages(),
+                    'links' => $regularNews->links()->render()
+                ]
+            ];
+        }
+
+        if ($type === 'fitm' || $type === 'both') {
+            $fitmNewsQuery = $this->buildFitmNewsQuery($fitmNewsColumns, $lang);
+            $this->applyFilters($request, $fitmNewsQuery, $fitmNewsQuery, $fitmNewsColumns, $newsColumns);
+            $fitmNews = $fitmNewsQuery->paginate(8, ['*'], 'fitm_page');
+
+            $result['fitmNews'] = [
+                'data' => $fitmNews->items(),
+                'pagination' => [
+                    'current_page' => $fitmNews->currentPage(),
+                    'last_page' => $fitmNews->lastPage(),
+                    'per_page' => $fitmNews->perPage(),
+                    'total' => $fitmNews->total(),
+                    'has_more_pages' => $fitmNews->hasMorePages(),
+                    'links' => $fitmNews->links()->render()
+                ]
+            ];
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $result
+        ]);
+    }
+
+    /**
      * Get all column names for a table
      *
      * @param string $table
@@ -133,7 +319,7 @@ class NewsFrontendController extends Controller
 
         // Select the appropriate title based on locale
         if (in_array('title_' . $lang, $columns)) {
-            $query->addSelect('title_' . $lang);
+            $query->addSelect('title_' . $lang . ' as title');
         }
 
         // Handle published date
@@ -157,7 +343,7 @@ class NewsFrontendController extends Controller
 
         // Handle description based on locale
         if (in_array('description_' . $lang, $columns)) {
-            $query->addSelect('description_' . $lang);
+            $query->addSelect('description_' . $lang . ' as description');
         } else {
             // No fallback to other language, just set NULL
             $query->addSelect(DB::raw('NULL as description'));
