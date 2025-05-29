@@ -107,7 +107,7 @@
     <script src="{{ asset('assets/vendor/datatable/jquery.dataTables.min.js') }}"></script>
     <!-- sweetalert js-->
     <script src="{{ asset('assets/vendor/sweetalert/sweetalert.js') }}"></script>
-    <script src="{{ asset('assets/vendor/moment/moment.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.30.1/moment.min.js"></script>
     <!-- Sortable.js for drag and drop functionality -->
     <script src="{{ asset('assets/vendor/sortable/Sortable.min.js') }}"></script>
 
