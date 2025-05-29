@@ -2,6 +2,11 @@
 
 @section('css')
     @vite(['resources/css/carousel.css'])
+    <style>
+        .bg-opacity {
+            --tw-bg-opacity: 0.4;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -18,7 +23,7 @@
                             <img src="{{ asset('storage/' . $item->cover) }}" class="w-full h-full object-cover"
                                 style="aspect-ratio: 1200/600;" alt="{{ $item->title }}">
                         </div>
-                        <div class="absolute bottom-0 w-full bg-black bg-opacity-60 text-white p-2 md:p-4">
+                        <div class="absolute bottom-0 w-full bg-black bg-opacity text-white p-2 md:p-4">
                             <h2 class="text-base md:text-xl font-bold truncate">{{ Str::limit($item->title, 50) }}</h2>
                             <p class="hidden md:block mt-1 md:mt-2 text-sm md:text-base line-clamp-2">
                                 {{ Str::limit($item->detail, 80) }}</p>
@@ -74,7 +79,7 @@
         <div class="mb-10">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-xl font-bold dark:text-white">{{ __('news.important_news') }}</h2>
-                <a href="{{ url('/news')}}"
+                <a href="{{ url('/news') }}"
                     class="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
                     @lang('news.view_all')
                     <svg class="w-4 h-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
@@ -155,11 +160,13 @@
             </section>
         </div>
         <!-- News Sections using the component -->
-        <x-news-section title="{{ __('news.news') }}" :news="$news" :type-id="11" link="{{ url('/news')}}" />
-        <x-news-section title="{{ __('news.academic_news') }}" :news="$news" :type-id="14" link="{{ url('/news')}}" />
+        <x-news-section title="{{ __('news.news') }}" :news="$news" :type-id="11" link="{{ url('/news') }}" />
+        <x-news-section title="{{ __('news.academic_news') }}" :news="$news" :type-id="14"
+            link="{{ url('/news') }}" />
         <x-news-section title="{{ __('news.research_funding_news') }}" :news="$news" :type-id="12"
             link="/news" />
-        <x-news-section title="{{ __('news.procurement_news') }}" :news="$news" :type-id="13" link="{{ url('/news')}}" />
+        <x-news-section title="{{ __('news.procurement_news') }}" :news="$news" :type-id="13"
+            link="{{ url('/news') }}" />
     </div>
     <!-- End of News section -->
 

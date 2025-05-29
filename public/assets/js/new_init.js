@@ -20,6 +20,21 @@ $(function () {
 
     $.fn.dataTable.moment('DD/MM/yyyy');
 
+    function switchNewType(newTypeId) {
+        switch (newTypeId) {
+            case 11:
+                return lang.news_11;
+            case 12:
+                return lang.news_12;
+            case 13:
+                return lang.news_13;
+            case 14:
+                return lang.news_14;
+            default:
+                return null; // Or a default message like "News not found"
+        }
+    }
+
     const table = $('#example').DataTable({
         ajax: {
             type: 'GET',
@@ -52,8 +67,9 @@ $(function () {
                             '<option value="">' + lang.all_types + '</option>';
 
                         // Add options for each new type
+                        console.log(newTypes);
                         newTypes.forEach(function (type) {
-                            filterHtml += '<option value="' + type.new_type_name + '">' + type.new_type_name + '</option>';
+                            filterHtml += '<option value="' + type.id + '">' + switchNewType(type.id) + '</option>';
                         });
 
                         filterHtml += '</select></div>';
@@ -66,7 +82,7 @@ $(function () {
                         // Add event listener for the filter
                         $('#typeFilter').on('change', function () {
                             let filterValue = $(this).val();
-                            table.column(3).search(filterValue).draw();
+                            table.column(0).search(filterValue).draw();
                         });
                     }
                 }, 100); // Small delay to ensure DataTable is fully initialized
@@ -75,6 +91,11 @@ $(function () {
             }
         },
         columns: [{
+                data: 'new_type.id',
+                visible: false,
+
+            },
+            {
                 data: 'title_th'
             },
             {
@@ -95,19 +116,8 @@ $(function () {
                     if (!data || !data.id) {
                         return null; // Or some default fallback message
                     }
+                    return switchNewType(data.new_type.id)
 
-                    switch (data.new_type.id) {
-                        case 11:
-                            return lang.news_11;
-                        case 12:
-                            return lang.news_12;
-                        case 13:
-                            return lang.news_13;
-                        case 14:
-                            return lang.news_14;
-                        default:
-                            return null; // Or a default message like "News not found"
-                    }
 
                 }
             },

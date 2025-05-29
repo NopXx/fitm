@@ -47,6 +47,7 @@
                                 <table id="example" class="display app-data-table default-data-table">
                                     <thead>
                                         <tr>
+                                            <th>@lang('translation.id')</th>
                                             <th>@lang('translation.title')</th>
                                             <th>@lang('translation.effective_date')</th>
                                             <th>@lang('translation.display_new')</th>
