@@ -18,7 +18,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            max-width: 250px;
+            min-width: 250px;
+            width: fit-content;
             margin: 0 auto 1.5rem;
         }
 
@@ -44,6 +45,9 @@
             position: relative;
             padding-top: 1rem;
             margin-top: 0.5rem;
+            /* Single line display with flexible width */
+            white-space: nowrap;
+            text-align: center;
         }
 
         :root.dark .org-chart-leader-name {
@@ -130,7 +134,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 160px;
+            min-width: 160px;
+            width: fit-content;
             text-align: center;
             position: relative;
             transition: transform 0.3s ease;
@@ -185,6 +190,9 @@
             font-weight: 600;
             color: #111827;
             margin-bottom: 0.25rem;
+            /* Single line display with flexible width */
+            white-space: nowrap;
+            text-align: center;
         }
 
         :root.dark .org-chart-person-name {
@@ -223,10 +231,17 @@
         @media (max-width: 640px) {
             .org-chart-reports {
                 gap: 1rem;
+                justify-content: center;
             }
 
             .org-chart-person {
-                width: 120px;
+                min-width: 120px;
+                width: fit-content;
+            }
+
+            .org-chart-leader {
+                min-width: 200px;
+                width: fit-content;
             }
 
             .org-chart-person-img-wrapper {
