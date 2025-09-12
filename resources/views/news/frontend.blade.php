@@ -238,7 +238,7 @@
                 </div>
 
                 <!-- Regular News Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="regularNewsGrid">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch" id="regularNewsGrid">
                     @if ($regularNews->isEmpty())
                         <div class="col-span-full text-center py-10">
                             <svg class="mx-auto h-16 w-16 text-gray-400 dark:text-gray-600 transition-colors duration-200"
@@ -255,7 +255,7 @@
                     @endif
 
                     @foreach ($regularNews as $item)
-                        <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-md overflow-hidden news-card hover:shadow-lg transition-all duration-200"
+                        <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-md overflow-hidden news-card hover:shadow-lg transition-all duration-200 h-full flex flex-col"
                             data-type="{{ is_object($item->new_type) ? $item->new_type->id : (is_numeric($item->new_type) ? $item->new_type : '') }}">
                             <a href="{{ isset($item->url) && $item->url ? $item->url : route('news.show', $item->id) }}"
                                 {{ isset($item->url) && $item->url ? 'target="_blank"' : '' }}
@@ -264,7 +264,7 @@
                                     src="{{ isset($item->cover) ? asset('storage/' . $item->cover) : (isset($item->cover_image) && $item->cover_image ? asset('storage/' . $item->cover_image) : asset('assets/images/fitm-logo.png')) }}"
                                     alt="{{ $item->title }}">
                             </a>
-                            <div class="p-5">
+                            <div class="p-5 flex flex-col flex-1">
                                 @if (isset($item->new_type))
                                     @php
                                         // Get the news type ID
@@ -313,7 +313,7 @@
 
                                 <a href="{{ isset($item->url) && $item->url ? $item->url : route('news.show', $item->id) }}"
                                     {{ isset($item->url) && $item->url ? 'target="_blank"' : '' }}
-                                    class="inline-flex items-center py-2 px-3 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-colors duration-200">
+                                    class="inline-flex items-center py-2 px-3 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-colors duration-200 mt-auto">
                                     {{ isset($item->url) && $item->url ? __('news.visit_link') : __('news.read_more') }}
                                     <svg class="ml-2 -mr-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20"
                                         xmlns="http://www.w3.org/2000/svg">
@@ -366,7 +366,7 @@
                 </div>
 
                 <!-- FITM News Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="fitmNewsGrid">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch" id="fitmNewsGrid">
                     @if ($fitmNews->isEmpty())
                         <div class="col-span-full text-center py-10">
                             <svg class="mx-auto h-16 w-16 text-gray-400 dark:text-gray-600 transition-colors duration-200"
@@ -383,14 +383,14 @@
                     @endif
 
                     @foreach ($fitmNews as $item)
-                        <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-md overflow-hidden fitm-news-card hover:shadow-lg transition-all duration-200"
+                        <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-md overflow-hidden fitm-news-card hover:shadow-lg transition-all duration-200 h-full flex flex-col"
                             data-issue="{{ is_string($item->issue_name) ? $item->issue_name : '' }}">
                             <a href="{{ $item->url }}" target="_blank" class="block overflow-hidden">
                                 <img class="rounded-t-lg w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
                                     src="{{ isset($item->cover) ? asset('storage/' . $item->cover) : (isset($item->cover_image) && $item->cover_image ? asset('storage/' . $item->cover_image) : asset('assets/images/fitm-logo.png')) }}"
                                     alt="{{ $item->title }}">
                             </a>
-                            <div class="p-5">
+                            <div class="p-5 flex flex-col flex-1">
                                 @if (isset($item->issue_name))
                                     <span
                                         class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded transition-colors duration-200">{{ $item->issue_name }}</span>
@@ -418,7 +418,7 @@
                                 </p>
 
                                 <a href="{{ $item->url }}" target="_blank"
-                                    class="inline-flex items-center py-2 px-3 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-colors duration-200">
+                                    class="inline-flex items-center py-2 px-3 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-colors duration-200 mt-auto">
                                     {{ __('news.visit_link') }}
                                     <svg class="ml-2 -mr-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20"
                                         xmlns="http://www.w3.org/2000/svg">
@@ -596,6 +596,7 @@
             handleResize() {
                 this.ResponsiveLayout.applyMobileStyles();
                 this.ResponsiveLayout.optimizeHeroForMobile();
+                this.ResponsiveLayout.equalizeHeroHeights();
             },
 
             // Utility methods
@@ -670,6 +671,17 @@
                 document.addEventListener('DOMContentLoaded', () => {
                     this.applyMobileStyles();
                     this.optimizeHeroForMobile();
+                });
+
+                // Recalculate hero heights after images load
+                const heroImages = document.querySelectorAll('#heroSection img');
+                heroImages.forEach(img => {
+                    if (img.complete) {
+                        // Defer to ensure layout is settled
+                        setTimeout(() => this.equalizeHeroHeights(), 50);
+                    } else {
+                        img.addEventListener('load', () => this.equalizeHeroHeights());
+                    }
                 });
             },
 
@@ -866,6 +878,71 @@
                         imageContainer.classList.add('mt-3', 'md:mt-0');
                     }
                 });
+
+                // Equalize heights after layout tweaks
+                this.equalizeHeroHeights();
+            },
+
+            equalizeHeroHeights() {
+                const regularHero = document.getElementById('regularHero');
+                const fitmHero = document.getElementById('fitmHero');
+                if (!regularHero || !fitmHero) return;
+
+                // Reset previous values
+                regularHero.style.minHeight = '';
+                fitmHero.style.minHeight = '';
+
+                const measure = (el) => {
+                    const wasHidden = el.classList.contains('hidden');
+                    // Preserve inline styles to restore later
+                    const prev = {
+                        position: el.style.position,
+                        visibility: el.style.visibility,
+                        display: el.style.display,
+                        left: el.style.left,
+                        right: el.style.right,
+                        top: el.style.top,
+                        width: el.style.width,
+                    };
+
+                    if (wasHidden) {
+                        el.classList.remove('hidden');
+                        // Take out of normal flow to avoid layout shift
+                        el.style.position = 'absolute';
+                        el.style.visibility = 'hidden';
+                        el.style.display = 'block';
+                        el.style.left = '-9999px';
+                        el.style.top = '0';
+                        el.style.width = '100%';
+                    }
+
+                    // Read height
+                    const rect = el.getBoundingClientRect();
+                    const h = Math.max(el.scrollHeight || 0, rect.height || 0);
+
+                    // Restore state
+                    if (wasHidden) {
+                        el.style.position = prev.position || '';
+                        el.style.visibility = prev.visibility || '';
+                        el.style.display = prev.display || '';
+                        el.style.left = prev.left || '';
+                        el.style.right = prev.right || '';
+                        el.style.top = prev.top || '';
+                        el.style.width = prev.width || '';
+                        el.classList.add('hidden');
+                    }
+
+                    return h;
+                };
+
+                const h1 = measure(regularHero);
+                const h2 = measure(fitmHero);
+                const maxH = Math.max(h1, h2);
+                if (maxH > 0) {
+                    const px = `${Math.ceil(maxH)}px`;
+                    regularHero.style.minHeight = px;
+                    fitmHero.style.minHeight = px;
+                }
             }
         };
 
@@ -909,6 +986,14 @@
 
                 // Setup autoplay
                 this.setupAutoplay(embla, emblaNode);
+
+                // Re-equalize hero heights when slide changes (images/text heights might differ)
+                embla.on('select', () => {
+                    setTimeout(() => App.ResponsiveLayout.equalizeHeroHeights(), 100);
+                });
+
+                // Also once after init
+                setTimeout(() => App.ResponsiveLayout.equalizeHeroHeights(), 150);
             },
 
             setupDots(embla, dotsNode) {
@@ -1070,8 +1155,11 @@
                     App.utils.toggleVisibility(regularHero, true, true);
                 }
 
-                // Re-apply mobile optimizations after transition
-                setTimeout(() => App.ResponsiveLayout.optimizeHeroForMobile(), 350);
+                // Re-apply optimizations and equalize heights after transition
+                setTimeout(() => {
+                    App.ResponsiveLayout.optimizeHeroForMobile();
+                    App.ResponsiveLayout.equalizeHeroHeights();
+                }, 350);
             }
         };
 
@@ -1297,14 +1385,14 @@
                 const publishedDate = item.published_date || new Date().toISOString().split('T')[0];
 
                 const cardHtml = `
-            <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-md overflow-hidden news-card hover:shadow-lg transition-all duration-200"
+            <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-md overflow-hidden news-card hover:shadow-lg transition-all duration-200 h-full flex flex-col"
                  data-type="${typeof item.new_type === 'object' ? item.new_type.id : (item.new_type || '')}">
                 <a href="${linkUrl}" ${linkTarget} class="block overflow-hidden">
                     <img class="rounded-t-lg w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
                          src="${imageSrc}"
                          alt="${item.title}">
                 </a>
-                <div class="p-5">
+                <div class="p-5 flex flex-col flex-1">
                     ${newsTypeHtml}
 
                     <div class="text-xs text-gray-500 dark:text-gray-400 mt-2 transition-colors duration-200 date-format"
@@ -1321,7 +1409,7 @@
                     </p>
 
                     <a href="${linkUrl}" ${linkTarget}
-                       class="inline-flex items-center py-2 px-3 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-colors duration-200">
+                       class="inline-flex items-center py-2 px-3 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-colors duration-200 mt-auto">
                         ${linkText}
                         <svg class="ml-2 -mr-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
@@ -1539,28 +1627,35 @@
 
                 let visibleCount = 0;
 
-                // If no search term, don't change the current visibility state of cards
                 if (searchTerm === '') {
-                    // Just count visible cards for the "no results" message
+                    // Clearing search: only unhide cards hidden by search previously
                     cards.forEach(card => {
+                        if (card.dataset && card.dataset.hiddenBySearch === '1') {
+                            card.style.display = '';
+                            delete card.dataset.hiddenBySearch;
+                        }
                         if (card.style.display !== 'none') {
                             visibleCount++;
                         }
                     });
                 } else {
-                    // Apply search filtering
+                    // Apply search filtering on currently visible cards (respect other filters)
                     cards.forEach(card => {
-                        // Only search cards that are not already hidden by other filters
                         if (card.style.display !== 'none') {
                             const title = card.querySelector('h5')?.textContent.toLowerCase() || '';
                             const description = card.querySelector('p')?.textContent.toLowerCase() || '';
 
-                            // Show or hide based on search
                             if (title.includes(searchTerm) || description.includes(searchTerm)) {
                                 card.style.display = '';
                                 visibleCount++;
+                                if (card.dataset && card.dataset.hiddenBySearch) {
+                                    delete card.dataset.hiddenBySearch;
+                                }
                             } else {
                                 card.style.display = 'none';
+                                if (card.dataset) {
+                                    card.dataset.hiddenBySearch = '1';
+                                }
                             }
                         }
                     });

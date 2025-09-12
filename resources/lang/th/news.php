@@ -35,10 +35,14 @@ return [
     'no_news_found' => 'ไม่พบข่าว',
     'no_fitm_news_found' => 'ไม่พบข่าว FITM',
     'no_match_criteria' => 'เราไม่พบข่าวใดๆ ที่ตรงกับเกณฑ์ของคุณ',
+    'no_match_search' => 'ไม่พบข่าวที่ตรงกับเกณฑ์การค้นหาของคุณ',
 
     // Feature Text
     'stay_updated' => 'ติดตามข่าวสารและประกาศล่าสุด',
 
     // Image Descriptions
     'default_image' => 'ภาพข่าวเริ่มต้น',
+
+    // UI States
+    'loading' => 'กำลังโหลด',
 ];

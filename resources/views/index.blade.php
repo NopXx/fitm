@@ -164,7 +164,7 @@
         <x-news-section title="{{ __('news.academic_news') }}" :news="$news" :type-id="14"
             link="{{ url('/news') }}" />
         <x-news-section title="{{ __('news.research_funding_news') }}" :news="$news" :type-id="12"
-            link="/news" />
+            link="{{ url('/news') }}" />
         <x-news-section title="{{ __('news.procurement_news') }}" :news="$news" :type-id="13"
             link="{{ url('/news') }}" />
     </div>

@@ -35,10 +35,14 @@ return [
     'no_news_found' => 'No news found',
     'no_fitm_news_found' => 'No FITM news found',
     'no_match_criteria' => 'We couldn\'t find any news matching your criteria.',
+    'no_match_search' => 'No news matching your search criteria.',
 
     // Feature Text
     'stay_updated' => 'Stay updated with the latest news and announcements.',
 
     // Image Descriptions
     'default_image' => 'Default News Image',
+
+    // UI States
+    'loading' => 'Loading',
 ];

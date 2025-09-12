@@ -1,3 +1,10 @@
+@props([
+    'newsItems',
+    'type' => 'regular', // 'regular' or 'fitm'
+    'badgeClass' => 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200', // Default for regular news
+    'dataAttribute' => 'type', // 'type' for regular, 'issue' for fitm
+])
+
 @if ($newsItems->isEmpty())
     <div class="col-span-full text-center py-10">
         <svg class="mx-auto h-16 w-16 text-gray-400 dark:text-gray-600 transition-colors duration-200" fill="none"
@@ -6,60 +13,53 @@
                 d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
         </svg>
         <h3 class="mt-2 text-lg font-medium text-gray-900 dark:text-white transition-colors duration-200">
-            {{ __('news.no_news_found') }}</h3>
+            {{ __('news.' . ($type === 'regular' ? 'no_news_found' : 'no_fitm_news_found')) }}</h3>
         <p class="mt-1 text-gray-500 dark:text-gray-400 transition-colors duration-200">
             {{ __('news.no_match_criteria') }}</p>
     </div>
 @endif
 
 @foreach ($newsItems as $item)
-    <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-md overflow-hidden news-card hover:shadow-lg transition-all duration-200 h-full flex flex-col"
-        data-type="{{ is_object($item->new_type) ? $item->new_type->id : (is_numeric($item->new_type) ? $item->new_type : '') }}">
-        <a href="{{ isset($item->url) && $item->url ? $item->url : route('news.show', $item->id) }}"
-            {{ isset($item->url) && $item->url ? 'target="_blank"' : '' }} class="block overflow-hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-md overflow-hidden {{ $type }}-news-card hover:shadow-lg transition-all duration-200 h-full flex flex-col"
+        data-{{ $dataAttribute }}="{{ $type === 'regular' ? (is_object($item->new_type) ? $item->new_type->id : (is_numeric($item->new_type) ? $item->new_type : '')) : (is_string($item->issue_name) ? $item->issue_name : '') }}">
+        <a href="{{ $item->url ?? route('news.show', $item->id) }}" {{ $item->url ? 'target="_blank"' : '' }}
+            class="block overflow-hidden">
             <img class="rounded-t-lg w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
                 src="{{ isset($item->cover) ? asset('storage/' . $item->cover) : (isset($item->cover_image) && $item->cover_image ? asset('storage/' . $item->cover_image) : asset('assets/images/fitm-logo.png')) }}"
                 alt="{{ $item->title }}">
         </a>
         <div class="p-5 flex flex-col flex-1">
-            @if (isset($item->new_type))
+            @if ($type === 'regular' && isset($item->new_type))
                 @php
-                    // Get the news type ID
-                    $newTypeId = '';
-                    if (is_object($item->new_type) && isset($item->new_type->id)) {
-                        $newTypeId = $item->new_type->id;
-                    } elseif (is_numeric($item->new_type)) {
-                        $newTypeId = $item->new_type;
-                    }
-
-                    // Create a translation key based on the news type ID
-                    $translationKey = '';
-                    if ($newTypeId) {
-                        $translationKey = 'news.news_' . $newTypeId;
-                    }
+                    $newTypeId = is_object($item->new_type)
+                        ? $item->new_type->id
+                        : (is_numeric($item->new_type)
+                            ? $item->new_type
+                            : '');
+                    $translationKey = $newTypeId ? 'news.news_' . $newTypeId : '';
                 @endphp
-
                 @if ($translationKey)
                     <span
-                        class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-semibold px-2.5 py-0.5 rounded transition-colors duration-200">
+                        class="{{ $badgeClass }} text-xs font-semibold px-2.5 py-0.5 rounded transition-colors duration-200">
                         @lang($translationKey)
                     </span>
                 @endif
+            @elseif ($type === 'fitm' && isset($item->issue_name))
+                <span
+                    class="{{ $badgeClass }} text-xs font-semibold mr-2 px-2.5 py-0.5 rounded transition-colors duration-200">
+                    {{ $item->issue_name }}
+                </span>
             @endif
 
             <div class="text-xs text-gray-500 dark:text-gray-400 mt-2 transition-colors duration-200 date-format"
-                data-date="@if ($item->published_date) @if (is_string($item->published_date))
-                                {{ $item->published_date }}
-                            @else
-                                {{ $item->published_date->format('Y-m-d') }} @endif
-@else
-{{ now()->format('Y-m-d') }}
-                          @endif">
+                data-date="{{ $item->published_date ? (is_string($item->published_date) ? $item->published_date : $item->published_date->format('Y-m-d')) : now()->format('Y-m-d') }}">
                 <!-- Date will be filled by Moment.js -->
             </div>
 
             <h5
                 class="mb-2 mt-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white transition-colors duration-200 line-clamp-2">
+                {{-- {{ $type === 'regular' ? $item->title : (isset($item->title_th) && $item->title_th ? $item->title_th : (isset($item->title_en) && $item->title_en ? $item->title_en : __('news.default_title'))) }} --}}
+                {{-- {{ $type === 'regular' ? $item->title :  }} --}}
                 {{ $item->title }}
             </h5>
 
@@ -67,10 +67,9 @@
                 {{ Str::limit($item->description ?? '', 120) }}
             </p>
 
-            <a href="{{ isset($item->url) && $item->url ? $item->url : route('news.show', $item->id) }}"
-                {{ isset($item->url) && $item->url ? 'target="_blank"' : '' }}
+            <a href="{{ $item->url ?? route('news.show', $item->id) }}" {{ $item->url ? 'target="_blank"' : '' }}
                 class="inline-flex items-center py-2 px-3 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-colors duration-200 mt-auto">
-                {{ isset($item->url) && $item->url ? __('news.visit_link') : __('news.read_more') }}
+                {{ $item->url ? __('news.visit_link') : __('news.read_more') }}
                 <svg class="ml-2 -mr-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20"
                     xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd"
