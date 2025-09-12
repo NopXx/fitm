@@ -123,6 +123,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/api/visitors/stats', [VisitorController::class, 'apiStats']);
         Route::get('/api/visitors/daily-stats', [VisitorController::class, 'apiDailyStats']);
         Route::get('/api/visitors/region-stats', [VisitorController::class, 'apiRegionStats'])->name('api.visitors.region-stats');
+        Route::get('/api/visitors/most-visited', [VisitorController::class, 'apiMostVisited'])->name('api.visitors.most-visited');
 
         Route::get('/boards', [BoardController::class, 'index'])->name('boards.index');
         Route::get('/boards/add', [BoardController::class, 'add'])->name('boards.add');

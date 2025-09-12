@@ -6,6 +6,7 @@ use App\Services\VisitorService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\VisitorLog;
+use Illuminate\Support\Facades\DB;
 
 class VisitorController extends Controller
 {
@@ -31,16 +32,8 @@ class VisitorController extends Controller
 
     public function dashboard()
     {
-        $data = [
-            'activeVisitors' => $this->visitorService->getActiveVisitors(15, true), // ไม่รวมส่วน admin
-            'totalVisitors' => $this->visitorService->getTotalVisitors(true),
-            'totalPageViews' => $this->visitorService->getTotalPageViews(true),
-            'todayVisitors' => $this->visitorService->getTodayVisitors(true),
-            'mostVisitedPages' => $this->visitorService->getMostVisitedPages(10, true),
-            'topRegions' => $this->visitorService->getTopRegions(10, true) // เพิ่มข้อมูลจังหวัด
-        ];
-
-        return view('dashboard.index', $data);
+        // แสดงหน้าแดชบอร์ด โดยให้ฝั่ง View ไปเรียกข้อมูลผ่าน API เอง
+        return view('dashboard.index');
     }
 
     public function apiStats()
@@ -56,10 +49,100 @@ class VisitorController extends Controller
         return response()->json($data);
     }
 
-    public function apiRegionStats()
+    public function apiRegionStats(Request $request)
     {
+        // Optional date range filtering using summary tables
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        if ($startDate && $endDate) {
+            $start = \Carbon\Carbon::parse($startDate)->startOfDay();
+            $end = \Carbon\Carbon::parse($endDate)->endOfDay();
+
+            $rows = DB::table('visitor_daily_regions')
+                ->selectRaw('region, SUM(`count`) as total')
+                ->whereBetween('date', [$start->toDateString(), $end->toDateString()])
+                ->groupBy('region')
+                ->orderByDesc('total')
+                ->limit(10)
+                ->get();
+
+            // Fallback to monthly summary if no daily data found
+            if ($rows->isEmpty()) {
+                $startMonth = $start->copy()->startOfMonth()->toDateString();
+                $endMonth = $end->copy()->startOfMonth()->toDateString();
+
+                $rows = DB::table('visitor_monthly_regions')
+                    ->selectRaw('region, SUM(`count`) as total')
+                    ->whereBetween('month', [$startMonth, $endMonth])
+                    ->groupBy('region')
+                    ->orderByDesc('total')
+                    ->limit(10)
+                    ->get();
+            }
+
+            $topRegions = $rows->map(fn($r) => ['region' => $r->region ?? 'Unknown', 'count' => (int)$r->total])->toArray();
+
+            return response()->json(['topRegions' => $topRegions]);
+        }
+
+        // Fallback: use service (recent window via logs)
         $data = [
             'topRegions' => $this->visitorService->getTopRegions(10, true)
+        ];
+
+        return response()->json($data);
+    }
+
+    public function apiMostVisited(Request $request)
+    {
+        // If a date range is supplied, use summary table visitor_daily_pages
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        if ($startDate && $endDate) {
+            $start = \Carbon\Carbon::parse($startDate)->startOfDay();
+            $end = \Carbon\Carbon::parse($endDate)->endOfDay();
+
+            $rows = DB::table('visitor_daily_pages')
+                ->selectRaw('COALESCE(page, "") as page, SUM(visits) as total')
+                ->whereBetween('date', [$start->toDateString(), $end->toDateString()])
+                ->groupBy('page')
+                ->orderByDesc('total')
+                ->limit(10)
+                ->get();
+
+            // Fallback to monthly summary if no daily data found
+            if ($rows->isEmpty()) {
+                $startMonth = $start->copy()->startOfMonth()->toDateString();
+                $endMonth = $end->copy()->startOfMonth()->toDateString();
+
+                $rows = DB::table('visitor_monthly_pages')
+                    ->selectRaw('COALESCE(page, "") as page, SUM(visits) as total')
+                    ->whereBetween('month', [$startMonth, $endMonth])
+                    ->groupBy('page')
+                    ->orderByDesc('total')
+                    ->limit(10)
+                    ->get();
+            }
+
+            $mostVisited = $rows->map(function ($r) {
+                $page = $r->page;
+                if ($page === '' || $page === null) {
+                    $page = 'Homepage';
+                }
+                return [
+                    'page' => $page,
+                    'visits' => (int)$r->total,
+                ];
+            })->toArray();
+
+            return response()->json(['mostVisitedPages' => $mostVisited]);
+        }
+
+        // Fallback to service using raw logs (recent window)
+        $data = [
+            'mostVisitedPages' => $this->visitorService->getMostVisitedPages(10, true)
         ];
 
         return response()->json($data);
@@ -82,31 +165,54 @@ class VisitorController extends Controller
             ? Carbon::parse($request->input('start_date'))
             : Carbon::today()->subDays(29);
 
-        // Validate date range (maximum 90 days to prevent performance issues)
+        // Decide aggregation granularity
         $daysDiff = $startDate->diffInDays($endDate);
-        if ($daysDiff > 90) {
+        $group = $request->input('group', 'auto'); // auto|daily|monthly
+        $useMonthly = ($group === 'monthly') || ($group === 'auto' && $daysDiff > 120);
+
+        if ($useMonthly) {
+            // Monthly aggregation using visitor_monthly_totals
+            $startMonth = $startDate->copy()->startOfMonth();
+            $endMonth = $endDate->copy()->startOfMonth();
+
+            $monthlyStats = [];
+            $categories = [];
+
+            for ($m = $startMonth->copy(); $m->lte($endMonth); $m->addMonth()) {
+                $key = $m->format('Y-m');
+                if ($locale === 'th') {
+                    $label = $this->getThaiMonth($m->format('n')) . ' ' . substr((intval($m->format('Y')) + 543), 2);
+                } else {
+                    $label = $m->format('M y');
+                }
+                $categories[] = $label;
+                $monthlyStats[$key] = 0;
+            }
+
+            $rows = DB::table('visitor_monthly_totals')
+                ->selectRaw('month, unique_visitors')
+                ->whereDate('month', '>=', $startMonth->toDateString())
+                ->whereDate('month', '<=', $endMonth->toDateString())
+                ->get();
+
+            foreach ($rows as $row) {
+                $key = \Carbon\Carbon::parse($row->month)->format('Y-m');
+                if (isset($monthlyStats[$key])) {
+                    $monthlyStats[$key] = (int) $row->unique_visitors;
+                }
+            }
+
             return response()->json([
-                'error' => $locale === 'th' ? 'ช่วงวันที่สูงสุดคือ 90 วัน' : 'Maximum date range is 90 days'
-            ], 400);
+                'visitors' => array_values($monthlyStats),
+                'categories' => $categories,
+                'start_date' => $startDate->format('Y-m-d'),
+                'end_date' => $endDate->format('Y-m-d'),
+                'locale' => $locale,
+                'aggregation' => 'monthly',
+            ]);
         }
 
-        // Find the first record date
-        $firstRecord = VisitorLog::where(function ($query) {
-            $query->where(function ($q) {
-                $q->where('page', '!=', 'admin')
-                    ->where('page', '!=', 'login')
-                    ->where('page', 'not like', 'admin/%')
-                    ->where('page', 'not like', 'api/%')
-                    ->where('page', 'not like', 'lang/%');
-            })->orWhereNull('page');
-        })
-            ->orderBy('created_at', 'asc')
-            ->first();
-
-        // If first record is after startDate, adjust startDate
-        if ($firstRecord && Carbon::parse($firstRecord->created_at)->isAfter($startDate)) {
-            $startDate = Carbon::parse($firstRecord->created_at)->startOfDay();
-        }
+        // Keep the requested range intact to display continuous dates (fill missing with 0)
 
         // Initialize arrays for stats and categories
         $dailyStats = [];
@@ -129,26 +235,50 @@ class VisitorController extends Controller
             $dailyStats[$formattedDate] = 0;
         }
 
-        // Get visitor stats excluding admin pages
-        $visitorStats = VisitorLog::selectRaw('DATE(created_at) as date, COUNT(DISTINCT ip_address) as visitors')
-            ->whereDate('created_at', '>=', $startDate)
-            ->whereDate('created_at', '<=', $endDate)
-            ->where(function ($query) {
-                $query->where(function ($q) {
-                    $q->where('page', '!=', 'admin')
-                        ->where('page', '!=', 'login')
-                        ->where('page', 'not like', 'admin/%')
-                        ->where('page', 'not like', 'api/%')
-                        ->where('page', 'not like', 'lang/%');
-                })->orWhereNull('page');
-            })
-            ->groupBy('date')
+        // Prefer reading from daily summary table for performance and retention
+        $summaryRows = DB::table('visitor_daily_totals')
+            ->selectRaw('date, unique_visitors')
+            ->whereDate('date', '>=', $startDate->format('Y-m-d'))
+            ->whereDate('date', '<=', $endDate->format('Y-m-d'))
             ->get();
 
-        // Populate data array
-        foreach ($visitorStats as $stat) {
-            if (isset($dailyStats[$stat->date])) {
-                $dailyStats[$stat->date] = (int) $stat->visitors;
+        foreach ($summaryRows as $row) {
+            $key = \Carbon\Carbon::parse($row->date)->format('Y-m-d');
+            if (isset($dailyStats[$key])) {
+                $dailyStats[$key] = (int) $row->unique_visitors;
+            }
+        }
+
+        // For recent dates (within the last 30 days) where summary might not exist yet, fallback to raw logs
+        $thirtyDaysAgo = \Carbon\Carbon::today()->subDays(30);
+        $needRawDates = [];
+        foreach ($dailyStats as $date => $value) {
+            $dateObj = \Carbon\Carbon::parse($date);
+            if ($dateObj->gte($thirtyDaysAgo) && $value === 0) {
+                $needRawDates[] = $date;
+            }
+        }
+
+        if (!empty($needRawDates)) {
+            $visitorStats = VisitorLog::selectRaw('DATE(created_at) as date, COUNT(DISTINCT ip_address) as visitors')
+                ->whereDate('created_at', '>=', min($needRawDates))
+                ->whereDate('created_at', '<=', max($needRawDates))
+                ->where(function ($query) {
+                    $query->where(function ($q) {
+                        $q->where('page', '!=', 'admin')
+                            ->where('page', '!=', 'login')
+                            ->where('page', 'not like', 'admin/%')
+                            ->where('page', 'not like', 'api/%')
+                            ->where('page', 'not like', 'lang/%');
+                    })->orWhereNull('page');
+                })
+                ->groupBy('date')
+                ->get();
+
+            foreach ($visitorStats as $stat) {
+                if (isset($dailyStats[$stat->date]) && in_array($stat->date, $needRawDates, true)) {
+                    $dailyStats[$stat->date] = (int) $stat->visitors;
+                }
             }
         }
 

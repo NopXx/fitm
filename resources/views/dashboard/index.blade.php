@@ -97,7 +97,7 @@
                                     <i class="fas fa-users"></i>
                                 </div>
                                 <div>
-                                    <div class="stats-number" id="active-visitors">{{ $activeVisitors }}</div>
+                                    <div class="stats-number" id="active-visitors">0</div>
                                     <div class="stats-label">@lang('translation.active_visitors')</div>
                                 </div>
                             </div>
@@ -111,7 +111,7 @@
                                     <i class="fas fa-calendar-day"></i>
                                 </div>
                                 <div>
-                                    <div class="stats-number">{{ $todayVisitors }}</div>
+                                    <div class="stats-number" id="today-visitors">0</div>
                                     <div class="stats-label">@lang('translation.today_visitors')</div>
                                 </div>
                             </div>
@@ -125,7 +125,7 @@
                                     <i class="fas fa-user-friends"></i>
                                 </div>
                                 <div>
-                                    <div class="stats-number">{{ $totalVisitors }}</div>
+                                    <div class="stats-number" id="total-visitors">0</div>
                                     <div class="stats-label">@lang('translation.total_visitors')</div>
                                 </div>
                             </div>
@@ -139,7 +139,7 @@
                                     <i class="fas fa-eye"></i>
                                 </div>
                                 <div>
-                                    <div class="stats-number">{{ $totalPageViews }}</div>
+                                    <div class="stats-number" id="total-page-views">0</div>
                                     <div class="stats-label">@lang('translation.total_page_views')</div>
                                 </div>
                             </div>
@@ -179,43 +179,22 @@
                         <p>@lang('translation.most_visited_pages')</p>
                     </div>
                     <div class="card-body">
-                        @if (count($mostVisitedPages) > 0)
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>@lang('translation.page')</th>
-                                            <th>@lang('translation.visits')</th>
-                                            <th>@lang('translation.percentage')</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $totalVisits = array_sum(array_column($mostVisitedPages, 'visits'));
-                                        @endphp
-                                        @foreach ($mostVisitedPages as $page)
-                                            <tr>
-                                                <td>{{ $page['page'] ?? 'Homepage' }}</td>
-                                                <td>{{ $page['visits'] }}</td>
-                                                <td>
-                                                    <div class="progress" style="height: 6px;">
-                                                        <div class="progress-bar" role="progressbar"
-                                                            style="width: {{ $totalVisits > 0 ? ($page['visits'] / $totalVisits) * 100 : 0 }}%">
-                                                        </div>
-                                                    </div>
-                                                    <span
-                                                        class="small">{{ $totalVisits > 0 ? number_format(($page['visits'] / $totalVisits) * 100, 1) : 0 }}%</span>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        @else
-                            <div class="alert alert-info text-center">
-                                @lang('translation.no_page_visits_data')
-                            </div>
-                        @endif
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>@lang('translation.page')</th>
+                                        <th>@lang('translation.visits')</th>
+                                        <th>@lang('translation.percentage')</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="most-visited-body">
+                                    <tr>
+                                        <td colspan="3" class="text-center text-muted">@lang('common.loading')</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <!-- เพิ่มหลังจากส่วนแสดงหน้าที่เข้าชมมากที่สุด -->
@@ -224,43 +203,22 @@
                         <p>@lang('translation.visitor_regions')</p>
                     </div>
                     <div class="card-body">
-                        @if (count($topRegions) > 0)
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>@lang('translation.region')</th>
-                                            <th>@lang('translation.visitors')</th>
-                                            <th>@lang('translation.percentage')</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $totalRegionVisits = array_sum(array_column($topRegions, 'count'));
-                                        @endphp
-                                        @foreach ($topRegions as $region)
-                                            <tr>
-                                                <td>{{ $region['region'] }}</td>
-                                                <td>{{ $region['count'] }}</td>
-                                                <td>
-                                                    <div class="progress" style="height: 6px;">
-                                                        <div class="progress-bar" role="progressbar"
-                                                            style="width: {{ $totalRegionVisits > 0 ? ($region['count'] / $totalRegionVisits) * 100 : 0 }}%">
-                                                        </div>
-                                                    </div>
-                                                    <span
-                                                        class="small">{{ $totalRegionVisits > 0 ? number_format(($region['count'] / $totalRegionVisits) * 100, 1) : 0 }}%</span>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        @else
-                            <div class="alert alert-info text-center">
-                                @lang('translation.no_region_data')
-                            </div>
-                        @endif
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>@lang('translation.region')</th>
+                                        <th>@lang('translation.visitors')</th>
+                                        <th>@lang('translation.percentage')</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="region-stats-body">
+                                    <tr>
+                                        <td colspan="3" class="text-center text-muted">@lang('common.loading')</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -303,15 +261,21 @@
             };
 
             const today = moment().format('YYYY-MM-DD');
+            const earliest = moment().subtract(60, 'days').format('YYYY-MM-DD');
 
-            // Initialize date pickers with default date range (30 days)
+            // Initialize date pickers with default date range (30 days) and enforce max 60-day window
             const startDatePicker = flatpickr("#start_date_picker", {
                 ...config,
                 defaultDate: startDate.format('YYYY-MM-DD'),
                 maxDate: today,
+                minDate: earliest,
                 onChange: function(selectedDates, dateStr) {
                     // Update end date picker's minDate when start date changes
                     endDatePicker.set('minDate', dateStr);
+                    // Limit end date to within 60 days from start (inclusive)
+                    const maxEnd = moment(dateStr).add(60, 'days');
+                    const maxEndStr = moment.min(maxEnd, moment(today)).format('YYYY-MM-DD');
+                    endDatePicker.set('maxDate', maxEndStr);
                 }
             });
 
@@ -346,6 +310,26 @@
                         'End date must be after start date';
 
                     alert(errorMessage);
+                    return;
+                }
+
+                // Enforce maximum 60-day window
+                const diffDays = end.diff(start, 'days');
+                if (diffDays > 60) {
+                    const msg = currentLang === 'th'
+                        ? 'เลือกช่วงวันที่ได้ไม่เกิน 60 วัน'
+                        : 'Please select a range of 60 days or less';
+                    alert(msg);
+                    return;
+                }
+
+                // Enforce lookback limit: start date not earlier than today-60 days
+                const earliestMoment = moment().subtract(60, 'days').startOf('day');
+                if (start.isBefore(earliestMoment)) {
+                    const msg = currentLang === 'th'
+                        ? 'สามารถดูย้อนหลังได้ไม่เกิน 60 วันนับจากวันนี้'
+                        : 'You can only look back up to 60 days from today';
+                    alert(msg);
                     return;
                 }
 
@@ -397,6 +381,10 @@
 
                             // Render chart with the data
                             renderChart(data.visitors, chartCategories);
+
+                            // Also update tables to the same range
+                            fetchMostVisitedPages(startDate, endDate);
+                            fetchRegionStats(startDate, endDate);
                         } else {
                             // No data available message
                             const noDataMessage = currentLang === 'th' ?
@@ -421,6 +409,93 @@
 
             // Initial data load (last 30 days)
             fetchVisitorData(startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD'));
+
+            // Fetch summary stats (active, today, totals)
+            function fetchSummaryStats() {
+                fetch(`{{ url('/admin/api/visitors/stats') }}`)
+                    .then(r => r.json())
+                    .then(d => {
+                        document.getElementById('active-visitors').textContent = d.activeVisitors ?? 0;
+                        document.getElementById('today-visitors').textContent = d.todayVisitors ?? 0;
+                        document.getElementById('total-visitors').textContent = d.totalVisitors ?? 0;
+                        document.getElementById('total-page-views').textContent = d.totalPageViews ?? 0;
+                    })
+                    .catch(() => {
+                        // keep defaults on error
+                    });
+            }
+
+            // Fetch most visited pages
+            function fetchMostVisitedPages(startDate = null, endDate = null) {
+                const tbody = document.getElementById('most-visited-body');
+                const qp = (startDate && endDate) ? `?start_date=${startDate}&end_date=${endDate}` : '';
+                fetch(`{{ url('/admin/api/visitors/most-visited') }}${qp}`)
+                    .then(r => r.json())
+                    .then(d => {
+                        const items = d.mostVisitedPages || [];
+                        if (!items.length) {
+                            tbody.innerHTML = `<tr><td colspan="3" class="text-center text-muted">@lang('translation.no_page_visits_data')</td></tr>`;
+                            return;
+                        }
+
+                        const total = items.reduce((sum, it) => sum + (it.visits || 0), 0);
+                        tbody.innerHTML = items.map(it => {
+                            const percent = total > 0 ? ((it.visits || 0) / total) * 100 : 0;
+                            const label = it.page || 'Homepage';
+                            return `
+                                <tr>
+                                    <td>${label}</td>
+                                    <td>${it.visits || 0}</td>
+                                    <td>
+                                        <div class=\"progress\" style=\"height: 6px;\">\n                                            <div class=\"progress-bar\" role=\"progressbar\" style=\"width: ${percent.toFixed(1)}%\"></div>\n                                        </div>
+                                        <span class=\"small\">${percent.toFixed(1)}%</span>
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('');
+                    })
+                    .catch(() => {
+                        tbody.innerHTML = `<tr><td colspan=\"3\" class=\"text-center text-danger\">@lang('translation.error')</td></tr>`;
+                    });
+            }
+
+            // Fetch top regions
+            function fetchRegionStats(startDate = null, endDate = null) {
+                const tbody = document.getElementById('region-stats-body');
+                const qp = (startDate && endDate) ? `?start_date=${startDate}&end_date=${endDate}` : '';
+                fetch(`{{ route('api.visitors.region-stats') }}${qp}`)
+                    .then(r => r.json())
+                    .then(d => {
+                        const items = d.topRegions || [];
+                        if (!items.length) {
+                            tbody.innerHTML = `<tr><td colspan=\"3\" class=\"text-center text-muted\">@lang('translation.no_region_data')</td></tr>`;
+                            return;
+                        }
+                        const total = items.reduce((sum, it) => sum + (it.count || 0), 0);
+                        tbody.innerHTML = items.map(it => {
+                            const percent = total > 0 ? ((it.count || 0) / total) * 100 : 0;
+                            return `
+                                <tr>
+                                    <td>${it.region}</td>
+                                    <td>${it.count || 0}</td>
+                                    <td>
+                                        <div class=\"progress\" style=\"height: 6px;\">\n                                            <div class=\"progress-bar\" role=\"progressbar\" style=\"width: ${percent.toFixed(1)}%\"></div>\n                                        </div>
+                                        <span class=\"small\">${percent.toFixed(1)}%</span>
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('');
+                    })
+                    .catch(() => {
+                        tbody.innerHTML = `<tr><td colspan=\"3\" class=\"text-center text-danger\">@lang('translation.error')</td></tr>`;
+                    });
+            }
+
+            // Initial fetches for stats and tables
+            fetchSummaryStats();
+            // For initial load, align tables to the initial chart range
+            fetchMostVisitedPages(startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD'));
+            fetchRegionStats(startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD'));
 
             function renderChart(visitorData, categoriesData) {
                 // Check if we have data
@@ -512,7 +587,7 @@
                 fetch('{{ url('/admin/api/visitors/stats') }}')
                     .then(response => response.json())
                     .then(data => {
-                        document.getElementById('active-visitors').textContent = data.activeVisitors;
+                        document.getElementById('active-visitors').textContent = data.activeVisitors ?? 0;
                     });
             }, 30000);
         });

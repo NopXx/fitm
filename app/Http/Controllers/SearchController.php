@@ -32,19 +32,12 @@ class SearchController extends Controller
             ]);
         }
 
-        // Current language
-        $lang = app()->getLocale();
-        $isThaiLanguage = $lang === 'th';
-
-        // Search in Content model
-        $contentResults = Content::where(function($q) use ($query, $isThaiLanguage) {
-            if ($isThaiLanguage) {
-                $q->where('title_th', 'LIKE', "%{$query}%")
-                  ->orWhere('detail_th', 'LIKE', "%{$query}%");
-            } else {
-                $q->where('title_en', 'LIKE', "%{$query}%")
-                  ->orWhere('detail_en', 'LIKE', "%{$query}%");
-            }
+        // Always search across both language columns to avoid locale mismatches
+        $contentResults = Content::where(function($q) use ($query) {
+            $q->where('title_th', 'LIKE', "%{$query}%")
+              ->orWhere('detail_th', 'LIKE', "%{$query}%")
+              ->orWhere('title_en', 'LIKE', "%{$query}%")
+              ->orWhere('detail_en', 'LIKE', "%{$query}%");
         })->get();
 
         // Search in FitmNews model
@@ -56,17 +49,14 @@ class SearchController extends Controller
               ->orWhere('issue_name', 'LIKE', "%{$query}%");
         })->get();
 
-        // Search in News model (with language consideration)
-        $newsResults = News::where(function($q) use ($query, $isThaiLanguage) {
-            if ($isThaiLanguage) {
-                $q->where('title_th', 'LIKE', "%{$query}%")
-                  ->orWhere('detail_th', 'LIKE', "%{$query}%")
-                  ->orWhere('content_th', 'LIKE', "%{$query}%");
-            } else {
-                $q->where('title_en', 'LIKE', "%{$query}%")
-                  ->orWhere('detail_en', 'LIKE', "%{$query}%")
-                  ->orWhere('content_en', 'LIKE', "%{$query}%");
-            }
+        // Search in News model across both languages
+        $newsResults = News::where(function($q) use ($query) {
+            $q->where('title_th', 'LIKE', "%{$query}%")
+              ->orWhere('detail_th', 'LIKE', "%{$query}%")
+              ->orWhere('content_th', 'LIKE', "%{$query}%")
+              ->orWhere('title_en', 'LIKE', "%{$query}%")
+              ->orWhere('detail_en', 'LIKE', "%{$query}%")
+              ->orWhere('content_en', 'LIKE', "%{$query}%");
         })
         ->where('status', 1) // Assuming status 1 means active/published
         ->orderBy('effective_date', 'desc')

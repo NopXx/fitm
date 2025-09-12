@@ -32,8 +32,18 @@ class IpInfoService
             return Cache::get($cacheKey);
         }
 
+        // หากไม่มีโทเค็น หรือสภาพแวดล้อมจำกัดเน็ตเวิร์ก ให้คืน Unknown ทันที
+        if (empty($this->token)) {
+            return [
+                'region' => 'Unknown',
+            ];
+        }
+
         try {
-            $response = Http::get("https://ipinfo.io/{$ip}?token={$this->token}");
+            $response = Http::timeout(2)
+                ->connectTimeout(1)
+                ->retry(0)
+                ->get("https://ipinfo.io/{$ip}?token={$this->token}");
 
             if ($response->successful()) {
                 $data = $response->json();
