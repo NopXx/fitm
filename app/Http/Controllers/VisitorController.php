@@ -39,11 +39,39 @@ class VisitorController extends Controller
     public function apiStats()
     {
         // ดึงข้อมูลสถิติโดยไม่รวมส่วน /admin/*
+        // active / today ใช้ service เดิม, ส่วนจำนวนเข้าชมทั้งหมดคำนวณจากสรุป (daily) + วันนี้
+
+        // Active (15 นาทีล่าสุด ไม่รวม admin)
+        $active = $this->visitorService->getActiveVisitors(15, true);
+
+        // Today unique visitors (ไม่รวม admin)
+        $todayUnique = $this->visitorService->getTodayVisitors(true);
+
+        // Total visitors (unique IPs) ตามนิยามเดิมของระบบ
+        $totalVisitors = $this->visitorService->getTotalVisitors(true);
+
+        // Total page views ใช้สรุปรายวันทั้งหมด + ยอดวันนี้จาก raw logs (เพราะสรุประยะรายวันรันตอนกลางคืน)
+        $totalFromDaily = DB::table('visitor_daily_totals')->sum('pageviews');
+        $todayRawPageviews = DB::table('visitor_logs')
+            ->whereDate('created_at', Carbon::today())
+            ->where(function ($query) {
+                $query->where(function ($q) {
+                    $q->where('page', '!=', 'admin')
+                        ->where('page', '!=', 'login')
+                        ->where('page', 'not like', 'admin/%')
+                        ->where('page', 'not like', 'api/%')
+                        ->where('page', 'not like', 'lang/%');
+                })->orWhereNull('page');
+            })
+            ->count();
+
+        $totalPageViews = (int) $totalFromDaily + (int) $todayRawPageviews;
+
         $data = [
-            'activeVisitors' => $this->visitorService->getActiveVisitors(15, true), // ส่งพารามิเตอร์ excludeAdmin = true
-            'totalVisitors' => $this->visitorService->getTotalVisitors(true),
-            'totalPageViews' => $this->visitorService->getTotalPageViews(true),
-            'todayVisitors' => $this->visitorService->getTodayVisitors(true)
+            'activeVisitors' => $active,
+            'totalVisitors' => $totalVisitors,
+            'totalPageViews' => $totalPageViews,
+            'todayVisitors' => $todayUnique,
         ];
 
         return response()->json($data);
