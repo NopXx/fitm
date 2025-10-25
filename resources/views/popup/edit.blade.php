@@ -49,6 +49,7 @@
                             </div>
 
                             <div class="form-check form-switch mb-4">
+                                <input type="hidden" name="is_active" value="0">
                                 <input class="form-check-input" type="checkbox" role="switch" id="is_active"
                                     name="is_active" value="1"
                                     {{ old('is_active', optional($popup)->is_active ?? true) ? 'checked' : '' }}>
