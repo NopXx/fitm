@@ -19,12 +19,26 @@
     <link rel="manifest" href="{{ asset('assets/images/favicon/site.webmanifest') }}" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script>
-        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia(
-                '(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark')
-        }
+        (function() {
+            const themeVersionKey = 'site-theme-version';
+            const currentThemeVersion = '20250301';
+            const storedThemeVersion = localStorage.getItem(themeVersionKey);
+
+            if (storedThemeVersion !== currentThemeVersion) {
+                localStorage.removeItem('color-theme');
+                localStorage.setItem(themeVersionKey, currentThemeVersion);
+            }
+
+            const storedTheme = localStorage.getItem('color-theme');
+            if (storedTheme === 'dark' || storedTheme === null) {
+                document.documentElement.classList.add('dark');
+                if (storedTheme === null) {
+                    localStorage.setItem('color-theme', 'dark');
+                }
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
     </script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/44.2.1/ckeditor5.css" />

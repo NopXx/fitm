@@ -419,9 +419,105 @@
             @endforeach
         </div>
     </div>
+
+    @if (isset($popupSetting) && $popupSetting->is_active && $popupSetting->image_url)
+        <div id="site-popup-wrapper"
+            class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/70 px-4 py-6">
+            <div class="absolute inset-0" data-popup-close></div>
+            <div
+                class="relative mx-auto w-full max-w-3xl overflow-hidden rounded-2xl bg-white shadow-xl dark:bg-gray-900">
+                <button type="button" data-popup-close
+                    class="absolute right-4 top-4 rounded-full bg-black/70 p-2 text-white transition hover:bg-black/90 dark:bg-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </button>
+                @if ($popupSetting->link)
+                    <a href="{{ $popupSetting->link }}" target="_blank" rel="noopener noreferrer">
+                        <img src="{{ asset('storage/' . $popupSetting->image_url) }}" alt="{{ $popupSetting->title ?? 'Popup' }}"
+                            class="h-full w-full object-cover">
+                    </a>
+                @else
+                    <img src="{{ asset('storage/' . $popupSetting->image_url) }}" alt="{{ $popupSetting->title ?? 'Popup' }}"
+                        class="h-full w-full object-cover">
+                @endif
+                <div class="bg-white px-6 pb-5 pt-4 text-center dark:bg-gray-900">
+                    @if ($popupSetting->title)
+                        <p class="mb-4 text-base font-medium text-gray-800 dark:text-gray-200">
+                            {{ $popupSetting->title }}
+                        </p>
+                    @endif
+                    <label class="inline-flex items-center justify-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                        <input id="popup-skip-today" type="checkbox"
+                            class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                        <span>@lang('popup.skip_today')</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    @endif
 @endsection
 
 @section('script-app')
+    @if (isset($popupSetting) && $popupSetting->is_active && $popupSetting->image_url)
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const wrapper = document.getElementById('site-popup-wrapper');
+                if (!wrapper) {
+                    return;
+                }
+
+                const skipKey = 'site-popup-skip-date';
+                const today = new Date().toISOString().slice(0, 10);
+                const skipCheckbox = document.getElementById('popup-skip-today');
+
+                const showPopup = () => {
+                    wrapper.classList.remove('hidden');
+                    wrapper.classList.add('flex');
+                    document.body.classList.add('overflow-hidden');
+                    if (skipCheckbox) {
+                        skipCheckbox.checked = false;
+                    }
+                };
+
+                const hidePopup = () => {
+                    wrapper.classList.add('hidden');
+                    document.body.classList.remove('overflow-hidden');
+                    if (skipCheckbox && skipCheckbox.checked) {
+                        localStorage.setItem(skipKey, today);
+                    } else {
+                        localStorage.removeItem(skipKey);
+                    }
+                };
+
+                const storedSkipDate = localStorage.getItem(skipKey);
+
+                if (storedSkipDate !== today) {
+                    if (storedSkipDate) {
+                        localStorage.removeItem(skipKey);
+                    }
+                    showPopup();
+                } else {
+                    wrapper.classList.add('hidden');
+                }
+
+                wrapper.querySelectorAll('[data-popup-close]').forEach((element) => {
+                    element.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        hidePopup();
+                    });
+                });
+
+                document.addEventListener('keydown', (event) => {
+                    if (event.key === 'Escape') {
+                        hidePopup();
+                    }
+                });
+            });
+        </script>
+    @endif
     <!-- Embla Carousel CDN -->
     <script src="https://unpkg.com/embla-carousel-autoplay/embla-carousel-autoplay.umd.js"></script>
     <script src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"></script>

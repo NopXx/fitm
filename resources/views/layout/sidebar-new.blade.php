@@ -64,6 +64,11 @@
                 </a>
             </li>
             <li class="no-sub">
+                <a class="" href="{{ route('popup-settings.edit') }}">
+                    <i class="ph ph-image-square"></i> @lang('popup.title')
+                </a>
+            </li>
+            <li class="no-sub">
                 <a class="" href="{{ route('online-services.index') }}">
                     <i class="ph ph-app-window"></i> @lang('online_services.title')
                 </a>

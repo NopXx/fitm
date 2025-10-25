@@ -78,11 +78,30 @@ $(document).on('click', '.menu-next', function (e) {
 
 $(function () {
   setUpHorizontalHeader();
-  let themeMode = getLocalStorageItem('theme-mode', 'light')
+  let themeMode = getLocalStorageItem('theme-mode', 'dark');
+  if (localStorage.getItem('La-Theme-theme-mode') === null) {
+    setLocalStorageItem('theme-mode', themeMode);
+  }
   setTimeout(() => {
-    $('body').addClass(`${themeMode}`)
+    $('body').addClass(`${themeMode}`);
+    syncHeaderThemeToggle(themeMode);
   }, 1000);
 });
+
+function syncHeaderThemeToggle(themeMode) {
+  const sunLogo = document.querySelector(".sun-logo");
+  const moonLogo = document.querySelector(".moon-logo");
+  if (!sunLogo || !moonLogo) {
+    return;
+  }
+  if (themeMode === 'dark') {
+    sunLogo.classList.add("sun");
+    moonLogo.classList.add("moon");
+  } else {
+    sunLogo.classList.remove("sun");
+    moonLogo.classList.remove("moon");
+  }
+}
 
 
 // >>-- 02 Flag  Icon Js --<<
@@ -242,19 +261,23 @@ function myFunction() {
 
 // >>-- 11 Dark mode js --<<
 
-document.querySelector(".header-dark").addEventListener("click", () => {
-  document.querySelector(".sun-logo").classList.toggle("sun");
-  document.querySelector(".moon-logo").classList.toggle("moon");
-  if ($('body').hasClass("dark")) {
-    document.body.classList.remove("dark")
-    document.body.classList.add("light")
-    setLocalStorageItem('theme-mode', 'light')
-  } else {
-    document.body.classList.remove("light")
-    document.body.classList.add("dark")
-    setLocalStorageItem('theme-mode', 'dark')
-  }
-})
+const headerDarkToggle = document.querySelector(".header-dark");
+if (headerDarkToggle) {
+  headerDarkToggle.addEventListener("click", () => {
+    let themeMode = 'dark';
+    if ($('body').hasClass("dark")) {
+      document.body.classList.remove("dark");
+      document.body.classList.add("light");
+      themeMode = 'light';
+    } else {
+      document.body.classList.remove("light");
+      document.body.classList.add("dark");
+      themeMode = 'dark';
+    }
+    setLocalStorageItem('theme-mode', themeMode);
+    syncHeaderThemeToggle(themeMode);
+  });
+}
 function appendHtml() {
   var div = document.getElementsByClassName('app-wrapper');
   div.innerHTML += '<p>This is some HTML code</p>';

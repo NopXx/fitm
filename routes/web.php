@@ -16,6 +16,7 @@ use App\Http\Controllers\NewsFrontendController;
 use App\Http\Controllers\OnlineServiceController;
 use App\Http\Controllers\PersonnelAdminController;
 use App\Http\Controllers\PersonnelController;
+use App\Http\Controllers\PopupSettingController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SymbolController;
 use App\Http\Controllers\VisitorController;
@@ -23,6 +24,7 @@ use App\Models\FitmNews;
 use App\Models\FitmVideo;
 use App\Models\News;
 use App\Models\OnlineService;
+use App\Models\PopupSetting;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
@@ -81,6 +83,9 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::resource('contents', ContentController::class);
         Route::get('/contents/get-contents', [ContentController::class, 'show']);
+
+        Route::get('/popup-settings', [PopupSettingController::class, 'edit'])->name('popup-settings.edit');
+        Route::post('/popup-settings', [PopupSettingController::class, 'update'])->name('popup-settings.update');
 
         Route::get('online-services', [OnlineServiceController::class, 'index'])->name('online-services.index');
         Route::get('online-services/get-services', [OnlineServiceController::class, 'getServices'])->name('online-services.get-services');
@@ -214,8 +219,10 @@ Route::get('/', function () {
     // ดึงข้อมูลวิดีโอ โดยเรียงตามวันที่สร้าง
     $videos = FitmVideo::orderBy('created_at', 'desc')->get();
 
+    $popupSetting = PopupSetting::first();
+
     // ส่งข้อมูลไปยัง view
-    return view('index', compact('news_show', 'news', 'important_news', 'services', 'fitmnews', 'videos'));
+    return view('index', compact('news_show', 'news', 'important_news', 'services', 'fitmnews', 'videos', 'popupSetting'));
 });
 
 Route::get('/api/visitors/stats', [VisitorController::class, 'apiStats']);
