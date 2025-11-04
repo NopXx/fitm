@@ -21,7 +21,7 @@
     <script>
         (function() {
             const themeVersionKey = 'site-theme-version';
-            const currentThemeVersion = '20250301';
+            const currentThemeVersion = '20251110';
             const storedThemeVersion = localStorage.getItem(themeVersionKey);
 
             if (storedThemeVersion !== currentThemeVersion) {
@@ -30,13 +30,13 @@
             }
 
             const storedTheme = localStorage.getItem('color-theme');
-            if (storedTheme === 'dark' || storedTheme === null) {
+            if (storedTheme === 'dark') {
                 document.documentElement.classList.add('dark');
-                if (storedTheme === null) {
-                    localStorage.setItem('color-theme', 'dark');
-                }
             } else {
                 document.documentElement.classList.remove('dark');
+                if (storedTheme === null) {
+                    localStorage.setItem('color-theme', 'light');
+                }
             }
         })();
     </script>

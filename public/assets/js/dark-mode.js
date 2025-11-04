@@ -2,7 +2,7 @@ const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
 const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
 
 const themeVersionKey = 'site-theme-version';
-const currentThemeVersion = '20250301';
+const currentThemeVersion = '20251110';
 const storedThemeVersion = localStorage.getItem(themeVersionKey);
 
 if (storedThemeVersion !== currentThemeVersion) {
@@ -11,7 +11,7 @@ if (storedThemeVersion !== currentThemeVersion) {
 }
 
 const storedColorTheme = localStorage.getItem('color-theme');
-const activeColorTheme = storedColorTheme ?? 'dark';
+const activeColorTheme = storedColorTheme ?? 'light';
 
 if (storedColorTheme === null) {
     localStorage.setItem('color-theme', activeColorTheme);
@@ -37,7 +37,7 @@ themeToggleBtn.addEventListener('click', function() {
     themeToggleLightIcon.classList.toggle('hidden');
 
     // if set via local storage previously
-    const currentTheme = localStorage.getItem('color-theme') ?? 'dark';
+    const currentTheme = localStorage.getItem('color-theme') ?? 'light';
 
     if (localStorage.getItem('color-theme')) {
         if (currentTheme === 'light') {
